@@ -2,12 +2,12 @@
 
 ## Pieces
 
-- Pharaoh
-- Scarab
-- Anubis
-- Pyramid
-- Sphinx
-- Eye of Horus
+-      Pharaoh 10
+-       Scarab 20 21
+-       Anubis 30 31 32 33
+-      Pyramid 40 41 42 43
+-       Sphinx 50 51 52 53
+- Eye of Horus 60 61
 
 ## Board
 
