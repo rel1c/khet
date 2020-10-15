@@ -2,12 +2,11 @@
 
 ## Pieces
 
--      Pharaoh 10
--       Scarab 20 21
--       Anubis 30 31 32 33
--      Pyramid 40 41 42 43
--       Sphinx 50 51 52 53
-- Eye of Horus 60 61
+- Anubis
+- Pharaoh
+- Pyramid
+- Scarab
+- Sphinx
 
 ## Board
 
@@ -19,27 +18,25 @@ in small areas adjacent are restricted squares that only one color of
 pieces can occupy.
 
 ```
-% ? + + + + + + & ?
-& + + + + + + + + ?
-& + + + + + + + + ?
-& + + + + + + + + ?
-& + + + + + + + + ?
-& + + + + + + + + ?
-& + + + + + + + + ?
-& ? + + + + + + & %
+R s + + + + + + r s
+r + + + + + + + + s
+r + + + + + + + + s
+r + + + + + + + + s
+r + + + + + + + + s
+r + + + + + + + + s
+r + + + + + + + + s
+r s + + + + + + r S
 ```
 
 ## Rules
 
+The rules for the game follow the rules released for the physical board
+game Khet: The Laser Game 2.0.
+
 1. Set up the pieces in one of the three starting positions given:
-   - classic
-   - imhotep
-   - dynasty
-   If using Eye of Horus set up the pieces on of these:
-   - imhotep^2
-   - dynasty^2
-   - osiris
-   - isis
+   - Classic
+   - Dynasty
+   - Imhotep
 
 2. Silver moves first. Players alternate turns, with each player
    moving only his/her own pieces. All the pieces, including Pharaohs,
@@ -104,14 +101,13 @@ pieces can occupy.
     squares in the same orientations, the player making the next move
     can declare a draw.
 
-## Eye of Horus Rules
+## Design Considerations
 
-1. The beam splitter moves in the exact same way as the Scarab in the
-   official Khet Rules of Play. Specifically, the Eye of Horus can
-   move one square in any direction or one quarter turn on any turn.
-   Also, the Eye of Horus piece can move into a square occupied by a
-   Pyramid or an Anubis of either color; the Pyramid or Anubis the goes
-   to the square the Eye of Horus piece started from. In other words,
-   the Eye of Horus piece can swap places with an adjacent Pyramid or
-   Anubis, but not with a Pharoah, Scarab, or another Eye of Horus
-   piece. Neither piece rotates.
+## Implementation
+
+Every piece has a direction, specifically an integer between 0-3 corresponding
+to north, east, south, west respectively. Attributes of pieces, namely what happens
+when one of their faces is hit by the laser, are static and are qualities in the
+pieces themselves. Rotations are purely the change in the north facing vector
+for each piece, again a number between 0-3. When a laser hit is resolved all
+that is needed is a ...
