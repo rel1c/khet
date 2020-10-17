@@ -1,22 +1,25 @@
 from const import Color, Direction, Face, Kind
+#TODO eliminate all get/set, use attributes
+#TODO consolidate default parameters
+#TODO default argument depening on color, or this too complicated?
 
 class Piece(object):
 
-    FACES_ANUBIS = ()
-    FACES_PHARAOH = (Face.GAME, Face.GAME, Face.GAME, Face.GAME) 
+    FACES_ANUBIS = (Face.ABSORB, Face.DESTROY, Face.DESTROY, Face.DESTROY)
+    FACES_PHARAOH = (Face.DESTROY, Face.DESTROY, Face.DESTROY, Face.DESTROY)
     FACES_PYRAMID = (Face.REFLECT_NEG, Face.REFLECT_POS, Face.DESTROY, Face.DESTROY)
     FACES_SCARAB = (Face.REFLECT_NEG, Face.REFLECT_POS, Face.REFLECT_NEG, Face.REFLECT_POS)
-    FACES_SPHINX= (Face.ABSORB, Face.ABSORB, Face.ABSORB, Face.ABSORB)
+    FACES_SPHINX = (Face.ABSORB, Face.ABSORB, Face.ABSORB, Face.ABSORB)
 
-    def __init__(self, kind, color, direction=Direction.NORTH):
+    def __init__(self, kind, color, direction):
         self.kind = kind
         self.color = color
         self.direction = direction
-        self.faces = [None] * 4
+        self.faces = None
         self.move = True
 
     def getKind(self):
-        return self.kind #TODO eliminate all get/set, use attributes
+        return self.kind
 
     def getColor(self):
         return self.color
@@ -38,28 +41,15 @@ class Piece(object):
     def __str__(self):
         return self.color.name + '_' + self.kind.name + '_' + self.direction.name
 
-class Scarab(Piece):
-
-#  \`\
-#   \ \
-#    \_\
-
-    def __init__(self, color):
-        Piece.__init__(self, Kind.SCARAB, color)
-        self.faces = list(Piece.FACES_SCARAB)
-
 class Anubis(Piece):
 
 #  ,===,
 #  |   |
 #  |___|
 
-    def __init__(self, color):
-        Piece.__init__(self, Kind.ANUBIS, color)
-        self.faces[0] = Face.ABSORB
-        self.faces[1] = Face.DESTROY
-        self.faces[2] = Face.DESTROY
-        self.faces[3] = Face.DESTROY
+    def __init__(self, color, direction=Direction.NORTH): 
+        Piece.__init__(self, Kind.ANUBIS, color, direction) 
+        self.faces = Piece.FACES_ANUBIS
 
 class Pharaoh(Piece):
 
@@ -67,9 +57,9 @@ class Pharaoh(Piece):
 #  |   |
 #  |___|
 
-    def __init__(self, color):
-        Piece.__init__(self, Kind.PHARAOH, color)
-        self.faces = list(FACES_PHARAOH)
+    def __init__(self, color, direction=Direction.NORTH):
+        Piece.__init__(self, Kind.PHARAOH, color, direction)
+        self.faces = Piece.FACES_PHARAOH
 
 class Pyramid(Piece):
 
@@ -77,9 +67,19 @@ class Pyramid(Piece):
 #   | \
 #   |__\
 
-    def __init__(self, color):
-        Piece.__init__(self, Kind.PYRAMID, color)
-        self.faces = list(FACES_PYRAMID)
+    def __init__(self, color, direction=Direction.NORTH):
+        Piece.__init__(self, Kind.PYRAMID, color, direction)
+        self.faces = Piece.FACES_PYRAMID
+
+class Scarab(Piece):
+
+#  \`\
+#   \ \
+#    \_\
+
+    def __init__(self, color, direction=Direction.NORTH):
+        Piece.__init__(self, Kind.SCARAB, color, direction)
+        self.faces = Piece.FACES_SCARAB
 
 class Sphinx(Piece):
 
@@ -87,7 +87,7 @@ class Sphinx(Piece):
 #  |   |
 #  |___|
 
-    def __init__(self, color):
-        Piece.__init__(self, Kind.SPHINX, color)
-        self.faces = list(FACES_SPHINX)
+    def __init__(self, color, direction=Direction.NORTH):
+        Piece.__init__(self, Kind.SPHINX, color, direction)
+        self.faces = Piece.FACES_SPHINX
         self.move = False
