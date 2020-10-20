@@ -2,6 +2,7 @@ from const import Color, Direction, Face, Kind
 #TODO eliminate all get/set, use attributes
 #TODO consolidate default parameters
 #TODO default argument depening on color, or this too complicated?
+#TODO combine rotate methods, call Sphinx(rotate) with only one?
 
 class Piece(object):
 
@@ -12,11 +13,11 @@ class Piece(object):
     FACES_SPHINX = (Face.ABSORB, Face.ABSORB, Face.ABSORB, Face.ABSORB)
 
     def __init__(self, kind, color, direction):
-        self.kind = kind
         self.color = color
+        self.destroyed = False
         self.direction = direction
         self.faces = None
-        self.move = True
+        self.kind = kind
 
     def getKind(self):
         return self.kind
@@ -73,7 +74,7 @@ class Pyramid(Piece):
 
 class Scarab(Piece):
 
-#  \`\
+#  \@\
 #   \ \
 #    \_\
 
@@ -90,4 +91,3 @@ class Sphinx(Piece):
     def __init__(self, color, direction=Direction.NORTH):
         Piece.__init__(self, Kind.SPHINX, color, direction)
         self.faces = Piece.FACES_SPHINX
-        self.move = False
