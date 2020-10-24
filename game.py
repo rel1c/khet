@@ -2,51 +2,40 @@ from const import Color, Constant, Direction, Kind, State
 from piece import Anubis, Pharaoh, Pyramid, Scarab, Sphinx
 
 """
-Move(x1, y1, x2, y2)
-    - move a piece from (x1, y1) to (x2, y2)
-    - check if move is legal
-    - check move consequences (scarab)
-    - execute move
-
-pieces [[P1, P2, ..., Pi], ..., [ ..., Pn]]
-    - each players active pieces on the board
-    - pieces are "idependent" of board as they move on it
-    - each piece has location as index on 2D array
-
-hand (P1, P2, ..., Pn)
-    - each player has a hand (set) of pieces
-
 The Game class enforces the rules, not the pieces or the board! If a piece cannot move or
 rotate, it is the Game's job to enfore the rules.
 """
-#TODO Initializing the game state should be responsible for constructing all of the players pieces.
-#This will ensure they are all at the correct coordinates and will cut down on code length as well
-#as make the game more flexible.
 class Game(object):
 
     class Player(object):
 
         def __init__(self, color):
             self.color = color
-            #self.pieces = (Pharaoh(color), Anubis(color), Anubis(color), Sphinx(color),
-            #               Scarab(color), Scarab(color, Pyramid(color), Pyramid(color),
-            #               Pyramid(color), Pyramid(color), Pyramid(color), Pyramid(color),
-            #               Pyramid(color))
-            self.pieces = []
+            self.pieces = set()
 
-        def assign(self, piece):
-            self.pieces.append(piece)
+        def give(self, piece):
+            self.pieces.add(piece)
+
+        def take(self, piece):
+            self.pieces.remove(piece)
 
     def __init__(self, initial_state=State.CLASSIC):
         self.state = [[None for col in range(Constant.COLS)] for row in range(Constant.ROWS)]
         self.players = (Game.Player(Color.SILVER), Game.Player(Color.RED))
         self.init_game(initial_state)
 
-    def move_piece():
-        pass
+    def move_piece(self, x1, y1, x2, y2):
+        piece = self.state[x1][y1]
+        self.state[x1][y1] = None
+        self.state[x2][y2] = piece
+        print('Moved piece:{} from location ({}, {}) to ({}, {})'.format(str(piece), x1, y1, x2, y2))
 
-    def is_over():
-        pass
+    def remove_piece(self, x, y):
+        piece = self.state[x][y]
+        color = piece.color.value
+        self.players[color].take(piece)
+        self.state[x][y] = None
+        print('Removed piece:{} at location ({}, {})'.format(str(piece), x, y))
 
     def fire_laser():
         pass
@@ -68,5 +57,20 @@ class Game(object):
             y = int(token[4])
             piece = pieces[kind](color, direction)
             print('{:<20} @ ({}, {})'.format(str(piece), x, y))
-            self.players[color.value].assign(piece)
+            self.players[color.value].give(piece)
             self.state[x][y] = piece
+
+    def __str__(self):
+        s = ""
+        for x in range(Constant.ROWS):
+            for y in range(Constant.COLS):
+                piece = self.state[x][y]
+                if piece is None:
+                    ch = ' + '
+                else:
+                    ch = str(piece.color.value)
+                    ch += str(piece.kind.value)
+                    ch += str(piece.direction.value)
+                s += ch + ' '
+            s += '\n'
+        return s

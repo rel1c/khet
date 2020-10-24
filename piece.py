@@ -14,29 +14,19 @@ class Piece(object):
 
     def __init__(self, kind, color, direction):
         self.color = color
-        self.destroyed = False
         self.direction = direction
         self.faces = None
         self.kind = kind
 
-    def getKind(self):
-        return self.kind
-
-    def getColor(self):
-        return self.color
-
-    def getDirection(self):
-        return self.direction
-
-    def getFace(self, laser_direction):
+    def resolve_hit(self, laser_direction):
         face_hit = (2 - laser_direction.value + self.direction.value) % 4
         print(face_hit)
         return self.faces[face_hit]
 
-    def rotatePositive(self):
+    def rotate_positive(self):
         self.direction = Direction((self.direction.value + 1) % 4)
 
-    def rotateNegative(self):
+    def rotate_negative(self):
         self.direction = Direction((self.direction.value - 1) % 4)
 
     def __str__(self):
