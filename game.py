@@ -1,5 +1,5 @@
 from const import Color, Constant, Direction, Kind, State
-from piece import Anubis, Pharaoh, Pyramid, Scarab, Sphinx
+from piece import Piece
 
 """
 The Game class enforces the rules, not the pieces or the board! If a piece cannot move or
@@ -41,13 +41,6 @@ class Game(object):
         pass
 
     def init_game(self, initial_state):
-        pieces = {#generalize this!
-            Kind.ANUBIS : Anubis,
-            Kind.PHARAOH : Pharaoh,
-            Kind.PYRAMID : Pyramid,
-            Kind.SCARAB : Scarab,
-            Kind.SPHINX : Sphinx
-        }
         print('Placing game pieces:')
         for token in initial_state:
             color = Color(int(token[0]))
@@ -55,7 +48,7 @@ class Game(object):
             direction = Direction(int(token[2]))
             x = int(token[3])
             y = int(token[4])
-            piece = pieces[kind](color, direction)
+            piece = Piece(color, kind, direction)
             print('{:<20} @ ({}, {})'.format(str(piece), x, y))
             self.players[color.value].give(piece)
             self.state[x][y] = piece
