@@ -14,7 +14,7 @@ class Piece(object):
         self.direction = direction
 
     def resolve_hit(self, laser_direction):
-        face_hit = (2 - laser_direction.value + self.direction.value) % 4
+        face_hit = (2 + laser_direction.value - self.direction.value) % 4
         return Piece.FACES[self.kind][face_hit]
 
     def rotate_positive(self):
