@@ -18,11 +18,11 @@ class Board(object):
         for x in range(len(self.squares)):
             for y in range(len(self.squares[x])):
                 if self.squares[x][y] is Color.RED:
-                    ch = 'R'
+                    ch = ' R '
                 elif self.squares[x][y] is Color.SILVER:
-                    ch = 'S'
+                    ch = ' S '
                 else:
-                    ch = '-'
+                    ch = ' + '
                 s += ch + ' '
             s += '\n'
         return s

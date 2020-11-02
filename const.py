@@ -27,6 +27,7 @@ class Kind(Enum):
     SCARAB = 3
     SPHINX = 4
 
+# Each string represents color, kind, direction, x, y
 class State(object):
     CLASSIC = ['14200', '10204', '11205', '10206', '12107', '12212', '02323', '12030', '02232',
                '13034', '13135', '12137', '02339', '12140', '02342', '03344', '03245', '12047',

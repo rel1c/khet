@@ -111,3 +111,5 @@ when one of their faces is hit by the laser, are static and are qualities in the
 pieces themselves. Rotations are purely the change in the north facing vector
 for each piece, again a number between 0-3. When a laser hit is resolved all
 that is needed is a ...
+
+## Game State
