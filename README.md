@@ -18,14 +18,14 @@ in small areas adjacent are restricted squares that only one color of
 pieces can occupy.
 
 ```
-R s + + + + + + r s
+r s + + + + + + r s
 r + + + + + + + + s
 r + + + + + + + + s
 r + + + + + + + + s
 r + + + + + + + + s
 r + + + + + + + + s
 r + + + + + + + + s
-r s + + + + + + r S
+r s + + + + + + r s
 ```
 
 ## Rules
@@ -101,8 +101,6 @@ game Khet: The Laser Game 2.0.
     squares in the same orientations, the player making the next move
     can declare a draw.
 
-## Design Considerations
-
 ## Implementation
 
 Every piece has a direction, specifically an integer between 0-3 corresponding
@@ -110,6 +108,22 @@ to north, east, south, west respectively. Attributes of pieces, namely what happ
 when one of their faces is hit by the laser, are static and are qualities in the
 pieces themselves. Rotations are purely the change in the north facing vector
 for each piece, again a number between 0-3. When a laser hit is resolved all
-that is needed is a ...
+that is needed is a simple formula to redirect its direction. If a nonreflective
+surface is hit the piece is eliminated or the laser is absorbed.
 
-## Game State
+The game board is represented as a 80-element tuple, where each 10 consecutive
+elements represent a row of board squares. The first element is the northwest
+corner of the board from the perspecive of the silver (first) player. This
+representation simplifies discovering legal plays as it cuts down on out-of-bounds
+checks.
+
+```
+00 01 02 03 04 05 06 07 08 09
+10 11 12 13 14 15 16 17 18 19
+20 21 22 23 24 25 26 27 28 29
+30 31 32 33 34 35 36 37 38 39
+40 41 42 43 44 45 46 47 48 49
+50 51 52 53 54 55 56 57 58 59
+60 61 62 63 64 65 66 67 68 69
+70 71 72 73 74 75 76 77 78 79
+```
