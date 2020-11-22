@@ -1,10 +1,10 @@
+import copy
 from collections import namedtuple
 from enum import IntEnum
 from game import Game, GameState
 
 Move = namedtuple('Move', 'cur_sq, new_sq')
-# Rotate = namedtuple('Rotate', 'cur_sq, value') # Seeing if using function pointer works instead
-Rotate = namedtuple('Rotate', 'fn')
+Rotate = namedtuple('Rotate', 'cur_sq, val')
 Swap = namedtuple('Swap', 'cur_sq, new_sq')
 
 COLS = 10
@@ -35,12 +35,6 @@ class Direction(IntEnum):
     SOUTH = 2
     WEST = 3
 
-# Function pointer makes this unneeded
-# class Rotation(IntEnum):
-#     NEG = -1
-#     FLIP = 0
-#     POS = 1
-
 # Faces of game pieces represented by the action to take upon being hit by the laser.
 class Face(IntEnum):
     REFLECT_POS = 0
@@ -56,6 +50,11 @@ class Kind(IntEnum):
     SCARAB = 3
     SPHINX = 4
 
+# Rotation values correspond to clockwise, flipping and counter-clockwise
+class Rotation(IntEnum):
+    NEG = -1
+    FLIP = 0
+    POS = 1
 
 # This is a constant for the Classic layout of the game pieces. Each square contains an integer
 # where each power of 10 is a 0-4 value corresponding to piece color, kind and direction,
@@ -93,21 +92,20 @@ class Piece(object):
         hit = (2 + laser_direction.value - self.direction.value) % 4
         return self.faces[hit]
 
-    # Rotates piece clockwise.
-    def rotate_positive(self):
-        self.direction = Direction((self.direction.value + 1) % 4)
+    # Rotates a piece clockwise or counter-clockwise, or flips it #
+    def rotate(self, rotation):
+        assert -1 <= rotation <= 1
+        if not rotation: #then flip
+            self.direction = Direction(self.direction.value ^ 3)
+        else:
+            self.direction = Direction((self.direction.value + rotation) % 4)
 
-    # Rotates piece counter-clockwise.
-    def rotate_negative(self):
-        self.direction = Direction((self.direction.value - 1) % 4)
-
-    # Flips a piece. This is specifically for the Sphinx laser piece as it cannot rotate
-    # like other pieces.
-    def flip(self):
-        self.direction = Direction(self.direction.value ^ 3)
+    # Return numerical values of piece in string for displaying game state #
+    def values(self):
+        return "{}{}{}".format(self.color, self.kind, self.direction)
 
     def __repr__(self):
-        return self.color.name + '_' + self.kind.name + '_' + self.direction.name
+        return "{}_{}_{}".format(self.color.name, self.kind.name, self.direction.name)
 
 
 class Khet(Game):
@@ -127,7 +125,7 @@ class Khet(Game):
 
     # Construct 2D Piece object array from provided layout #
     def __init__(self, layout=Layout.CLASSIC):
-        initial_board = []
+        initial_board = [[None] * COLS for i in range(ROWS)]
         self.lasers = {Color.SILVER: (), Color.RED: ()} # The sphinx locations for each player
 
         for i, row in enumerate(layout):
@@ -137,13 +135,11 @@ class Khet(Game):
                     color = Color(square // 100)
                     kind = Kind((square // 10) % 10)
                     direction = Direction(square % 10)
-                    initial_board.append(Piece(color, kind, direction))
+                    initial_board[i][j] = Piece(color, kind, direction)
                     if kind == Kind.SPHINX:
                         self.lasers[color] = (i, j)
-                else:
-                    initial_board.append(None)
 
-        assert len(initial_board) * len(initial_board[0]) == NUM_SQUARES
+        
         self.initial = GameState(to_move=Color.SILVER, utility=0, board=initial_board, moves=[])
 
 
@@ -157,7 +153,7 @@ class Khet(Game):
 
     # Modify the game board according to the selected move #
     def result(self, state, action):
-        board = state.board
+        board = copy.deepcopy(state.board)
         i, j = action.cur_sq
 
         if isinstance(action, Move):
@@ -165,23 +161,51 @@ class Khet(Game):
             board[new_i][new_j] = board[i][j]
             board[i][j] = None      
         elif isinstance(action, Rotate):
-            action.fn()
+            board[i][j].rotate(action.val.value) #TODO ugly but it works
         else:
             # action is Swap
             new_i, new_j = action.new_sq
             board[i][j], board[new_i][new_j] = board[new_i][new_j], board[i][j]
             
-        self.fire_laser(state)
+        self.fire_laser(board, self.lasers[state.to_move])
 
         return GameState(to_move=self.opponent_color(state.to_move),
-                         utility=self.compute_utility(state.board, action, state.to_move), #TODO: implement compute_utility
+                         utility=self.compute_utility(board, action, state.to_move), #TODO: implement compute_utility
                          board=board, moves=[])
+
+
+    # Retrieve utility of game state #
+    def utility(self, state, player):
+        pass #TODO: implement
+
+
+    # Determine if game has come to an end #
+    def terminal_test(self, state):
+        pass #TODO: implement
+
+
+    # Display game state in human readable format #
+    def display(self, state):
+        board = state.board
+        for i, row in enumerate(board):
+            for j, _ in enumerate(row):
+                square = board[i][j]
+                if square:
+                    print(square.values(), end=' ')
+                else:
+                    print("---", end=' ')
+            print()
+
+
+    # Compute utility of game state #
+    def compute_utility(self, board, move, player):
+        pass #TODO: implement
 
 
     # Find all legal moves for a piece #
     def get_legal_moves(self, state, square):
         row, col = square
-        piece = state.moves[row][col]
+        piece = state.board[row][col]
 
         if piece is None or piece.color != state.to_move:
             # There is no piece at the current square or the piece belongs to the opponent
@@ -189,7 +213,7 @@ class Khet(Game):
             return
         if piece.kind == Kind.SPHINX:
             # Only possible move for Sphinx is to flip rotation
-            state.moves.append(Rotate(fn=piece.flip))
+            state.moves.append(Rotate(cur_sq=square, val=Rotation.FLIP))
             return
 
         # Iterate over the relative indices of the 8 surrounding squares to check movement/swap possibilities
@@ -208,13 +232,14 @@ class Khet(Game):
                     state.moves.append(Move(cur_sq=square, new_sq=(new_row, new_col)))
 
         # Positive and negative rotation is always a legal move for every piece
-        state.moves.append(Rotate(fn=piece.rotate_positive), Rotate(fn=piece.rotate_negative))
+        state.moves.append(Rotate(cur_sq=square, val=Rotation.NEG))
+        state.moves.append(Rotate(cur_sq=square, val=Rotation.POS))
 
 
     # Determine result of laser on game board #
-    def fire_laser(self, state):
-        i, j = self.lasers[state.to_move]
-        direction = state.board[i, j].direction
+    def fire_laser(self, board, laser):
+        i, j = laser
+        direction = board[i][j].direction
 
         while True:
             if direction is Direction.NORTH or direction is Direction.SOUTH:
@@ -226,24 +251,24 @@ class Khet(Game):
                 print('Laser out of bounds')
                 return
 
-            piece = state.board[i, j]
+            piece = board[i][j]
             if piece is not None:
                 face_hit = piece.resolve_hit(direction)
                 if face_hit is Face.DESTROY:
-                    print('Destroyed piece:{} at location ({}, {})'.format(str(piece), i, j))
-                    state.board[i, j] = None
+                    print('Destroyed {} at ({}, {})'.format(piece, i, j))
+                    board[i][j] = None
                     return
 
                 elif face_hit is Face.REFLECT_POS: 
                     direction = Direction((direction.value + 1) % 4)
-                    print('Laser reflected {} off piece:{} at location ({}, {})'
-                        .format(direction, str(piece), i, j))
+                    print('Laser reflected {} off {} at ({}, {})'
+                        .format(direction.name, piece, i, j))
 
                 elif face_hit is Face.REFLECT_NEG:
                     direction = Direction((direction.value - 1) % 4)
-                    print('Laser reflected {} off piece:{} at location ({}, {})'
-                        .format(direction, str(piece), i, j))
+                    print('Laser reflected {} off {} at ({}, {})'
+                        .format(direction.name, piece, i, j))
 
                 else:
-                    print('Illuminated piece:{} at location ({}, {})'.format(str(piece), i, j))
+                    print('Hit {} at ({}, {})'.format(piece, i, j))
                     return
