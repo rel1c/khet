@@ -1,84 +1,22 @@
 import copy
-from collections import namedtuple
-from enum import IntEnum
+import utils
+from collections import Counter
 from game import Game, GameState
-
-Move = namedtuple('Move', 'cur_sq, new_sq')
-Rotate = namedtuple('Rotate', 'cur_sq, val')
-Swap = namedtuple('Swap', 'cur_sq, new_sq')
-
-COLS = 10
-ROWS = 8
-NUM_SQUARES = COLS * ROWS
-
-# This is a constant layout for the gameboard. 
-# The values of each square correspond with the Color values below.
-SQUARES = [[2, 1, 0, 0, 0, 0, 0, 0, 2, 1], 
-           [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-           [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-           [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-           [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-           [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-           [2, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-           [2, 1, 0, 0, 0, 0, 0, 0, 2, 1]]
-
-
-# Player colors, starting at 1 to avoid the confusion of the sequence '000' in game layout.
-class Color(IntEnum):
-    SILVER = 1
-    RED = 2
-
-# Cardinal directions for piece facing and laser routing.
-class Direction(IntEnum):
-    NORTH = 0
-    EAST = 1
-    SOUTH = 2
-    WEST = 3
-
-# Faces of game pieces represented by the action to take upon being hit by the laser.
-class Face(IntEnum):
-    REFLECT_POS = 0
-    REFLECT_NEG = 1
-    ABSORB = 2
-    DESTROY = 3
-
-# Game pieces, listed alphabetically.
-class Kind(IntEnum):
-    ANUBIS = 0
-    PHARAOH = 1
-    PYRAMID = 2
-    SCARAB = 3
-    SPHINX = 4
-
-# Rotation values correspond to clockwise, flipping and counter-clockwise
-class Rotation(IntEnum):
-    NEG = -1
-    FLIP = 0
-    POS = 1
-
-# This is a constant for the Classic layout of the game pieces. Each square contains an integer
-# where each power of 10 is a 0-4 value corresponding to piece color, kind and direction,
-# respectively. This is used as a human friendly way to initiate the game state.
-class Layout(object):
-    CLASSIC = [[242, 000, 000, 000, 202, 212, 202, 221, 000, 000],
-               [000, 000, 222, 000, 000, 000, 000, 000, 000, 000],
-               [000, 000, 000, 123, 000, 000, 000, 000, 000, 000],
-               [220, 000, 122, 000, 230, 231, 000, 221, 000, 123],
-               [221, 000, 123, 000, 133, 132, 000, 220, 000, 122],
-               [000, 000, 000, 000, 000, 000, 221, 000, 000, 000],
-               [000, 000, 000, 000, 000, 000, 000, 120, 000, 000],
-               [000, 000, 123, 100, 110, 100, 000, 000, 000, 140]]
+from utils import Move, Rotate, Swap, Color, Direction, Face, Kind, Rotation
+from display import tui_display
 
 
 # Object class which embodies a game piece.
 class Piece(object):
 
     # Look-up table to generate the faces of a piece
-    FACES = {Kind.ANUBIS: (Face.ABSORB, Face.DESTROY, Face.DESTROY, Face.DESTROY),
-            Kind.PHARAOH: (Face.DESTROY, Face.DESTROY, Face.DESTROY, Face.DESTROY),
-            Kind.PYRAMID: (Face.REFLECT_NEG, Face.REFLECT_POS, Face.DESTROY, Face.DESTROY),
-            Kind.SCARAB: (Face.REFLECT_NEG, Face.REFLECT_POS, Face.REFLECT_NEG, Face.REFLECT_POS),
-            Kind.SPHINX: (Face.ABSORB, Face.ABSORB, Face.ABSORB, Face.ABSORB)}
+    FACES = {
+        Kind.ANUBIS: (Face.ABSORB, Face.DESTROY, Face.DESTROY, Face.DESTROY),
+        Kind.PHARAOH: (Face.DESTROY, Face.DESTROY, Face.DESTROY, Face.DESTROY),
+        Kind.PYRAMID: (Face.REFLECT_NEG, Face.REFLECT_POS, Face.DESTROY, Face.DESTROY),
+        Kind.SCARAB: (Face.REFLECT_NEG, Face.REFLECT_POS, Face.REFLECT_NEG, Face.REFLECT_POS),
+        Kind.SPHINX: (Face.ABSORB, Face.ABSORB, Face.ABSORB, Face.ABSORB)
+    }
 
     # Each piece corresponds to the three digit number in a game layout.
     def __init__(self, color, kind, direction):
@@ -87,6 +25,24 @@ class Piece(object):
         self.direction = direction
         self.faces = Piece.FACES[kind]
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            # Ensure other is a Piece object
+            return self.color == other.color and self.kind == other.kind and self.direction == other.direction
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    #TODO: Making a mutable object hashable causes problems if the object is used as the key to a dictionary
+    # as the hash is only calculated at creation. In this case the problem is avoided because Piece objects 
+    # are never used directly as a key and the dictionary of game board hashes is treated as immutable.
+    # However, would probably be a "best practice" to have rotate() method create new Piece objects instead of
+    # mutating direction state
+    def __hash__(self):
+        # Piece objects with the same color, kind, and direction will evaluate as equal and hash to same value
+        return hash((self.color, self.kind, self.direction))
+        
     # Resolves a laser hit on a piece via the face look-up table and the laser's direction.
     def resolve_hit(self, laser_direction):
         hit = (2 + laser_direction.value - self.direction.value) % 4
@@ -95,7 +51,7 @@ class Piece(object):
     # Rotates a piece clockwise or counter-clockwise, or flips it #
     def rotate(self, rotation):
         assert -1 <= rotation <= 1
-        if not rotation: #then flip
+        if not rotation: # Then flip
             self.direction = Direction(self.direction.value ^ 3)
         else:
             self.direction = Direction((self.direction.value + rotation) % 4)
@@ -116,18 +72,23 @@ class Khet(Game):
     # Determine if a square is on the game board #
     @staticmethod
     def in_bounds(row, col):
-        return 0 <= row < ROWS and 0 <= col < COLS
+        return 0 <= row < utils.ROWS and 0 <= col < utils.COLS 
 
     # Return the color of the opposing player #
     @staticmethod
     def opponent_color(player_color):
         return player_color % 2 + 1  # Color enum begins at 1 instead of 0
 
-    # Construct 2D Piece object array from provided layout #
-    def __init__(self, layout=Layout.CLASSIC):
-        initial_board = [[None] * COLS for i in range(ROWS)]
-        self.lasers = {Color.SILVER: (), Color.RED: ()} # The sphinx locations for each player
+    # Calculate the hash of a game board to track the number of times it has been seen in a game #
+    @staticmethod
+    def hash_game(board):
+        return hash(tuple(map(tuple, board)))
 
+    # Construct 2D Piece object array from provided layout #
+    def __init__(self, layout=utils.Layout.CLASSIC):
+        self.lasers = {Color.SILVER: (), Color.RED: ()}  # The sphinx locations for each player
+
+        initial_board = [[None] * utils.COLS for _ in range(utils.ROWS)]
         for i, row in enumerate(layout):
             for j, square in enumerate(row):
                 if square:
@@ -136,26 +97,36 @@ class Khet(Game):
                     kind = Kind((square // 10) % 10)
                     direction = Direction(square % 10)
                     initial_board[i][j] = Piece(color, kind, direction)
-                    if kind == Kind.SPHINX:
+                    if kind is Kind.SPHINX:
                         self.lasers[color] = (i, j)
 
-        
-        self.initial = GameState(to_move=Color.SILVER, utility=0, board=initial_board, moves=[])
+        # Contains the current game board, its hash,
+        # and a mapping between game board hashes and the number of times they have been seen in a game
+        board_state = (
+            initial_board,                                  
+            initial_hash := self.hash_game(initial_board), 
+            Counter({initial_hash: 1})
+        ) 
+        self.initial = GameState(to_move=Color.SILVER, utility=0, board=board_state, moves=[])
 
 
     # Return all of a player's legal moves #
     def actions(self, state):
-        for i, row in enumerate(state.board):
+        board = state.board[0]
+        for i, row in enumerate(board):
             for j, _ in enumerate(row):
-                self.get_legal_moves(state, (i, j))
+                self.get_legal_moves(i, j, board, state.moves, state.to_move)
         return state.moves
 
 
     # Modify the game board according to the selected move #
-    def result(self, state, action):
-        board = copy.deepcopy(state.board)
-        i, j = action.cur_sq
+    # log_result determines if the result of each laser fire is logged to stdout
+    def result(self, state, action, log_result=False):
+        board, _, times_seen = state.board
+        board = copy.deepcopy(board)           # Boards must be immutable for algorithms that reuse previous states
+        times_seen = copy.deepcopy(times_seen) # Tracking of seen game boards must also be immutable to enforce distinct states
 
+        i, j = action.cur_sq
         if isinstance(action, Move):
             new_i, new_j = action.new_sq
             board[new_i][new_j] = board[i][j]
@@ -165,79 +136,82 @@ class Khet(Game):
         else:
             # action is Swap
             new_i, new_j = action.new_sq
-            board[i][j], board[new_i][new_j] = board[new_i][new_j], board[i][j]
-            
-        self.fire_laser(board, self.lasers[state.to_move])
+            board[i][j], board[new_i][new_j] = board[new_i][new_j], board[i][j]  
+
+        utility = self.fire_laser(board, self.lasers[state.to_move], log_result)
+        board_hash = self.hash_game(board)
+        times_seen[board_hash] += 1
 
         return GameState(to_move=self.opponent_color(state.to_move),
-                         utility=self.compute_utility(board, action, state.to_move), #TODO: implement compute_utility
-                         board=board, moves=[])
+                         utility=utility,
+                         board=(board, board_hash, times_seen), 
+                         moves=[])
 
 
-    # Retrieve utility of game state #
+    # Retrieve utility of a game state #
     def utility(self, state, player):
-        pass #TODO: implement
+        return state.utility if player is Color.SILVER else -state.utility
 
 
     # Determine if game has come to an end #
     def terminal_test(self, state):
-        pass #TODO: implement
+        _, board_hash, times_seen = state.board
+        return state.utility != 0 or times_seen[board_hash] == utils.DRAW_CONDITION
 
 
     # Display game state in human readable format #
-    def display(self, state):
-        board = state.board
-        for i, row in enumerate(board):
-            for j, _ in enumerate(row):
-                square = board[i][j]
-                if square:
-                    print(square.values(), end=' ')
-                else:
-                    print("---", end=' ')
-            print()
-
-
-    # Compute utility of game state #
-    def compute_utility(self, board, move, player):
-        pass #TODO: implement
-
+    def display(self, state, as_tui=True, interactive=False):
+        if as_tui:
+            return tui_display(state, self if interactive else None)
+        else:
+            # Pieces displayed as three digit numbers with each digit representing color, kind, and direction, respectively
+            board = state.board[0]
+            for row in board:
+                for square in row:
+                    if square:
+                        print(square.values(), end=' ')
+                    else:
+                        print("---", end=' ')
+                print()
+         
 
     # Find all legal moves for a piece #
-    def get_legal_moves(self, state, square):
-        row, col = square
-        piece = state.board[row][col]
+    def get_legal_moves(self, i, j, board, moves, player_color):
+        square = i, j
+        piece = board[i][j]
 
-        if piece is None or piece.color != state.to_move:
+        if piece is None or piece.color != player_color:
             # There is no piece at the current square or the piece belongs to the opponent
             # and therefore cannot have any legal moves for the player
             return
-        if piece.kind == Kind.SPHINX:
+        if piece.kind is Kind.SPHINX:
             # Only possible move for Sphinx is to flip rotation
-            state.moves.append(Rotate(cur_sq=square, val=Rotation.FLIP))
+            moves.append(Rotate(cur_sq=square, val=Rotation.FLIP))
             return
 
         # Iterate over the relative indices of the 8 surrounding squares to check movement/swap possibilities
         for row_offset, col_offset in Khet.ordinals:    
-            new_row = row + row_offset
-            new_col = col + col_offset
-            if self.in_bounds(new_row, new_col) and SQUARES[new_row][new_col] != self.opponent_color(state.to_move):
+            new_i = i + row_offset
+            new_j = j + col_offset
+            if self.in_bounds(new_i, new_j) and utils.SQUARES[new_i][new_j] != self.opponent_color(player_color):
                 # Square is both on the board and not the opponent's color
-                if (adj_piece := state.board[new_row][new_col]) is not None:
+                if (adj_piece := board[new_i][new_j]) is not None:
                     # Adjacent square has a piece
-                    if piece.kind == Kind.SCARAB and adj_piece.kind == Kind.PYRAMID or adj_piece.kind == Kind.ANUBIS:
+                    if piece.kind is Kind.SCARAB and (adj_piece.kind is Kind.PYRAMID or adj_piece.kind is Kind.ANUBIS):
                         # Requirements for Scarab swap are satisfied
-                        state.moves.append(Swap(cur_sq=square, new_sq=(new_row, new_col)))
+                        moves.append(Swap(cur_sq=square, new_sq=(new_i, new_j)))
                 else:
                     # Adjacent square is empty indicating that it is a legal move
-                    state.moves.append(Move(cur_sq=square, new_sq=(new_row, new_col)))
+                    moves.append(Move(cur_sq=square, new_sq=(new_i, new_j)))
 
-        # Positive and negative rotation is always a legal move for every piece
-        state.moves.append(Rotate(cur_sq=square, val=Rotation.NEG))
-        state.moves.append(Rotate(cur_sq=square, val=Rotation.POS))
+        # Negative and positive rotation is always a legal move for every piece
+        moves.append(Rotate(cur_sq=square, val=Rotation.NEG))
+        moves.append(Rotate(cur_sq=square, val=Rotation.POS))
 
 
-    # Determine result of laser on game board #
-    def fire_laser(self, board, laser):
+    # Determine result of firing laser on game board #
+    def fire_laser(self, board, laser, log_result):
+        utility = 0
         i, j = laser
         direction = board[i][j].direction
 
@@ -248,27 +222,34 @@ class Khet(Game):
                 j += (2 - direction.value)
 
             if not self.in_bounds(i, j):
-                print('Laser out of bounds')
-                return
+                if log_result: 
+                    print('Laser out of bounds')
+                return utility
 
-            piece = board[i][j]
-            if piece is not None:
+            if (piece := board[i][j]) is not None:
                 face_hit = piece.resolve_hit(direction)
                 if face_hit is Face.DESTROY:
-                    print('Destroyed {} at ({}, {})'.format(piece, i, j))
+                    if log_result:
+                        print('Destroyed {} at ({}, {})'.format(piece, i, j))
+                    if piece.kind is Kind.PHARAOH:
+                        # Game is over on elimination of either player's Pharaoh
+                        utility = 1 if piece.color is Color.RED else -1
                     board[i][j] = None
-                    return
+                    return utility
 
                 elif face_hit is Face.REFLECT_POS: 
                     direction = Direction((direction.value + 1) % 4)
-                    print('Laser reflected {} off {} at ({}, {})'
-                        .format(direction.name, piece, i, j))
+                    if log_result:
+                        print('Laser reflected {} off {} at ({}, {})'
+                            .format(direction.name, piece, i, j))
 
                 elif face_hit is Face.REFLECT_NEG:
                     direction = Direction((direction.value - 1) % 4)
-                    print('Laser reflected {} off {} at ({}, {})'
-                        .format(direction.name, piece, i, j))
+                    if log_result:
+                        print('Laser reflected {} off {} at ({}, {})'
+                            .format(direction.name, piece, i, j))
 
                 else:
-                    print('Hit {} at ({}, {})'.format(piece, i, j))
-                    return
+                    if log_result:
+                        print('Hit {} at ({}, {})'.format(piece, i, j))
+                    return utility
