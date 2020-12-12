@@ -18,6 +18,15 @@ class Piece(object):
         Kind.SPHINX: (Face.ABSORB, Face.ABSORB, Face.ABSORB, Face.ABSORB)
     }
 
+    # Look-up table to tally player's points
+    POINTS = {
+        Kind.ANUBIS: 3,
+        Kind.PHARAOH: 100,
+        Kind.PYRAMID: 7,
+        Kind.SCARAB: 0,
+        Kind.SPHINX: 0
+    }
+
     # Each piece corresponds to the three digit number in a game layout.
     def __init__(self, color, kind, direction):
         self.color = color
@@ -84,6 +93,21 @@ class Khet(Game):
     def hash_game(board):
         return hash(tuple(map(tuple, board)))
 
+    # Calculate a player's points
+    @staticmethod
+    def tally_points(board, player_color):
+        points = 0
+        for i, row in enumerate(board):
+            for j, _ in enumerate(row):
+                piece = board[i][j]
+                if piece:
+                    if piece.color == player_color:
+                        points += Piece.POINTS[piece.kind]
+                    else:
+                        points -= Piece.POINTS[piece.kind]
+        return points
+        
+
     # Construct 2D Piece object array from provided layout #
     def __init__(self, layout=utils.Layout.CLASSIC):
         self.lasers = {Color.SILVER: (), Color.RED: ()}  # The sphinx locations for each player
@@ -100,13 +124,15 @@ class Khet(Game):
                     if kind is Kind.SPHINX:
                         self.lasers[color] = (i, j)
 
-        # Contains the current game board, its hash,
-        # and a mapping between game board hashes and the number of times they have been seen in a game
+        # Contains the current game board, its hash, and a mapping between game board hashes and the
+        # number of times they have been seen in a game, and a flag if the game is to be terminated
+        over = 0
         board_state = (
-            initial_board,                                  
-            initial_hash := self.hash_game(initial_board), 
-            Counter({initial_hash: 1})
-        ) 
+            initial_board,
+            initial_hash := self.hash_game(initial_board),
+            Counter({initial_hash: 1}),
+            over
+        )
         self.initial = GameState(to_move=Color.SILVER, utility=0, board=board_state, moves=[])
 
 
@@ -122,7 +148,7 @@ class Khet(Game):
     # Modify the game board according to the selected move #
     # log_result determines if the result of each laser fire is logged to stdout
     def result(self, state, action, log_result=False):
-        board, _, times_seen = state.board
+        board, _, times_seen, _ = state.board
         board = copy.deepcopy(board)           # Boards must be immutable for algorithms that reuse previous states
         times_seen = copy.deepcopy(times_seen) # Tracking of seen game boards must also be immutable to enforce distinct states
 
@@ -132,31 +158,32 @@ class Khet(Game):
             board[new_i][new_j] = board[i][j]
             board[i][j] = None      
         elif isinstance(action, Rotate):
-            board[i][j].rotate(action.val.value) #TODO ugly but it works
+            board[i][j].rotate(action.val.value)
         else:
             # action is Swap
             new_i, new_j = action.new_sq
             board[i][j], board[new_i][new_j] = board[new_i][new_j], board[i][j]  
 
-        utility = self.fire_laser(board, self.lasers[state.to_move], log_result)
-        board_hash = self.hash_game(board)
+        over = self.fire_laser(board, self.lasers[state.to_move], log_result)
+        utility = self.tally_points(board, state.to_move) #TODO this might be better off accepting
+        board_hash = self.hash_game(board)                # the game state rather than a board
         times_seen[board_hash] += 1
 
         return GameState(to_move=self.opponent_color(state.to_move),
                          utility=utility,
-                         board=(board, board_hash, times_seen), 
+                         board=(board, board_hash, times_seen, over), 
                          moves=[])
 
 
-    # Retrieve utility of a game state #
+    # Retrieve utility of a game state based on player's score #
     def utility(self, state, player):
         return state.utility if player is Color.SILVER else -state.utility
 
 
     # Determine if game has come to an end #
     def terminal_test(self, state):
-        _, board_hash, times_seen = state.board
-        return state.utility != 0 or times_seen[board_hash] == utils.DRAW_CONDITION
+        _, board_hash, times_seen, over = state.board
+        return over or times_seen[board_hash] == utils.DRAW_CONDITION
 
 
     # Display game state in human readable format #
@@ -211,10 +238,9 @@ class Khet(Game):
 
     # Determine result of firing laser on game board #
     def fire_laser(self, board, laser, log_result):
-        utility = 0
         i, j = laser
         direction = board[i][j].direction
-
+        over = 0
         while True:
             if direction is Direction.NORTH or direction is Direction.SOUTH:
                 i += (direction.value - 1)
@@ -224,18 +250,18 @@ class Khet(Game):
             if not self.in_bounds(i, j):
                 if log_result: 
                     print('Laser out of bounds')
-                return utility
+                return over
 
             if (piece := board[i][j]) is not None:
                 face_hit = piece.resolve_hit(direction)
                 if face_hit is Face.DESTROY:
                     if log_result:
                         print('Destroyed {} at ({}, {})'.format(piece, i, j))
-                    if piece.kind is Kind.PHARAOH:
+                    if piece.kind is Kind.PHARAOH: #TODO tally player's points
                         # Game is over on elimination of either player's Pharaoh
-                        utility = 1 if piece.color is Color.RED else -1
+                        over = 1
                     board[i][j] = None
-                    return utility
+                    return over
 
                 elif face_hit is Face.REFLECT_POS: 
                     direction = Direction((direction.value + 1) % 4)
@@ -252,4 +278,4 @@ class Khet(Game):
                 else:
                     if log_result:
                         print('Hit {} at ({}, {})'.format(piece, i, j))
-                    return utility
+                    return over
