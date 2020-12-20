@@ -32,7 +32,7 @@ def minmax_decision(state, game):
     return max(game.actions(state), key=lambda a: min_value(game.result(state, a)))
 
 
-def monte_carlo_tree_search(state, game, N=1000):
+def monte_carlo_tree_search(state, game, N=500):
     def select(n):
         """select a leaf node in the tree"""
         if n.children:
@@ -107,9 +107,15 @@ def mcts_player(game, state):
     print("\nShhhh I'm thinking.........")
     move = monte_carlo_tree_search(state, game)
     i, j = move.cur_sq
-    print(f'I chose: {state.board[0][i][j]} : {move} ')
+    print(f'I choose: {state.board[0][i][j]} : {move} ')
     return move
 
+def random_player(game, state):
+    print("\nUhhhh anything will do!")
+    move = random.choice(game.actions(state)
+    i, j = move.cur_sq
+    print(f'I choose: {state.board[0][i][j]} : {move} ')
+    return move
 
 # ______________________________________________________________________________
 # AIMA abstract class providing a model for all games

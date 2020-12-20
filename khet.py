@@ -106,7 +106,6 @@ class Khet(Game):
                     else:
                         points -= Piece.POINTS[piece.kind]
         return points
-        
 
     # Construct 2D Piece object array from provided layout #
     def __init__(self, layout=utils.Layout.CLASSIC):
@@ -145,6 +144,18 @@ class Khet(Game):
         return state.moves
 
 
+    # Retrieve utility of a game state based on player's score #
+    def utility(self, state, player):
+        return state.utility if player is Color.SILVER else -state.utility
+
+
+    # Returns a scored normalized utility (-1, 1)
+    def compute_utility(self, state):
+        board, _, _, _ = state.board
+        points = self.tally_points(board, state.to_move)
+        return points / 155.0 # magic number is maximum score for a player 
+
+
     # Modify the game board according to the selected move #
     # log_result determines if the result of each laser fire is logged to stdout
     def result(self, state, action, log_result=False):
@@ -165,19 +176,13 @@ class Khet(Game):
             board[i][j], board[new_i][new_j] = board[new_i][new_j], board[i][j]  
 
         over = self.fire_laser(board, self.lasers[state.to_move], log_result)
-        utility = self.tally_points(board, state.to_move) #TODO this might be better off accepting
-        board_hash = self.hash_game(board)                # the game state rather than a board
+        board_hash = self.hash_game(board)
         times_seen[board_hash] += 1
-
+        utility = self.compute_utility(state)
         return GameState(to_move=self.opponent_color(state.to_move),
                          utility=utility,
                          board=(board, board_hash, times_seen, over), 
                          moves=[])
-
-
-    # Retrieve utility of a game state based on player's score #
-    def utility(self, state, player):
-        return state.utility if player is Color.SILVER else -state.utility
 
 
     # Determine if game has come to an end #
@@ -257,7 +262,7 @@ class Khet(Game):
                 if face_hit is Face.DESTROY:
                     if log_result:
                         print('Destroyed {} at ({}, {})'.format(piece, i, j))
-                    if piece.kind is Kind.PHARAOH: #TODO tally player's points
+                    if piece.kind is Kind.PHARAOH:
                         # Game is over on elimination of either player's Pharaoh
                         over = 1
                     board[i][j] = None

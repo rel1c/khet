@@ -39,7 +39,8 @@ k = Khet()
 # test_times_seen(k)
 # print(monte_carlo_tree_search(k.initial, k))
 
-print(f'MCTS final utility: {k.play_game(mcts_player, tui_player)}')
+# print(f'MCTS final utility: {k.play_game(mcts_player, tui_player)}')
+print(f'MCTS final utility: {k.play_game(mcts_player, random_player)}')
 
 # k = Khet()
 # new_state = k.result(k.initial, k.actions(k.initial)[0])
