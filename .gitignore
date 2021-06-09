@@ -1,5 +1,13 @@
+# C++
+*.o
+*.out
+
 # Python
-__pycache__
+__pycache__/
+
+# project specific
+build/
+old/
 
 # vim specific
 *.swp
