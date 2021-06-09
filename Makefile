@@ -15,10 +15,14 @@ CXXFLAGS ?= $(INC_FLAGS) -Wall -Wextra
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 
-# c++ source
+# compile c++ source
 $(BUILD_DIR)/%.cc.o: %.cc
 	$(MKDIR_P) $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# build tests
+test:
+	make; cd tests; make
 
 .PHONY: clean
 

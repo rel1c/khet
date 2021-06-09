@@ -5,6 +5,8 @@
 #ifndef BITBOARD_H_
 #define BITBOARD_H_
 
+#include <cstdint>
+
 namespace khet {
 
 /**
@@ -15,6 +17,10 @@ namespace khet {
  */
 struct Bitboard {
   unsigned __int128 b;
+
+  uint8_t operator[](uint8_t i) const {
+    return (b >> i) & 1;
+}
 };
 
 } // namespace khet
