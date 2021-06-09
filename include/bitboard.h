@@ -18,9 +18,16 @@ namespace khet {
 struct Bitboard {
   unsigned __int128 b;
 
+  // Numerical assignment operator
+  Bitboard& operator=(const unsigned __int128 n) {
+    b = n;
+    return *this;
+  }
+
+  // Indexing operator, for element access
   uint8_t operator[](uint8_t i) const {
     return (b >> i) & 1;
-}
+  }
 };
 
 } // namespace khet
