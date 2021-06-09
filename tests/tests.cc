@@ -24,6 +24,12 @@ TEST_F(BitboardTest, IndexTest) {
   ASSERT_EQ(board_empty[127], 0);
   ASSERT_EQ(board_full[0], 1);
   ASSERT_EQ(board_full[127], 1);
+  board = 1;
+  ASSERT_EQ(board[0], 1);
+  for (uint8_t i = 0; i < 128; i++) {
+    ASSERT_EQ(board[i], 1);
+    board.b = board.b << 1;
+  }
 }
 
 } // namespace khet
