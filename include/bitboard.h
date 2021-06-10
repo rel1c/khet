@@ -5,28 +5,34 @@
 #ifndef BITBOARD_H_
 #define BITBOARD_H_
 
-#include <cstdint>
+#include <bitset>
+#include <cassert>
 
 namespace khet {
 
-/**
- * @struct Bitboard
- * @brief A bitboard for the game of Khet.
- * @details This struct embodies the details of various Khet pieces and their
- *          possible actions in a 128-bit word using bit flags.
- */
 struct Bitboard {
-  unsigned __int128 b;
+  std::bitset<128> bits;
 
-  // Numerical assignment operator
-  Bitboard& operator=(const unsigned __int128 n) {
-    b = n;
-    return *this;
+  // Access square of board
+  bool get(int x, int y) {
+    assert(0 <= x && x <= 7);
+    assert(0 <= y && y <= 9);
+    return bits[10*y + x];
   }
 
-  // Indexing operator, for element access
-  uint8_t operator[](uint8_t i) const {
-    return (b >> i) & 1;
+  // Assign square of board
+  void set(int x, int y, bool val) {
+    assert(0 <= x && x <= 7);
+    assert(0 <= y && y <= 9);
+    bits[10*x + y] = val;
+  }
+
+  // Set board to all true or false
+  void setAll(bool val) {
+    if (val)
+      bits.set();
+    else
+      bits.reset();
   }
 };
 

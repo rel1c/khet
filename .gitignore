@@ -19,8 +19,7 @@ CTestTestfile.cmake
 _deps
 
 # project specific
-build/
-old/
+build/**
 
 # vim specific
 *.swp

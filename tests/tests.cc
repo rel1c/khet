@@ -7,29 +7,35 @@ namespace khet {
 
 class BitboardTest : public::testing::Test {
 public:
-  void SetUp() {
-    board_empty = 0;
-    board_full = (__int128) (-1);
-  }
-
+  void SetUp() {}
   void TearDown() {}
 protected:
   Bitboard board;
-  Bitboard board_empty;
-  Bitboard board_full;
 };
 
-TEST_F(BitboardTest, IndexTest) {
-  ASSERT_EQ(board_empty[0], 0);
-  ASSERT_EQ(board_empty[127], 0);
-  ASSERT_EQ(board_full[0], 1);
-  ASSERT_EQ(board_full[127], 1);
-  board = 1;
-  ASSERT_EQ(board[0], 1);
-  for (uint8_t i = 0; i < 128; i++) {
-    ASSERT_EQ(board[i], 1);
-    board.b = board.b << 1;
+TEST_F(BitboardTest, BitsetTest) {
+  ASSERT_EQ(board.bits.size(), 128);
+  board.setAll(true);
+  ASSERT_EQ(board.bits.all(), true);
+  ASSERT_EQ(board.bits.count(), 128);
+  board.setAll(false);
+  ASSERT_EQ(board.bits.none(), true);
+  ASSERT_EQ(board.bits.count(), 0);
+}
+
+TEST_F(BitboardTest, ElementAccessTest) {
+  board.setAll(false);
+  ASSERT_EQ(board.get(0, 0), false);
+  board.bits[0] = true;
+  EXPECT_EQ(board.get(0, 0), true);
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 10; j++) {
+      board.set(i, j, true);
+      EXPECT_EQ(board.bits[10*i + j], true);
+    }
   }
+  board.bits >>= 80;
+  EXPECT_EQ(board.bits.count(), 0);
 }
 
 } // namespace khet
