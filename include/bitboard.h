@@ -43,18 +43,40 @@ struct Bitboard {
     return *this;
   }
 
-  // Access square of board
+  // Access square of board with Cartesian coordinates
   bool get(int x, int y) {
-    assert(0 <= x && x < ROW);
-    assert(0 <= y && y < COL);
-    return bits[COL*x + y];
+    assert(0 <= y && y < ROW);
+    assert(0 <= x && x < COL);
+    return bits[COL*y + x];
   }
 
-  // Assign square of board
+  // Assign square of board with Cartesian coordinates
   void set(int x, int y, bool val) {
-    assert(0 <= x && x < ROW);
-    assert(0 <= y && y < COL);
-    bits[COL*x + y] = val;
+    assert(0 <= y && y < ROW);
+    assert(0 <= x && x < COL);
+    bits[COL*y + x] = val;
+  }
+
+  // Access square of board with alphanumeric coordinates
+  bool get(char cha, char chn) {
+    assert(isalpha(cha));
+    assert(isdigit(chn));
+    int x = cha - 97;
+    int y = chn - 49;
+    assert(0 <= y && y < ROW);
+    assert(0 <= x && x < COL);
+    return bits[COL*y + x];
+  }
+
+  // Assign square of board with alphanumeric coordinates
+  void set(char cha, char chn, bool val) {
+    assert(isalpha(cha));
+    assert(isdigit(chn));
+    int x = cha - 97;
+    int y = chn - 49;
+    assert(0 <= y && y < ROW);
+    assert(0 <= x && x < COL);
+    bits[COL*y + x] = val;
   }
 
   // Set board to all true or false

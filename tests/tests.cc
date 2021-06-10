@@ -7,7 +7,7 @@ namespace khet {
 
 class BitboardTest : public::testing::Test {
 public:
-  void SetUp() {}
+  void SetUp() { board.bits.reset(); }
   void TearDown() {}
 protected:
   Bitboard board;
@@ -23,22 +23,6 @@ TEST_F(BitboardTest, BitsetTest) {
   ASSERT_EQ(board.bits.count(), 0);
 }
 
-TEST_F(BitboardTest, ElementAccessTest) {
-  board.setAll(false);
-  ASSERT_EQ(board.get(0, 0), false);
-  board.bits[0] = true;
-  EXPECT_EQ(board.get(0, 0), true);
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 10; j++) {
-      board.set(i, j, true);
-      EXPECT_EQ(board.bits[10*i + j], true);
-    }
-  }
-  EXPECT_EQ(board.bits.count(), 80);
-  board.bits >>= 80;
-  EXPECT_EQ(board.bits.count(), 0);
-}
-
 TEST_F(BitboardTest, StandardOutTest) {
   board = Bitboard(std::bitset<128>(0x00ff00ff00ff00ff) << 64 
                  | std::bitset<128>(0x00ff00ff00ff00ff));
@@ -50,7 +34,15 @@ TEST_F(BitboardTest, StandardOutTest) {
                        "00000000111111110000000011111111"
                        "00000000111111110000000011111111"
                        "00000000111111110000000011111111";
-  EXPECT_EQ(expect, output) << "Proper conversion to string";
+  ASSERT_EQ(expect, output) << "Proper conversion to string";
+}
+
+TEST_F(BitboardTest, ElementAccessTest) {
+  board.set(9, 7, true);
+  EXPECT_EQ(board.bits[79], true) << "Cartesian to bitwise mapping";
+  board.set('e', '4', true);
+  EXPECT_EQ(board.bits[34], true) << "Alphanumeric to bitwise mapping";
+  EXPECT_EQ(board.get(4, 3), true) << "Alphanumeric to Cartesian mapping";
 }
 
 TEST_F(BitboardTest, DisplayTest) {
