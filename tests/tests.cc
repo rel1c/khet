@@ -34,8 +34,37 @@ TEST_F(BitboardTest, ElementAccessTest) {
       EXPECT_EQ(board.bits[10*i + j], true);
     }
   }
+  EXPECT_EQ(board.bits.count(), 80);
   board.bits >>= 80;
   EXPECT_EQ(board.bits.count(), 0);
+}
+
+TEST_F(BitboardTest, StandardOutTest) {
+  board = Bitboard(std::bitset<128>(0x00ff00ff00ff00ff) << 64 
+                 | std::bitset<128>(0x00ff00ff00ff00ff));
+  testing::internal::CaptureStdout();
+  std::cout << board;
+  std::string output = testing::internal::GetCapturedStdout();
+  ASSERT_EQ(output.length(), 128) << "Correct dimensions";
+  std::string expect = "00000000111111110000000011111111"
+                       "00000000111111110000000011111111"
+                       "00000000111111110000000011111111"
+                       "00000000111111110000000011111111";
+  EXPECT_EQ(expect, output) << "Proper conversion to string";
+}
+
+TEST_F(BitboardTest, DisplayTest) {
+  board = Bitboard(std::bitset<128>(0x0000000000003fc7) << 64 
+                 | std::bitset<128>(0xf0fc1f03c0700c01));
+  testing::internal::CaptureStdout();
+  board.display();
+  std::string output = testing::internal::GetCapturedStdout();
+  ASSERT_EQ(output.length(), 88) << "Correct dimensions";
+  std::string expect = "1111111100\n1111111000\n"
+                       "1111110000\n1111100000\n"
+                       "1111000000\n1110000000\n"
+                       "1100000000\n1000000000\n";
+  EXPECT_EQ(expect, output) << "Properly displayed as gameboard";
 }
 
 } // namespace khet
