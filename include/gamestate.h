@@ -16,6 +16,12 @@ namespace khet {
  */
 class Gamestate {
 public:
+  enum Configuration { CLASSIC, DYNASTY, IMHOTEP };
+  static unsigned int turn;
+  static const Bitboard squares_red;
+  static const Bitboard squares_silver;
+  static const Bitboard pieces_sphinx;
+
   Bitboard allPieces();
   Bitboard redAnubis();
   Bitboard redPharaoh();
@@ -31,10 +37,6 @@ public:
   bool isTurnRed() { return !silver_to_play; }
   bool isTurnSilver() { return silver_to_play; }
 
-  static unsigned int turn;
-  static const Bitboard squares_red;
-  static const Bitboard squares_silver;
-  static const Bitboard pieces_sphinx;
 private:
   Bitboard pieces_red;
   Bitboard pieces_silver;

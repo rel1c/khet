@@ -1,9 +1,14 @@
-#include <cstdint>
-#include <iostream>
-#include <gtest/gtest.h>
 #include "bitboard.h"
+#include "gamestate.h"
+
+#include <gtest/gtest.h>
+
+#include <iostream>
+#include <cstdint>
 
 namespace khet {
+
+/// Bitboard Tests /////////////////////////////////////////////////////////////
 
 class BitboardTest : public::testing::Test {
 public:
@@ -59,4 +64,39 @@ TEST_F(BitboardTest, DisplayTest) {
   EXPECT_EQ(expect, output) << "Properly displayed as gameboard";
 }
 
+/// Gamestate Tests ////////////////////////////////////////////////////////////
+
+class GamestateTest : public::testing::Test {
+public:
+  void SetUp() {}
+  void TearDown() {}
+protected:
+  Gamestate gamestate;
+};
+/*
+TEST_F(GamestateTest, BoardConstantsTest) {
+  testing::internal::CaptureStdout();
+  Gamestate::squares_red.display();
+  std::string output = testing::internal::GetCapturedStdout();
+  std::string expect = "1000000010\n1000000000\n"
+                       "1000000000\n1000000000\n"
+                       "1000000000\n1000000000\n"
+                       "1000000000\n1000000010\n";
+  EXPECT_EQ(expect, output) << "Red board squares";
+  Gamestate::squares_silver.display();
+  output = testing::internal::GetCapturedStdout();
+  expect = "0100000001\n0000000001\n"
+           "0000000001\n0000000001\n"
+           "0000000001\n0000000001\n"
+           "0000000001\n0100000001\n";
+  EXPECT_EQ(expect, output) << "Silver board squares";
+  Gamestate::pieces_sphinx.display();
+  output = testing::internal::GetCapturedStdout();
+  expect = "1000000000\n0000000000\n"
+           "0000000000\n0000000000\n"
+           "0000000000\n0000000000\n"
+           "0000000000\n0000000001\n";
+  EXPECT_EQ(expect, output) << "Sphinx board squares";
+}
+*/
 } // namespace khet

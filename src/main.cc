@@ -1,5 +1,5 @@
 #include "gamestate.h"
-#include "bitboard.h" //
+
 #include <iostream>
 
 using namespace khet;
@@ -8,5 +8,6 @@ using namespace khet;
 int main() {
   Gamestate g;
   std::cout << "Gamestate size: " << sizeof(g) << std::endl;
+  //std::cout << Gamestate::squares_red;
   return 0;
 }

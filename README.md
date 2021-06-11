@@ -150,3 +150,9 @@ Bitstring Mapping
   10  11  12  13  14  15  16  17  18  19
   00  01  02  03  04  05  06  07  08  09
 ```
+
+## Notes
+
+Why not `typedef` std::bitwise<128> to Bitboard? Make constants for 0x000...
+and 0xfff... Instead of a struct there could be a class of functions that
+operate on the Bitboard type, like setAll() etc.

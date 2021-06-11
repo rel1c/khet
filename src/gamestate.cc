@@ -5,9 +5,8 @@
 #include "gamestate.h"
 
 namespace khet {
-
   Bitboard Gamestate::allPieces() {
-    return pieces_red | pieces_silver;
+    return pieces_red.bits | pieces_silver.bits;
   }
 
   Bitboard Gamestate::redAnubis() {

@@ -6,8 +6,8 @@
 #define BITBOARD_H_
 
 #include <bitset>
-#include <cassert>
 #include <iostream>
+#include <cassert>
 
 namespace khet {
 
@@ -28,7 +28,7 @@ struct Bitboard {
   }
 
   // Bitstring constructor
-  Bitboard(std::string bitstr) {
+  Bitboard(std::string& bitstr) {
     bits = std::bitset<128>(bitstr);
   }
 
@@ -87,6 +87,12 @@ struct Bitboard {
       bits.reset();
   }
 
+  // Logical OR operator overload
+  Bitboard& operator|(const Bitboard& b) {
+    bits |= b.bits;
+    return *this;
+  }
+
   // Send bitboard to standard out
   friend std::ostream& operator<<(std::ostream& os, const Bitboard& b) {
     std::string str = b.bits.to_string();
@@ -94,7 +100,7 @@ struct Bitboard {
   }
 
   // Pretty printer for bitboard
-  void display() {
+  void display() const {
     for (int i = ROW-1; i >= 0; i--) {
       for (int j = 0; j < COL; j++) {
         char ch = (bits[i*COL + j]) ? '1' : '0';
