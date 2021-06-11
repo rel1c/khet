@@ -16,26 +16,33 @@ namespace khet {
  */
 class Gamestate {
 public:
-  enum Configuration { CLASSIC, DYNASTY, IMHOTEP };
-  static unsigned int turn;
+  enum Layout { CLASSIC, DYNASTY, IMHOTEP };
   static const Bitboard squares_red;
   static const Bitboard squares_silver;
   static const Bitboard pieces_sphinx;
 
-  Bitboard allPieces();
-  Bitboard redAnubis();
-  Bitboard redPharaoh();
-  Bitboard redPyramid();
-  Bitboard redScarab();
-  Bitboard silverAnubis();
-  Bitboard silverPharaoh();
-  Bitboard silverPyramid();
-  Bitboard silverScarab();
+  // Default constructor
+  Gamestate(Layout layout = CLASSIC) {
+    switch (layout) {
+      case CLASSIC:;
+      case DYNASTY:;
+      case IMHOTEP:;
+    }
+  }
 
-  void incrementTurn() { turn++; }
-  void setNextPlayer() { silver_to_play = !silver_to_play; }
-  bool isTurnRed() { return !silver_to_play; }
-  bool isTurnSilver() { return silver_to_play; }
+  Bitboard AllPieces();
+  Bitboard RedAnubis();
+  Bitboard RedPharaoh();
+  Bitboard RedPyramid();
+  Bitboard RedScarab();
+  Bitboard SilverAnubis();
+  Bitboard SilverPharaoh();
+  Bitboard SilverPyramid();
+  Bitboard SilverScarab();
+
+  void SetNextPlayer() { silver_to_play = !silver_to_play; }
+  bool IsTurnRed() { return !silver_to_play; }
+  bool IsTurnSilver() { return silver_to_play; }
 
 private:
   Bitboard pieces_red;

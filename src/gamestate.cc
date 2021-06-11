@@ -10,39 +10,39 @@ namespace khet {
   const Bitboard Gamestate::squares_silver = Bitboard(0);
   const Bitboard Gamestate::pieces_sphinx = Bitboard(0);
 
-  Bitboard Gamestate::allPieces() {
+  Bitboard Gamestate::AllPieces() {
     return pieces_red | pieces_silver;
   }
 
-  Bitboard Gamestate::redAnubis() {
+  Bitboard Gamestate::RedAnubis() {
     return pieces_red | pieces_anubis;
   }
 
-  Bitboard Gamestate::redPharaoh() {
+  Bitboard Gamestate::RedPharaoh() {
     return pieces_red | pieces_pharaoh;
   }
 
-  Bitboard Gamestate::redPyramid() {
+  Bitboard Gamestate::RedPyramid() {
     return pieces_red | pieces_pyramid;
   }
 
-  Bitboard Gamestate::redScarab() {
+  Bitboard Gamestate::RedScarab() {
     return pieces_red | pieces_scarab;
   }
 
-  Bitboard Gamestate::silverAnubis() {
+  Bitboard Gamestate::SilverAnubis() {
     return pieces_silver | pieces_anubis;
   }
 
-  Bitboard Gamestate::silverPharaoh() {
+  Bitboard Gamestate::SilverPharaoh() {
     return pieces_silver | pieces_pharaoh;
   }
 
-  Bitboard Gamestate::silverPyramid() {
+  Bitboard Gamestate::SilverPyramid() {
     return pieces_silver | pieces_pyramid;
   }
 
-  Bitboard Gamestate::silverScarab() {
+  Bitboard Gamestate::SilverScarab() {
     return pieces_silver | pieces_scarab;
   }
 

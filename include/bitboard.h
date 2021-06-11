@@ -18,25 +18,25 @@ typedef std::bitset<128> Bitboard;
 
 class Bitlogic {
 public:
-  static const Bitboard boardEmpty;
-  static const Bitboard boardFull;
+  static const Bitboard board_empty;
+  static const Bitboard board_full;
 
     // Access square of board with Cartesian coordinates
-  static bool get(Bitboard board, int x, int y) {
+  static bool Get(Bitboard board, int x, int y) {
     assert(0 <= y && y < ROWS);
     assert(0 <= x && x < COLS);
     return board[COLS*y + x];
   }
 
   // Assign square of board with Cartesian coordinates
-  static void set(Bitboard board, int x, int y, bool val) {
+  static void Set(Bitboard board, int x, int y, bool val) {
     assert(0 <= y && y < ROWS);
     assert(0 <= x && x < COLS);
     board[COLS*y + x] = val;
   }
 
   // Access square of board with alphanumeric coordinates
-  static bool get(Bitboard board, char cha, char chn) {
+  static bool Get(Bitboard board, char cha, char chn) {
     assert(isalpha(cha));
     assert(isdigit(chn));
     int x = cha - 97;
@@ -47,7 +47,7 @@ public:
   }
 
   // Assign square of board with alphanumeric coordinates
-  static void set(Bitboard board, char cha, char chn, bool val) {
+  static void Set(Bitboard board, char cha, char chn, bool val) {
     assert(isalpha(cha));
     assert(isdigit(chn));
     int x = cha - 97;
@@ -58,7 +58,7 @@ public:
   }
 
   // Set board to all true or false
-  static void setAll(Bitboard board, bool val) {
+  static void SetAll(Bitboard board, bool val) {
     if (val)
       board.set();
     else
@@ -66,7 +66,7 @@ public:
   }
 
   // Pretty printer for bitboard
-  static void display(Bitboard board) {
+  static void Display(Bitboard board) {
     for (int i = ROWS-1; i >= 0; i--) {
       std::cout << i+1 << " ";
       for (int j = 0; j < COLS; j++) {
