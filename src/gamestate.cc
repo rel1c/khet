@@ -5,8 +5,13 @@
 #include "gamestate.h"
 
 namespace khet {
+
+  const Bitboard Gamestate::squares_red = Bitboard(0);
+  const Bitboard Gamestate::squares_silver = Bitboard(0);
+  const Bitboard Gamestate::pieces_sphinx = Bitboard(0);
+
   Bitboard Gamestate::allPieces() {
-    return pieces_red.bits | pieces_silver.bits;
+    return pieces_red | pieces_silver;
   }
 
   Bitboard Gamestate::redAnubis() {
