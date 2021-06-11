@@ -29,11 +29,12 @@ TEST_F(BitboardTest, BitsetTest) {
 }
 
 TEST_F(BitboardTest, ElementAccessTest) {
-  Bitlogic::set(board, 9, 7, true);
-  EXPECT_EQ(board[79], true) << "Cartesian to bitwise mapping";
-  Bitlogic::set(board, 'e', '4', true);
-  EXPECT_EQ(board[34], true) << "Alphanumeric to bitwise mapping";
-  EXPECT_EQ(Bitlogic::get(board, 4, 3), true) << "Alphanumeric to Cartesian mapping";
+  board[32] = true;
+  board[75] = true;
+  EXPECT_EQ(Bitlogic::get(board, 2, 3), true) << "Cartesian mapping";
+  EXPECT_EQ(Bitlogic::get(board, 5, 7), true) << "Cartesian mapping";
+  EXPECT_EQ(Bitlogic::get(board, 'c', '4'), true) << "Alphanumeric mapping";
+  EXPECT_EQ(Bitlogic::get(board, 'f', '8'), true) << "Alphanumeric mapping";
 }
 
 TEST_F(BitboardTest, DisplayTest) {
