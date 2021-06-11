@@ -9,7 +9,12 @@ set(PROJ_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 set(PROJ_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(PROJ_TEST_DIR "${CMAKE_SOURCE_DIR}/tests")
 
-add_executable(khet ${PROJ_SOURCE_DIR}/main.cc)
+file(GLOB PROJ_SOURCES
+  ${CMAKE_SOURCE_DIR}/include/*.h
+  ${CMAKE_SOURCE_DIR}/src/*.cc
+)
+
+add_executable(khet ${PROJ_SOURCES})
 
 include_directories(${PROJ_INCLUDE_DIR})
 
