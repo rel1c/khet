@@ -21,20 +21,20 @@ protected:
 TEST_F(BitboardTest, BitsetTest) {
   ASSERT_EQ(board.size(), 128) << "128b set size";
   board.set();
-  ASSERT_EQ(board.all(), true);
+  ASSERT_TRUE(board.all());
   ASSERT_EQ(board.count(), 128) << "Bits set to true";
   board.reset();
-  ASSERT_EQ(board.none(), true);
+  ASSERT_TRUE(board.none());
   ASSERT_EQ(board.count(), 0) << "Bits set to false";
 }
 
 TEST_F(BitboardTest, ElementAccessTest) {
   board[32] = true;
   board[75] = true;
-  EXPECT_EQ(Bitlogic::Get(board, 2, 3), true) << "Cartesian mapping";
-  EXPECT_EQ(Bitlogic::Get(board, 5, 7), true) << "Cartesian mapping";
-  EXPECT_EQ(Bitlogic::Get(board, 'c', '4'), true) << "Alphanumeric mapping";
-  EXPECT_EQ(Bitlogic::Get(board, 'f', '8'), true) << "Alphanumeric mapping";
+  EXPECT_TRUE(Bitlogic::Get(board, 2, 3)) << "Cartesian mapping";
+  EXPECT_TRUE(Bitlogic::Get(board, 5, 7)) << "Cartesian mapping";
+  EXPECT_TRUE(Bitlogic::Get(board, 'c', '4')) << "Alphanumeric mapping";
+  EXPECT_TRUE(Bitlogic::Get(board, 'f', '8')) << "Alphanumeric mapping";
 }
 
 TEST_F(BitboardTest, DisplayTest) {
