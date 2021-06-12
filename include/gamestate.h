@@ -17,9 +17,6 @@ namespace khet {
 class Gamestate {
 public:
   enum Layout { CLASSIC, DYNASTY, IMHOTEP };
-  static const Bitboard squares_red;
-  static const Bitboard squares_silver;
-  static const Bitboard pieces_sphinx;
 
   // Default constructor
   Gamestate(Layout layout = CLASSIC) {
@@ -35,16 +32,23 @@ public:
   Bitboard RedPharaoh();
   Bitboard RedPyramid();
   Bitboard RedScarab();
+  Bitboard RedSphinx();
+  Bitboard RedSquares();
   Bitboard SilverAnubis();
   Bitboard SilverPharaoh();
   Bitboard SilverPyramid();
   Bitboard SilverScarab();
+  Bitboard SilverSphinx();
+  Bitboard SilverSquares();
 
   void SetNextPlayer() { silver_to_play = !silver_to_play; }
   bool IsTurnRed() { return !silver_to_play; }
   bool IsTurnSilver() { return silver_to_play; }
 
 private:
+  static const Bitboard squares_red;
+  static const Bitboard squares_silver;
+  Bitboard pieces_sphinx;
   Bitboard pieces_red;
   Bitboard pieces_silver;
   Bitboard pieces_anubis;

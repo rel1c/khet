@@ -59,4 +59,22 @@ protected:
   Gamestate gamestate;
 };
 
+TEST_F(GamestateTest, ConstantBoardTest) {
+  std::string expect, output;
+  testing::internal::CaptureStdout();
+  Bitlogic::Display(gamestate.RedSquares());
+  output = testing::internal::GetCapturedStdout();
+  expect = "8 1000000010\n7 1000000000\n6 1000000000\n"
+           "5 1000000000\n4 1000000000\n3 1000000000\n"
+           "2 1000000000\n1 1000000010\n  abcdefghij\n";
+  EXPECT_EQ(expect, output) << "Red board squares";
+  testing::internal::CaptureStdout();
+  Bitlogic::Display(gamestate.SilverSquares());
+  output = testing::internal::GetCapturedStdout();
+  expect = "8 0100000001\n7 0000000001\n6 0000000001\n"
+           "5 0000000001\n4 0000000001\n3 0000000001\n"
+           "2 0000000001\n1 0100000001\n  abcdefghij\n";
+  EXPECT_EQ(expect, output) << "Silver board squares";
+}
+
 } // namespace khet
