@@ -20,6 +20,7 @@ _deps
 
 # project specific
 build/**
+edit.sh
 
 # vim specific
 *.swp
