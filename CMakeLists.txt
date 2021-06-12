@@ -14,7 +14,9 @@ file(GLOB PROJ_SOURCES
   ${CMAKE_SOURCE_DIR}/src/*.cc
 )
 
-add_executable(khet ${PROJ_SOURCES})
+add_library(khet_lib ${PROJ_SOURCES})
+add_executable(khet ${PROJ_SOURCE_DIR}/main.cc)
+target_link_libraries(khet khet_lib)
 
 include_directories(${PROJ_INCLUDE_DIR})
 
@@ -33,7 +35,9 @@ add_executable(tests ${PROJ_TEST_DIR}/tests.cc)
 
 target_link_libraries(
   tests
+  gtest
   gtest_main
+  khet_lib
 )
 
 include(GoogleTest)
