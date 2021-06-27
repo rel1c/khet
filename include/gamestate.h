@@ -21,9 +21,9 @@ public:
   // Default constructor
   Gamestate(Layout layout = CLASSIC) {
     switch (layout) {
-      case CLASSIC:;
-      case DYNASTY:;
-      case IMHOTEP:;
+      case CLASSIC:; //TODO
+      case DYNASTY:; //TODO
+      case IMHOTEP:; //TODO
     }
   }
 

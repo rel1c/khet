@@ -6,22 +6,26 @@
 
 namespace khet {
 
-  const Bitboard Gamestate::squares_red = Bitboard("0100000001"
-                                                   "0000000001"
-                                                   "0000000001"
-                                                   "0000000001"
-                                                   "0000000001"
-                                                   "0000000001"
-                                                   "0000000001"
-                                                   "0100000001");
-  const Bitboard Gamestate::squares_silver = Bitboard("1000000010"
-                                                      "1000000000"
-                                                      "1000000000"
-                                                      "1000000000"
-                                                      "1000000000"
-                                                      "1000000000"
-                                                      "1000000000"
-                                                      "1000000010");
+  const Bitboard Gamestate::squares_red = Bitboard(
+    "0100000001"
+    "0000000001"
+    "0000000001"
+    "0000000001"
+    "0000000001"
+    "0000000001"
+    "0000000001"
+    "0100000001"
+  );
+  const Bitboard Gamestate::squares_silver = Bitboard(
+    "1000000010"
+    "1000000000"
+    "1000000000"
+    "1000000000"
+    "1000000000"
+    "1000000000"
+    "1000000000"
+    "1000000010"
+  );
 
   Bitboard Gamestate::AllPieces() {
     return pieces_red | pieces_silver;

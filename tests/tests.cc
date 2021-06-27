@@ -49,6 +49,22 @@ TEST_F(BitboardTest, DisplayTest) {
   EXPECT_EQ(expect, output) << "Properly displayed as gameboard";
 }
 
+TEST_F(BitboardTest, CreateBoardTest) {
+  std::vector<std::string> coords = {"b1", "i1", "b8", "i8"};
+  board = Bitlogic::CreateBoard(coords);
+  Bitboard expect = Bitboard(
+    "0100000010"
+    "0000000000"
+    "0000000000"
+    "0000000000"
+    "0000000000"
+    "0000000000"
+    "0000000000"
+    "0100000010"
+  );
+  EXPECT_EQ(board, expect);
+}
+
 /// Gamestate Tests ////////////////////////////////////////////////////////////
 
 class GamestateTest : public::testing::Test {
