@@ -67,6 +67,9 @@ public:
       board.reset();
   }
 
+  // Create board for a vector of coordinates
+  static Bitboard CreateBoard(std::vector<std::string> coords);
+
   // Pretty printer for bitboard
   static void Display(Bitboard board);
 };
