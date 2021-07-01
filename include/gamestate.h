@@ -33,13 +33,14 @@ public:
   Bitboard RedPyramid();
   Bitboard RedScarab();
   Bitboard RedSphinx();
-  Bitboard RedSquares();
   Bitboard SilverAnubis();
   Bitboard SilverPharaoh();
   Bitboard SilverPyramid();
   Bitboard SilverScarab();
   Bitboard SilverSphinx();
-  Bitboard SilverSquares();
+
+  const Bitboard& SilverSquares() const;
+  const Bitboard& RedSquares() const;
 
   void SetNextPlayer() { silver_to_play = !silver_to_play; }
   bool IsTurnRed() { return !silver_to_play; }

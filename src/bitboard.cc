@@ -18,7 +18,7 @@ Bitboard Bitlogic::CreateBoard(std::vector<std::string> coords) {
   return board;
 }
 
-void Bitlogic::Display(Bitboard board) {
+void Bitlogic::Display(const Bitboard& board) {
   for (int i = ROWS-1; i >= 0; i--) {
     std::cout << i+1 << " ";
     for (int j = 0; j < COLS; j++) {

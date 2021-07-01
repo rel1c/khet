@@ -71,7 +71,7 @@ public:
   static Bitboard CreateBoard(std::vector<std::string> coords);
 
   // Pretty printer for bitboard
-  static void Display(Bitboard board);
+  static void Display(const Bitboard& board);
 };
 
 } // namespace khet
