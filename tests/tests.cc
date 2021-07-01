@@ -1,5 +1,6 @@
 #include "bitboard.h"
 #include "gamestate.h"
+#include "game.h"
 
 #include <gtest/gtest.h>
 
@@ -91,6 +92,22 @@ TEST_F(GamestateTest, ConstantBoardTest) {
            "5 0000000001\n4 0000000001\n3 0000000001\n"
            "2 0000000001\n1 0100000001\n  abcdefghij\n";
   EXPECT_EQ(expect, output) << "Silver board squares";
+}
+
+/// Game Tests /////////////////////////////////////////////////////////////////
+
+class GameTest : public::testing::Test {
+public:
+  void SetUp() {}
+  void TearDown() {}
+protected:
+  Game game;
+  Bitboard board;
+};
+
+TEST_F(GameTest, TranslationTest) {
+  board = Bitboard(0b00111000000010100000); // coordinate (g,1) set
+  EXPECT_EQ(board, game.GetTranslation(6));
 }
 
 } // namespace khet
