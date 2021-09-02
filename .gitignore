@@ -20,7 +20,9 @@ _deps
 
 # project specific
 build/**
-edit.sh
+lib/*
+*.a
+*.cmake
 
 # vim specific
 *.swp
