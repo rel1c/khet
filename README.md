@@ -2,9 +2,9 @@
 
 ## Requirements
 
-CMake 3.19.7
-GNU Make 4.3
-g++ (GCC) 10.3.1
+* CMake 3.19.7
+* GNU Make 4.3
+* g++ (GCC) 10.3.1
 
 ## Setup
 
