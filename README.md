@@ -21,7 +21,7 @@ project once in a while, and I could use all the help I can get. The primary
 goal is to achieve a state similar to where it was left off, as can be seen in
 the old branches using Python and AIMA code from Peter Norvig.
 
-Too build an efficient engine I am borrowing from the chess AI playbook and
+To build an efficient engine I am borrowing from the chess AI playbook and
 using bit-boards to hold game state and execute game logic. The situation for
 Khet is not as serendipitous as it is for chess. In chess there are 64 squares
 on the board which conveniently can be represented by a 64-bit word. Khet has
