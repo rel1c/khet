@@ -1,78 +1,25 @@
-/**
- * @file bitboard.h
- */
-
 #ifndef BITBOARD_H_
 #define BITBOARD_H_
 
+#include <array>
 #include <bitset>
-#include <iostream>
-#include <cassert>
-#include <string>
-#include <vector>
 
 namespace khet {
 
-const unsigned int ROWS = 8;
-const unsigned int COLS = 10;
+using bitboard = std::bitset <128>;
 
-typedef std::bitset<128> Bitboard;
-
-class Bitlogic {
-public:
-  static const Bitboard board_empty;
-  static const Bitboard board_full;
-
-  // Access square of board with Cartesian coordinates
-  static bool Get(Bitboard& board, int x, int y) {
-    assert(0 <= y && y < ROWS);
-    assert(0 <= x && x < COLS);
-    return board[COLS*y + x];
-  }
-
-  // Assign square of board with Cartesian coordinates
-  static void Set(Bitboard& board, int x, int y, bool val) {
-    assert(0 <= y && y < ROWS);
-    assert(0 <= x && x < COLS);
-    board[COLS*y + x] = val;
-  }
-
-  // Access square of board with alphanumeric coordinates
-  static bool Get(Bitboard& board, char cha, char chn) {
-    assert(isalpha(cha));
-    assert(isdigit(chn));
-    int x = cha - 97;
-    int y = chn - 49;
-    assert(0 <= y && y < ROWS);
-    assert(0 <= x && x < COLS);
-    return board[COLS*y + x];
-  }
-
-  // Assign square of board with alphanumeric coordinates
-  static void Set(Bitboard& board, char cha, char chn, bool val) {
-    assert(isalpha(cha));
-    assert(isdigit(chn));
-    int x = cha - 97;
-    int y = chn - 49;
-    assert(0 <= y && y < ROWS);
-    assert(0 <= x && x < COLS);
-    board[COLS*y + x] = val;
-  }
-
-  // Set board to all true or false
-  static void SetAll(Bitboard& board, bool val) {
-    if (val)
-      board.set();
-    else
-      board.reset();
-  }
-
-  // Create board for a vector of coordinates
-  static Bitboard CreateBoard(std::vector<std::string> coords);
-
-  // Pretty printer for bitboard
-  static void Display(const Bitboard& board);
+enum square {
+  a1, b1, c1, d1, e1, f1, g1, h1, i1, j1,
+  a2, b2, c2, d2, e2, f2, g2, h2, i2, j2,
+  a3, b3, c3, d3, e3, f3, g3, h3, i3, j3,
+  a4, b4, c4, d4, e4, f4, g4, h4, i4, j4,
+  a5, b5, c5, d5, e5, f5, g5, h5, i5, j5,
+  a6, b6, c6, d6, e6, f6, g6, h6, i6, j6,
+  a7, b7, c7, d7, e7, f7, g7, h7, i7, j7,
+  a8, b8, c8, d8, e8, f8, g8, h8, i8, j8,
 };
+extern const std::array <bitboard,10> files;
+extern const std::array <bitboard,8> ranks;
 
 } // namespace khet
 

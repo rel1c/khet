@@ -14,12 +14,12 @@ To build the main Khet program and testing suite run the `init.sh` script in
 the root directory. To undo and clean-up, simply remove the created `build/`
 directory.
 
-## Plan
+## Goal
 
 The following is a structure to guide further development. I only look at this
 project once in a while, and I could use all the help I can get. The primary
-goal is to achieve a state similar to where it was left off, as can be seen in
-the old branches using Python and AIMA code from Peter Norvig.
+goal is to develop a program that executes a game of Khet 2.0 and employs a
+challenging AI agent.
 
 To build an efficient engine I am borrowing from the chess AI playbook and
 using bit-boards to hold game state and execute game logic. The situation for
@@ -33,30 +33,14 @@ something better comes my way).
 
 For the 128-bit bit-boards I am using the
 (bitset)[https://www.cplusplus.com/reference/bitset/bitset/] class from the
-standard library. It may turn out that an array of 128 bools is faster, but
+C++ standard library. It may turn out that an array of 128 bools is faster, but
 it's arguably larger given the word size of each bool. This becomes an issue
 when storing trees of game states in memory. In the previous implementation
 it was not uncommon to encounter 1000-depth decision trees. That was likely
-excessive, but nonetheless memory should be spared where it can. Bitwise logic
-is not that difficult compared to that of arrays, anyway.
+excessive, but nonetheless memory should be spared where it can.
 
 The goal of this project does not include a nice graphical representation of
 the game, but I am entertained by the prospect. Rather I would like to serve
 an API such that a GUI could take advantage of the engine, be it 2D, 3D or in
 the terminal. For usability I intend to develop a rudimentary ASCII 
 implementation which uses an algebraic notation similar to that of chess.
-
-- [ ] Board configuration
-- [ ] Move logic
-  - [ ] Scarab piece swap
-- [ ] Laser logic
-- [ ] Game execution
-  - [ ] Output/input with algebraic notation
-  - [ ] Scoring
-  - [ ] Turn limit option
-  - [ ] Enforce repeated state rule
-- [ ] Game state tree 
-  - [ ] Hash game state
-- [ ] AI agent
-  - [ ] Min/max algorithm
-  - [ ] Alpha/beta pruning
