@@ -3,6 +3,7 @@
 
 #include <array>
 #include <bitset>
+#include <vector>
 
 namespace khet {
 
@@ -18,8 +19,11 @@ enum square {
   a7, b7, c7, d7, e7, f7, g7, h7, i7, j7,
   a8, b8, c8, d8, e8, f8, g8, h8, i8, j8,
 };
+
 extern const std::array <bitboard,10> files;
 extern const std::array <bitboard,8> ranks;
+
+bitboard init_bitboard(std::vector<int> v);
 
 } // namespace khet
 

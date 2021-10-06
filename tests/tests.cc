@@ -17,6 +17,14 @@ TEST_F(BitboardTest, SquareIndexTest) {
   ASSERT_EQ(j8, 79);
 }
 
+TEST_F(BitboardTest, InitBoardTest) {
+  bitboard bb;
+  ASSERT_FALSE(bb.all());
+  bb = init_bitboard(std::vector<int> {a1, j8});
+  ASSERT_EQ(bb[a1], 1);
+  ASSERT_EQ(bb[j8], 1);
+}
+
 TEST_F(BitboardTest, FilesTest) {
   ASSERT_EQ(files[0][a1], 1);
   ASSERT_EQ(files[0][a2], 1);
