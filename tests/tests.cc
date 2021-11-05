@@ -12,59 +12,46 @@ namespace khet {
 
 class BitboardTest : public::testing::Test {};
 
+/* Test the mapping of bitboard notation to actual indices */
 TEST_F(BitboardTest, SquareIndexTest) {
-  ASSERT_EQ(a1, 0);
-  ASSERT_EQ(j8, 79);
+  ASSERT_EQ(A1, 0);
+  ASSERT_EQ(J8, 79);
 }
 
+/* Test creating initializing a bitboard from a notation vector */
 TEST_F(BitboardTest, InitBoardTest) {
-  bitboard bb;
+  Bitboard bb;
   ASSERT_FALSE(bb.all());
-  bb = init_bitboard(std::vector<int> {a1, j8});
-  ASSERT_EQ(bb[a1], 1);
-  ASSERT_EQ(bb[j8], 1);
+  bb = initBitboard(std::vector<int> {A1, E5, J8});
+  EXPECT_EQ(bb[A1], 1);
+  EXPECT_EQ(bb[E5], 1);
+  EXPECT_EQ(bb[J8], 1);
 }
 
+/* Test the file values */
 TEST_F(BitboardTest, FilesTest) {
-  ASSERT_EQ(files[0][a1], 1);
-  ASSERT_EQ(files[0][a2], 1);
-  ASSERT_EQ(files[0][a3], 1);
-  ASSERT_EQ(files[0][a4], 1);
-  ASSERT_EQ(files[0][a5], 1);
-  ASSERT_EQ(files[0][a6], 1);
-  ASSERT_EQ(files[0][a7], 1);
-  ASSERT_EQ(files[0][a8], 1);
-  ASSERT_EQ(files[9][j1], 1);
-  ASSERT_EQ(files[9][j2], 1);
-  ASSERT_EQ(files[9][j3], 1);
-  ASSERT_EQ(files[9][j4], 1);
-  ASSERT_EQ(files[9][j5], 1);
-  ASSERT_EQ(files[9][j6], 1);
-  ASSERT_EQ(files[9][j7], 1);
-  ASSERT_EQ(files[9][j8], 1);
+  std::vector<Bitboard> files = {FILE_A, FILE_B, FILE_C, FILE_D, FILE_E,
+                                 FILE_F, FILE_G, FILE_H, FILE_I, FILE_J};
+  ASSERT_EQ(NFILES, files.size());
+  for (int i = 0; i < NFILES; i++) {
+    Bitboard file = files[i];
+    for (int j = 0; j < NRANKS; j++) {
+      EXPECT_EQ(file[i + j * NFILES], 1);
+    }
+  }
 }
 
+/* Test the rank values */
 TEST_F(BitboardTest, RanksTest) {
-  ASSERT_EQ(ranks[0][a1], 1);
-  ASSERT_EQ(ranks[0][b1], 1);
-  ASSERT_EQ(ranks[0][c1], 1);
-  ASSERT_EQ(ranks[0][d1], 1);
-  ASSERT_EQ(ranks[0][e1], 1);
-  ASSERT_EQ(ranks[0][f1], 1);
-  ASSERT_EQ(ranks[0][g1], 1);
-  ASSERT_EQ(ranks[0][h1], 1);
-  ASSERT_EQ(ranks[0][i1], 1);
-  ASSERT_EQ(ranks[0][j1], 1);
-  ASSERT_EQ(ranks[7][a8], 1);
-  ASSERT_EQ(ranks[7][b8], 1);
-  ASSERT_EQ(ranks[7][c8], 1);
-  ASSERT_EQ(ranks[7][d8], 1);
-  ASSERT_EQ(ranks[7][e8], 1);
-  ASSERT_EQ(ranks[7][f8], 1);
-  ASSERT_EQ(ranks[7][g8], 1);
-  ASSERT_EQ(ranks[7][h8], 1);
-  ASSERT_EQ(ranks[7][i8], 1);
-  ASSERT_EQ(ranks[7][j8], 1);
+  std::vector<Bitboard> ranks = {RANK_1, RANK_2, RANK_3, RANK_4,
+                                 RANK_5, RANK_6, RANK_7, RANK_8};
+  ASSERT_EQ(NRANKS, ranks.size());
+  for (int i = 0; i < NRANKS; i ++) {
+    Bitboard rank = ranks[i];
+    for (int j = 0; j < NFILES; j++) {
+      EXPECT_EQ(rank[i * NFILES + j], 1);
+    }
+  }
 }
 
 } // namespace khet

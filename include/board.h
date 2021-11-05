@@ -4,21 +4,21 @@
 namespace khet {
 
 struct Board {
-  static const bitboard squares_red;
-  static const bitboard squares_silver;
+  static const Bitboard squares_red;
+  static const Bitboard squares_silver;
 
-  bitboard red;
-  bitboard silver;
-  bitboard north;
-  bitboard east;
-  bitboard south;
-  bitboard west;
+  Bitboard red;
+  Bitboard silver;
+  Bitboard north;
+  Bitboard east;
+  Bitboard south;
+  Bitboard west;
 
-  bitboard anubis;
-  bitboard pharaoh;
-  bitboard pyramid;
-  bitboard scarab;
-  bitboard sphinx;
+  Bitboard anubis;
+  Bitboard pharaoh;
+  Bitboard pyramid;
+  Bitboard scarab;
+  Bitboard sphinx;
 };
 
 } // namespace khet
