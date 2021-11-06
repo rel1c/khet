@@ -5,99 +5,34 @@
 
 namespace khet {
 
+enum Color {
+  RED,
+  SILVER,
+};
+
+enum Piece {
+  ANUBIS,
+  PHARAOH,
+  PYRAMID,
+  SCARAB,
+  SPHINX
+};
+
+enum Direction {
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST
+};
+
 class Board {
 public:
   Bitboard getMoves(const Square) const;
-
-  Bitboard getSquaresRed();
-  Bitboard getSquaresSilver();
-  Bitboard getRed();
-  Bitboard getSilver();
-                     
-  Bitboard getNorth();
-  Bitboard getEast();
-  Bitboard getSouth();
-  Bitboard getWest();
-                     
-  Bitboard getAnubis();
-  Bitboard getRedAnubis();
-  Bitboard getSilverAnubis();
-  Bitboard getAnubisNorth();
-  Bitboard getAnubisEast();
-  Bitboard getAnubisSouth();
-  Bitboard getAnubisWest();
-  Bitboard getRedAnubisNorth();
-  Bitboard getRedAnubisEast();
-  Bitboard getRedAnubisSouth();
-  Bitboard getRedAnubisWest();
-  Bitboard getSilverAnubisNorth();
-  Bitboard getSilverAnubisEast();
-  Bitboard getSilverAnubisSouth();
-  Bitboard getSilverAnubisWest();
-                     
-  Bitboard getPharaoh();
-  Bitboard getRedPharaoh();
-  Bitboard getSilverPharaoh();
-  Bitboard getPharaohNorth();
-  Bitboard getPharaohEast();
-  Bitboard getPharaohSouth();
-  Bitboard getPharaohWest();
-  Bitboard getRedPharaohNorth();
-  Bitboard getRedPharaohEast();
-  Bitboard getRedPharaohSouth();
-  Bitboard getRedPharaohWest();
-  Bitboard getSilverPharaohNorth();
-  Bitboard getSilverPharaohEast();
-  Bitboard getSilverPharaohSouth();
-  Bitboard getSilverPharaohWest();
-                     
-  Bitboard getPyramid();
-  Bitboard getRedPyramid();
-  Bitboard getSilverPyramid();
-  Bitboard getPyramidNorth();
-  Bitboard getPyramidEast();
-  Bitboard getPyramidSouth();
-  Bitboard getPyramidWest();
-  Bitboard getRedPyramidNorth();
-  Bitboard getRedPyramidEast();
-  Bitboard getRedPyramidSouth();
-  Bitboard getRedPyramidWest();
-  Bitboard getSilverPyramidNorth();
-  Bitboard getSilverPyramidEast();
-  Bitboard getSilverPyramidSouth();
-  Bitboard getSilverPyramidWest();
-                     
-  Bitboard getScarab();
-  Bitboard getRedScarab();
-  Bitboard getSilverScarab();
-  Bitboard getScarabNorth();
-  Bitboard getScarabEast();
-  Bitboard getScarabSouth();
-  Bitboard getScarabWest();
-  Bitboard getRedScarabNorth();
-  Bitboard getRedScarabEast();
-  Bitboard getRedScarabSouth();
-  Bitboard getRedScarabWest();
-  Bitboard getSilverScarabNorth();
-  Bitboard getSilverScarabEast();
-  Bitboard getSilverScarabSouth();
-  Bitboard getSilverScarabWest();
-                     
-  Bitboard getSphinx();
-  Bitboard getRedSphinx();
-  Bitboard getSilverSphinx();
-  Bitboard getSphinxNorth();
-  Bitboard getSphinxEast();
-  Bitboard getSphinxSouth();
-  Bitboard getSphinxWest();
-  Bitboard getRedSphinxNorth();
-  Bitboard getRedSphinxEast();
-  Bitboard getRedSphinxSouth();
-  Bitboard getRedSphinxWest();
-  Bitboard getSilverSphinxNorth();
-  Bitboard getSilverSphinxEast();
-  Bitboard getSilverSphinxSouth();
-  Bitboard getSilverSphinxWest();
+  Bitboard getSquaresRed() const;
+  Bitboard getSquaresSilver() const;
+  Bitboard getPosition(Color) const;
+  Bitboard getPosition(Color, Piece) const;
+  Bitboard getPosition(Color, Piece, Direction) const;
 private:
   static const std::vector<Bitboard> moves_;
 
