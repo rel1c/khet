@@ -14,16 +14,58 @@ Bitboard Bitboard::getSquaresSilver() const {
   return squares_silver;
 }
 
-Bitboard Bitboard::getPosition(Color) const {
-  return empty_;
-}
-
-Bitboard Bitboard::getPosition(Color, Piece) const {
-  return empty_;
-}
-
-Bitboard Bitboard::getPosition(Color, Piece, Direction) const {
-  return empty_;
+Bitboard Bitboard::getPosition(Color c=NO_COLOR,
+                               Piece p=NO_PIECE,
+                               Direction d=NO_DIRECTION) const {
+  Bitboard bb = full_;
+  switch (c) {
+  case NO_COLOR:
+    goto position;
+  case RED:
+    bb &= red_;
+    break;
+  case SILVER:
+    bb &= silver_;
+    break;
+  }
+position:
+  switch (p) {
+  case NO_POSITION:
+    goto direction;
+  case ANUBIS:
+    bb &= anubis_;
+    break;
+  case PHARAOH:
+    bb &= pharaoh_;
+    break;
+  case PYRAMID:
+    bb &= pyramid_;
+    break;
+  case SCARAB:
+    bb &= scarab_;
+    break;
+  case SPHINX:
+    bb &= sphinx_;
+    break;
+  }
+direction:
+  switch (d) {
+  case NO_DIRECTION:
+    break;
+  case NORTH:
+    bb &= north_;
+    break;
+  case EAST:
+    bb &= east_;
+    break;
+  case SOUTH:
+    bb &= south_;
+    break;
+  case WEST:
+    bb &= west_;
+    break;
+  }
+  return bb;
 }
 
 Board::bb_squares_red = initBitboard(
