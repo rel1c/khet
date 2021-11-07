@@ -1,4 +1,6 @@
 #include "bitboard.h"
+#include <string>
+#include <iostream>
 
 namespace khet {
 
@@ -29,5 +31,19 @@ Bitboard initBitboard(const std::vector<int>& v) {
   }
   return bb;
 };
+
+void displayBitboard(Bitboard& bb) {
+  std::string bb_str = bb.to_string();
+  std::string out_str = "";
+  //for (int i = 0; i < FILES; i++) {
+  int j = 0;
+  for (int i = bb_str.length() - 1; i >= 0; i--) {
+    if (j++ % 10 == 0) { //TODO magic number
+      out_str += '\n';
+    }
+    out_str = bb_str[i] + out_str;
+  }
+  std::cout << out_str << std::endl;
+}
 
 } // namespace khet

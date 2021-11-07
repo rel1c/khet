@@ -46,6 +46,8 @@ extern const Bitboard RANK_8;
 
 Bitboard initBitboard(const std::vector<int>& v);
 
+void displayBitboard(Bitboard& bb);
+
 } // namespace khet
 
 #endif
