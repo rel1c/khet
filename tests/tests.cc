@@ -54,4 +54,24 @@ TEST_F(BitboardTest, RanksTest) {
   }
 }
 
+/* Display the bitboard in a convenient format */
+TEST_F(BitboardTest, DisplayTest) {
+  Bitboard bb = initBitboard(std::vector<int> {
+    A1, B2, C3, D6, E6, F4, G2, G7, H5, I8, J1, J6
+  });
+  testing::internal::CaptureStdout();
+  displayBitboard(bb);
+  std::string output = testing::internal::GetCapturedStdout();
+  std::string expect = 
+    "0000000010\n"
+    "0000001000\n"
+    "0001100001\n"
+    "0000000100\n"
+    "0000010000\n"
+    "0010000000\n"
+    "0100001000\n"
+    "1000000001\n";
+  EXPECT_EQ(output, expect);
+}
+
 } // namespace khet

@@ -32,18 +32,19 @@ Bitboard initBitboard(const std::vector<int>& v) {
   return bb;
 };
 
+/** @brief Display a bitboard as a Khet board, with starting square in the
+ * lower left, as seen by the silver player.
+ * @param bb The bitboard.
+ */
 void displayBitboard(Bitboard& bb) {
   std::string bb_str = bb.to_string();
   std::string out_str = "";
-  //for (int i = 0; i < FILES; i++) {
-  int j = 0;
-  for (int i = bb_str.length() - 1; i >= 0; i--) {
-    if (j++ % 10 == 0) { //TODO magic number
-      out_str += '\n';
+  for (int i = 7; i >= 0; i--) {
+    for (int j = 0; j < 10; j++) {
+      std::cout << bb[i * 10 + j];
     }
-    out_str = bb_str[i] + out_str;
+    std::cout << std::endl;
   }
-  std::cout << out_str << std::endl;
 }
 
 } // namespace khet
