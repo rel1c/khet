@@ -5,7 +5,10 @@ namespace khet {
 
 class Gamestate {
 public:
+  Gamestate();
+  void initLayout();
 private:
+  Board board_;
 };
 
 } // namespace khet

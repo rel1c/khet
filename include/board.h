@@ -6,13 +6,11 @@
 namespace khet {
 
 enum Color {
-  NO_COLOR = 0,
   RED = 100,
   SILVER = 200,
 };
 
 enum Piece {
-  NO_PIECE = 0,
   ANUBIS = 10,
   PHARAOH = 20,
   PYRAMID = 30,
@@ -21,20 +19,13 @@ enum Piece {
 };
 
 enum Direction {
-  NO_DIRECTION = 0,
   NORTH = 1,
   EAST = 2,
   SOUTH = 3,
   WEST = 4
 };
 
-class Board {
-public:
-  Bitboard getMoves(const Square) const;
-  Bitboard getSquaresRed() const;
-  Bitboard getSquaresSilver() const;
-  Bitboard getPosition(Color, Piece, Direction) const;
-private:
+struct Board {
   static const std::vector<Bitboard> moves_;
 
   static const Bitboard squares_red_;
