@@ -3,10 +3,16 @@
 
 namespace khet {
 
+enum Layout {
+  CLASSIC,
+  IMHOTEP,
+  DYNASTY
+};
+
 class Gamestate {
 public:
-  Gamestate();
-  void initLayout();
+  Gamestate(Layout);
+  void initLayout(Layout);
 private:
   Board board_;
 };
