@@ -1,7 +1,5 @@
 # Khet
 
-Version 0.0.0
-
 ## Requirements
 
 * CMake 3.19.7
