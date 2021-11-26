@@ -2,14 +2,6 @@
 
 namespace khet {
 
-const Bitboard Board::squares_red_ = initBitboard(std::vector<Square> {
-  A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
-});
-
-const Bitboard Board::squares_silver_ = initBitboard(std::vector<Square> {
-  B1, B8, J1, J2, J3, J4, J5, J6, J7, J8
-});
-
 const std::array<Bitboard, NFILES * NRANKS> Board::moves_ = {
   initBitboard(std::vector<Square> {A2, B1, B2}),                     // A1
   initBitboard(std::vector<Square> {A1, A2, B2, C1, C2}),             // B1
@@ -99,6 +91,14 @@ const std::array<Bitboard, NFILES * NRANKS> Board::moves_ = {
   initBitboard(std::vector<Square> {H7, H8, I7, J7, J8}),             // I8
   initBitboard(std::vector<Square> {I7, I8, J7}),                     // J8
 };
+
+const Bitboard Board::squares_red_ = initBitboard(std::vector<Square> {
+  A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
+});
+
+const Bitboard Board::squares_silver_ = initBitboard(std::vector<Square> {
+  B1, B8, J1, J2, J3, J4, J5, J6, J7, J8
+});
 
 static void initBoard(Board& b, Layout layout) {
   switch (layout) {
