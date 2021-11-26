@@ -2,6 +2,7 @@
 #define BOARD_H_
 
 #include <vector>
+#include "bitboard.h"
 
 namespace khet {
 
@@ -25,8 +26,14 @@ enum Direction {
   WEST = 4
 };
 
+enum Layout {
+  CLASSIC,
+  IMHOTEP,
+  DYNASTY
+};
+
 struct Board {
-  static const std::vector<Bitboard> moves_;
+  static const std::array<Bitboard, NFILES * NRANKS> moves_;
 
   static const Bitboard squares_red_;
   static const Bitboard squares_silver_;
@@ -48,6 +55,8 @@ struct Board {
   Bitboard scarab_;
   Bitboard sphinx_;
 };
+
+static void initBoard(Board&, Layout);
 
 } // namespace khet
 

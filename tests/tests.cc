@@ -22,7 +22,7 @@ TEST_F(BitboardTest, SquareIndexTest) {
 TEST_F(BitboardTest, InitBoardTest) {
   Bitboard bb;
   ASSERT_FALSE(bb.all());
-  bb = initBitboard(std::vector<int> {A1, E5, J8});
+  bb = initBitboard(std::vector<Square> {A1, E5, J8});
   EXPECT_EQ(bb[A1], 1);
   EXPECT_EQ(bb[E5], 1);
   EXPECT_EQ(bb[J8], 1);
@@ -56,7 +56,7 @@ TEST_F(BitboardTest, RanksTest) {
 
 /* Display the bitboard in a convenient format */
 TEST_F(BitboardTest, DisplayTest) {
-  Bitboard bb = initBitboard(std::vector<int> {
+  Bitboard bb = initBitboard(std::vector<Square> {
     A1, B2, C3, D6, E6, F4, G2, G7, H5, I8, J1, J6
   });
   testing::internal::CaptureStdout();

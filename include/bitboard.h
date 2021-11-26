@@ -44,7 +44,7 @@ extern const Bitboard RANK_6;
 extern const Bitboard RANK_7;
 extern const Bitboard RANK_8;
 
-Bitboard initBitboard(const std::vector<int>& v);
+Bitboard initBitboard(const std::vector<Square>& v);
 
 void displayBitboard(Bitboard& bb);
 
