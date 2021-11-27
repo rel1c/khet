@@ -287,5 +287,13 @@ TEST_F(BoardTest, ConstructorClassicSphinxTest) {
   EXPECT_EQ(output, expect);
 }
 
+TEST_F(BoardTest, GetPieceAtTest) {
+  Board b = Board(CLASSIC);
+  EXPECT_EQ(b.getPieceAt(A8), RED_SPHINX_SOUTH);
+  EXPECT_EQ(b.getPieceAt(C1), SILVER_PYRAMID_WEST);
+  EXPECT_EQ(b.getPieceAt(D1), SILVER_ANUBIS_NORTH);
+  EXPECT_EQ(b.getPieceAt(E5), RED_SCARAB_NORTH);
+  EXPECT_EQ(b.getPieceAt(H8), RED_PYRAMID_EAST);
+}
 
 } // namespace khet
