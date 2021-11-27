@@ -1,4 +1,5 @@
 #include "bitboard.h"
+#include "board.h"
 
 #include <gtest/gtest.h>
 
@@ -73,5 +74,218 @@ TEST_F(BitboardTest, DisplayTest) {
     "1000000001\n";
   EXPECT_EQ(output, expect);
 }
+
+/// Board Tests ////////////////////////////////////////////////////////////////
+
+class BoardTest : public::testing::Test {};
+
+/* Test empty and full bitboards */
+TEST_F(BoardTest, EmptyFullTest) {
+  Board b;
+  for (int i = 0; i < NFILES * NRANKS; i++) {
+    ASSERT_EQ(b.empty_[i], 0);
+    ASSERT_EQ(b.full_[i], 1);
+  }
+}
+
+/* Test the mapping of bitboard notation to actual indices */
+TEST_F(BoardTest, ConstructorClassicRedTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.red_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "1000111100\n"
+    "0010000000\n"
+    "0000000000\n"
+    "1000110100\n"
+    "1000000100\n"
+    "0000001000\n"
+    "0000000000\n"
+    "0000000000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicSilverTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.silver_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000000000\n"
+    "0000000000\n"
+    "0001000000\n"
+    "0010000001\n"
+    "0010110001\n"
+    "0000000000\n"
+    "0000000100\n"
+    "0011110001\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicNorthTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.north_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "1000100000\n"
+    "0000000100\n"
+    "0000000000\n"
+    "0000000100\n"
+    "0001110001\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicEastTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.east_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000000100\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000010100\n"
+    "1000000000\n"
+    "0000001000\n"
+    "0000000000\n"
+    "0000000000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicSouthTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.south_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "1000111000\n"
+    "0010000000\n"
+    "0000000000\n"
+    "0010000000\n"
+    "0000010001\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicWestTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.west_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000000000\n"
+    "0000000000\n"
+    "0001000000\n"
+    "0000000001\n"
+    "0010100000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0010000000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicAnubisTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.anubis_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000101000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0001010000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicPharaohTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.pharaoh_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000010000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000100000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicPyramidTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.pyramid_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000000100\n"
+    "0010000000\n"
+    "0001000000\n"
+    "1010000101\n"
+    "1010000101\n"
+    "0000001000\n"
+    "0000000100\n"
+    "0010000000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicScarabTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.scarab_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000110000\n"
+    "0000110000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n";
+  EXPECT_EQ(output, expect);
+}
+
+TEST_F(BoardTest, ConstructorClassicSphinxTest) {
+  Board classic = Board(CLASSIC);
+  std::string output, expect;
+  testing::internal::CaptureStdout();
+  displayBitboard(classic.sphinx_);
+  output = testing::internal::GetCapturedStdout();
+  expect = 
+    "1000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000000\n"
+    "0000000001\n";
+  EXPECT_EQ(output, expect);
+}
+
 
 } // namespace khet

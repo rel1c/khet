@@ -3,7 +3,7 @@
 namespace khet {
 
 Gamestate::Gamestate(Layout layout=CLASSIC) {
-  initBoard(board_, layout);
+  board_ = Board(layout);
   player_ = SILVER;
 }
 

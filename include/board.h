@@ -32,7 +32,11 @@ enum Layout {
   DYNASTY
 };
 
-struct Board {
+class Board {
+public:
+  Board();
+  Board(Layout);
+
   static const std::array<Bitboard, NFILES * NRANKS> moves_;
 
   static const Bitboard squares_red_;
@@ -55,8 +59,6 @@ struct Board {
   Bitboard scarab_;
   Bitboard sphinx_;
 };
-
-static void initBoard(Board&, Layout);
 
 } // namespace khet
 
