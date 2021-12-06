@@ -10,6 +10,7 @@ namespace khet {
 const int NBITS = 128;
 const int NFILES = 10;
 const int NRANKS = 8;
+const int NSQUARES = NFILES * NRANKS;
 
 using Bitboard = std::bitset <NBITS>;
 
@@ -44,9 +45,9 @@ extern const Bitboard RANK_6;
 extern const Bitboard RANK_7;
 extern const Bitboard RANK_8;
 
-Bitboard initBitboard(const std::vector<Square>& v);
+Bitboard initBitboard(const std::vector<Square>&);
 
-void displayBitboard(Bitboard& bb);
+void displayBitboard(Bitboard&);
 
 } // namespace khet
 

@@ -2,23 +2,21 @@
 #define GAMESTATE_H_
 
 #include "board.h"
-#include "move.h"
+#include "action.h"
 
 namespace khet {
 
 class Gamestate {
 public:
   Gamestate(Layout);
-  void GenerateMoves();
-  void GenerateAnubisMoves();
-  void GeneratePharaohMoves();
-  void GeneratePyramidMoves();
-  void GenerateScarabMoves();
-  void GenerateSphinxMoves();
+  void GenActions();
+  void GenMoves(Color);
+  void GenSwaps();
+  void GenRotations();
 private:
   Board board_;
   Color player_;
-  std::vector<Move> moves_; //TODO statically allocate max possible moves
+  std::vector<Action> actions_; //TODO statically allocate max possible actions
 };
 
 } // namespace khet

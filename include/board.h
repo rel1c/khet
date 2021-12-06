@@ -84,8 +84,8 @@ public:
 
   static const std::array<Bitboard, NFILES * NRANKS> moves_;
 
-  static const Bitboard squares_red_;
-  static const Bitboard squares_silver_;
+  static const Bitboard squares_red_; //TODO enforce with separate look-up tables
+  static const Bitboard squares_silver_; //TODO ^^^
 
   static const Bitboard empty_;
   static const Bitboard full_;
