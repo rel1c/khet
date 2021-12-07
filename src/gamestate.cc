@@ -8,6 +8,10 @@ Gamestate::Gamestate(Layout layout=CLASSIC) {
   actions_.reserve(NACTIONS);
 }
 
+/**
+ * @brief
+ * @param turn
+ */
 void Gamestate::GenActions(Color turn) {
   actions_.clear();
   // copy in this turn's pieces
@@ -34,10 +38,6 @@ void Gamestate::GenActions(Color turn) {
   }
 }
 
-/**
- * @brief
- * @param turn
- */
 /*
 void Gamestate::GenMoves(Color turn) {
   Bitboard vacant = ~(board_.silver_ & board_.red_);
