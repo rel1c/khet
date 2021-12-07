@@ -82,7 +82,8 @@ public:
 
   PieceCode getPieceAt(Square);
 
-  static const std::array<Bitboard, NFILES * NRANKS> moves_;
+  static const std::array<std::vector<Square>, NSQUARES> moves_sqrs_;
+  static const std::array<Bitboard, NSQUARES> moves_;
 
   static const Bitboard squares_red_; //TODO enforce with separate look-up tables
   static const Bitboard squares_silver_; //TODO ^^^
