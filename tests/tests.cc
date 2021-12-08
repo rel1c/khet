@@ -2,6 +2,7 @@
 #include "board.h"
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include <cstdint>
 #include <iostream>

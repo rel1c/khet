@@ -24,17 +24,22 @@ include_directories(${PROJ_INCLUDE_DIR})
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        release-1.11.0
 )
 FetchContent_MakeAvailable(googletest)
 
 # GoogleTest config
+set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
+set(BUILD_GTEST ON CACHE BOOL "" FORCE)
+
 enable_testing()
 
 add_executable(tests ${PROJ_TEST_DIR}/tests.cc)
 
 target_link_libraries(
   tests
+  gmock
   gtest
   gtest_main
   khet_lib
