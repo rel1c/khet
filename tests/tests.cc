@@ -1,3 +1,4 @@
+#include "action.h"
 #include "bitboard.h"
 #include "board.h"
 #include "gamestate.h"
@@ -298,6 +299,26 @@ TEST_F(BoardTest, GetPieceAtTest) {
   EXPECT_EQ(b.getPieceAt(H8), RED_PYRAMID_EAST);
 }
 
+/// Action Tests ///////////////////////////////////////////////////////////////
+
+class ActionTest : public::testing::Test {};
+
+/* Test ... */
+TEST_F(ActionTest, OutStreamTest) {
+  Action act;
+  // impossible values
+  act.swap_ = true;
+  act.rotate_ = POSITIVE;
+  act.from_ = A2;
+  act.to_ = J7;
+  act.direction_ = SOUTH;
+  testing::internal::CaptureStdout();
+  std::cout << act;
+  std::string output = testing::internal::GetCapturedStdout();
+  std::string expect = "Action{swap:1,rotate:POSITIVE,from:A2,to:J7,direction:SOUTH}";
+  EXPECT_EQ(output, expect);
+}
+
 /// Gamestate Tests ////////////////////////////////////////////////////////////
 
 class GamestateTest : public::testing::Test {
@@ -358,4 +379,5 @@ TEST_F(GamestateTest, GenActionsTest) {
     GTEST_SKIP();
   Gamestate gs;
 }
+
 } // namespace khet

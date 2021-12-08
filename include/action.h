@@ -11,6 +11,13 @@ enum Rotation {
   POSITIVE = 1
 };
 
+const std::map<Rotation, std::string> rotationStrings {
+  {NEGATIVE, "NEGATIVE"},
+  {NONE, "NONE"},
+  {POSITIVE, "POSITIVE"}
+};
+
+
 struct Action {
   Action();
 

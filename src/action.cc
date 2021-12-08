@@ -26,10 +26,10 @@ void Action::print() const {
 std::ostream& operator<<(std::ostream& os, const Action& act) {
   return os << "Action{"
     << "swap:" << act.swap_
-    << ",rotate:" << act.rotate_
-    << ",from:" << act.from_
-    << ",to:" << act.to_
-    << ",direction:" << act.direction_
+    << ",rotate:" << rotationStrings.at(act.rotate_)
+    << ",from:" << squareStrings[act.from_]
+    << ",to:" << squareStrings[act.to_]
+    << ",direction:" << directionStrings.at(act.direction_)
     << "}";
 }
 

@@ -2,6 +2,7 @@
 #define BOARD_H_
 
 #include <vector>
+#include <map>
 #include "bitboard.h"
 
 namespace khet {
@@ -9,6 +10,11 @@ namespace khet {
 enum Color {
   RED = 100,
   SILVER = 200,
+};
+
+const std::map<Color, std::string> colorStrings {
+  {RED, "RED"},
+  {SILVER, "SILVER"}
 };
 
 enum Piece {
@@ -19,11 +25,26 @@ enum Piece {
   SPHINX = 50
 };
 
+const std::map<Piece, std::string> pieceStrings {
+  {ANUBIS, "ANUBIS"},
+  {PHARAOH, "PHARAOH"},
+  {PYRAMID, "PYRAMID"},
+  {SCARAB, "SCARAB"},
+  {SPHINX, "SPHINX"}
+};
+
 enum Direction {
   NORTH = 1,
   EAST = 2,
   SOUTH = 3,
   WEST = 4
+};
+
+const std::map<Direction, std::string> directionStrings {
+  {NORTH, "NORTH"},
+  {EAST, "EAST"},
+  {SOUTH, "SOUTH"},
+  {WEST, "WEST"}
 };
 
 enum Layout {
