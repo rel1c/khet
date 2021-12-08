@@ -109,6 +109,7 @@ Board::Board(Layout layout=CLASSIC) {
   });
 }
 
+//TODO DRY
 const std::array<std::vector<Square>, NSQUARES> Board::moves_sqrs_ = {
   std::vector<Square> {A2, B1, B2},                     // A1
   std::vector<Square> {A1, A2, B2, C1, C2},             // B1
@@ -199,6 +200,7 @@ const std::array<std::vector<Square>, NSQUARES> Board::moves_sqrs_ = {
   std::vector<Square> {I7, I8, J7}                      // J8
 };
 
+//TODO DRY
 const std::array<Bitboard, NSQUARES> Board::moves_ = {
   initBitboard(moves_sqrs_[A1]),
   initBitboard(moves_sqrs_[B1]),

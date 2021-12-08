@@ -2,75 +2,72 @@
 
 namespace khet {
 
+Gamestate::Gamestate() {
+  board_ = Board(CLASSIC);
+  player_ = SILVER;
+  actions_.reserve(NACTIONS);
+}
+
 Gamestate::Gamestate(Layout layout=CLASSIC) {
   board_ = Board(layout);
   player_ = SILVER;
   actions_.reserve(NACTIONS);
 }
 
+std::vector<Action>& Gamestate::getActions() {
+  return actions_;
+}
+
+Board& Gamestate::getBoard() {
+  return board_;
+}
+
 /**
  * @brief
  * @param turn
  */
-void Gamestate::GenActions(Color turn) {
+void Gamestate::genActions(Color turn) {
   actions_.clear();
-  // copy in this turn's pieces
+  // copy in pieces for current turn
   Bitboard pieces;
   if (turn == RED)
     pieces = board_.red_;
   else
     pieces = board_.silver_;
+  Bitboard vacant = ~(board_.red_ | board_.silver_);
   int n_pieces = pieces.count();
-  // iterate over them
+  // iterate over them and generate possible actions
   for (int i = 0; i < NSQUARES; i++) {
-    Square s = static_cast<Square>(i);
     if (n_pieces <= 0)
       break;
+    n_pieces--;
+    Square s = static_cast<Square>(i);
     if (pieces[i] & board_.sphinx_[i]) { //TODO refactor to use less logic
-      GenSphinxAction(s);
+      genSphinxAction(s);
       continue;
     }
     else if (pieces[i] & board_.scarab_[i]) {
-      GenSwaps(s);
+      genSwaps(s);
     }
-    GenMoves(s);
-    GenRotations(s);
+    genMoves(s, vacant);
+    genRotations(s);
   }
 }
 
-/*
-void Gamestate::GenMoves(Color turn) {
-  Bitboard vacant = ~(board_.silver_ & board_.red_);
-  Bitboard pieces = ~board_.sphinx_;
-  if (turn == RED)
-    pieces &= board_.red_;
-  else
-    pieces &= board_.silver_;
-  int n_pieces = pieces.count();
-  for (int i = 0; i < NSQUARES; i++) {
-    if (n_pieces <= 0)
-      break;
-    Bitboard moves = board_.moves_[i] & vacant;
-    if (moves.any()) {
-      int n_moves = moves.count();
-      for (int j = 0; j < NSQUARES; j++) { //TODO replace with square look-up?
-        if (n_moves <= 0)
-          break;
-        if (moves[i]) {
-          Action act;
-          act.from_ = static_cast <Square>(i);
-          act.to_ = static_cast <Square>(j);
-          actions_.push_back(act);
-        }
-      }
+void Gamestate::genMoves(Square s, Bitboard& bb) {
+  Action act;
+  Bitboard possible_moves = board_.moves_[s] & bb;
+  for (Square t : board_.moves_sqrs_[s]) {
+    if (possible_moves[t]) {
+      act.from_ = s;
+      act.to_ = t;
+      actions_.push_back(act);
     }
   }
 }
-*/
 
-void Gamestate::GenMoves(Square s) {}
-void Gamestate::GenSwaps(Square s) {}
-void Gamestate::GenRotations(Square s) {}
-void Gamestate::GenSphinxAction(Square s) {}
+void Gamestate::genSwaps(Square s) {}
+void Gamestate::genRotations(Square s) {}
+void Gamestate::genSphinxAction(Square s) {}
 
 } // namespace khet

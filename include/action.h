@@ -1,6 +1,8 @@
 #ifndef ACTION_H_
 #define ACTION_H_
 
+#include "board.h"
+
 namespace khet {
 
 enum Rotation {
@@ -10,11 +12,19 @@ enum Rotation {
 };
 
 struct Action {
+  Action();
+
   bool swap_;
-  Rotation rotate_; // -1 or 1 : ccw or cw TODO make enum
+  Rotation rotate_;
   Square from_;
   Square to_;
   Direction direction_;
+
+  void print() const;
+
+  bool operator==(const Action&) const;
+
+  friend std::ostream& operator<<(std::ostream&, const Action&);
 };
 
 } // namespace khet

@@ -12,16 +12,19 @@ namespace khet {
  * are only 13 pieces per player, 1 of which is a Sphinx. Therefore, at worst
  * case there are 121 possible actions per player on any given turn.
  */
-const int NACTIONS = 122;
+const int NACTIONS = 121;
 
 class Gamestate {
 public:
+  Gamestate();
   Gamestate(Layout);
-  void GenActions(Color);
-  void GenMoves(Square);
-  void GenSwaps(Square);
-  void GenRotations(Square);
-  void GenSphinxAction(Square);
+  std::vector<Action>& getActions();
+  Board& getBoard();
+  void genActions(Color);
+  void genMoves(Square, Bitboard&);
+  void genSwaps(Square);
+  void genRotations(Square);
+  void genSphinxAction(Square);
 private:
   Board board_;
   Color player_;

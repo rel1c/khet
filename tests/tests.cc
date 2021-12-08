@@ -1,5 +1,6 @@
 #include "bitboard.h"
 #include "board.h"
+#include "gamestate.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -297,4 +298,64 @@ TEST_F(BoardTest, GetPieceAtTest) {
   EXPECT_EQ(b.getPieceAt(H8), RED_PYRAMID_EAST);
 }
 
+/// Gamestate Tests ////////////////////////////////////////////////////////////
+
+class GamestateTest : public::testing::Test {
+public:
+  void SetUp() {
+    actions_pass = false;
+  }
+  bool actions_pass;
+};
+
+/* Test ... */
+TEST_F(GamestateTest, GenMovesTest) {
+  Gamestate gs;
+  Board b = gs.getBoard();
+  Bitboard red_pieces = b.red_;
+  Bitboard vacant = ~(b.red_ | b.silver_);
+  gs.genMoves(G3, vacant); // red pyramid south, classic board
+  Action mov1, mov2, mov3, mov4, mov5;
+  mov1.from_ = G3;
+  mov2.from_ = G3;
+  mov3.from_ = G3;
+  mov4.from_ = G3;
+  mov5.from_ = G3;
+  mov1.to_ = G4;
+  mov2.to_ = F3;
+  mov3.to_ = H3;
+  mov4.to_ = F2;
+  mov5.to_ = G2;
+  using namespace testing;
+  EXPECT_THAT(gs.getActions(), Contains(mov1));
+  EXPECT_THAT(gs.getActions(), Contains(mov2));
+  EXPECT_THAT(gs.getActions(), Contains(mov3));
+  EXPECT_THAT(gs.getActions(), Contains(mov4));
+  EXPECT_THAT(gs.getActions(), Contains(mov5));
+}
+
+/* Test ... */
+TEST_F(GamestateTest, GenSwapsTest) {
+  GTEST_SKIP();
+  Gamestate gs;
+}
+
+/* Test ... */
+TEST_F(GamestateTest, GenRotationsTest) {
+  GTEST_SKIP();
+  Gamestate gs;
+}
+
+/* Test ... */
+TEST_F(GamestateTest, GenSphinxActionTest) {
+  GTEST_SKIP();
+  Gamestate gs;
+}
+
+/* Test ... */
+TEST_F(GamestateTest, GenActionsTest) {
+  if (!actions_pass)
+    GTEST_SKIP();
+  Gamestate gs;
+}
 } // namespace khet
