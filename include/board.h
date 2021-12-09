@@ -112,6 +112,8 @@ public:
   static const Bitboard empty_;
   static const Bitboard full_;
 
+  static const Bitboard sphinx_;
+
   Bitboard red_;
   Bitboard silver_;
 
@@ -124,7 +126,6 @@ public:
   Bitboard pharaoh_;
   Bitboard pyramid_;
   Bitboard scarab_;
-  Bitboard sphinx_;
 };
 
 } // namespace khet

@@ -77,7 +77,7 @@ Bitboard initBitboard(const std::vector<Square>& v) {
  * lower left, as seen by the silver player.
  * @param bb The bitboard.
  */
-void displayBitboard(Bitboard& bb) {
+void displayBitboard(const Bitboard& bb) {
   std::string bb_str = bb.to_string();
   std::string out_str = "";
   for (int i = 7; i >= 0; i--) {

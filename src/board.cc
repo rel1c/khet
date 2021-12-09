@@ -103,10 +103,6 @@ Board::Board(Layout layout=CLASSIC) {
     });
     break;
   }
-  // All configurations have the same sphinx placement
-  sphinx_ = initBitboard(std::vector<Square> {
-    A8, J1
-  });
 }
 
 //TODO DRY
@@ -290,6 +286,10 @@ const std::array<Bitboard, NSQUARES> Board::moves_ = {
   initBitboard(moves_sqrs_[I8]),
   initBitboard(moves_sqrs_[J8])
 };
+
+const Bitboard Board::sphinx_ = initBitboard(std::vector<Square> {
+  A8, J1
+});
 
 const Bitboard Board::squares_red_ = initBitboard(std::vector<Square> {
   A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
