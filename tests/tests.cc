@@ -328,9 +328,7 @@ public:
 TEST_F(GamestateTest, GenMovesTest) {
   Gamestate gs;
   Board b = gs.getBoard();
-  Bitboard red_pieces = b.red_;
-  Bitboard vacant = ~(b.red_ | b.silver_);
-  gs.genMoves(G3, vacant); // red pyramid south, classic board
+  gs.genMoves(G3); // red pyramid south, classic board
   Action mov1(G3, G4);
   Action mov2(G3, F3);
   Action mov3(G3, H3);
@@ -346,20 +344,42 @@ TEST_F(GamestateTest, GenMovesTest) {
 
 /* Test ... */
 TEST_F(GamestateTest, GenSwapsTest) {
-  GTEST_SKIP();//TODO
+  //TODO Could use a more thorough test with custom layout
   Gamestate gs;
+  Board b = gs.getBoard();
+  ASSERT_TRUE(b.scarab_[F4] & b.south_[F4]); // silver scarab south, classic
+  gs.genSwaps(F4);
+  Action mov1(F4, G3, true);
+  using namespace testing;
+  EXPECT_THAT(gs.getActions(), Contains(mov1));
 }
 
 /* Test ... */
 TEST_F(GamestateTest, GenRotationsTest) {
-  GTEST_SKIP();//TODO
   Gamestate gs;
+  Board b = gs.getBoard();
+  ASSERT_TRUE(b.pharaoh_[E1] & b.north_[E1]); // silver pharaoh north, classic
+  gs.genRotations(E1);
+  Action mov1(E1, NORTH, WEST);
+  Action mov2(E1, NORTH, EAST);
+  using namespace testing;
+  EXPECT_THAT(gs.getActions(), Contains(mov1));
+  EXPECT_THAT(gs.getActions(), Contains(mov2));
 }
 
 /* Test ... */
 TEST_F(GamestateTest, GenSphinxActionTest) {
-  GTEST_SKIP();//TODO
   Gamestate gs;
+  Board b = gs.getBoard();
+  ASSERT_TRUE(b.sphinx_[J1] & b.north_[J1]); // silver sphinx north, classic
+  gs.genSphinxActions(J1);
+  ASSERT_TRUE(b.sphinx_[A8] & b.south_[A8]); // red sphinx south, classic
+  gs.genSphinxActions(A8);
+  Action mov1(J1, NORTH, WEST);
+  Action mov2(A8, SOUTH, EAST);
+  using namespace testing;
+  EXPECT_THAT(gs.getActions(), Contains(mov1));
+  EXPECT_THAT(gs.getActions(), Contains(mov2));
 }
 
 /* Test ... */

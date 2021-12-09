@@ -7,7 +7,7 @@
 
 namespace khet {
 
-enum class Color : unsigned int {
+enum Color {
   RED = 100,
   SILVER = 200,
 };
@@ -17,7 +17,7 @@ const std::map<Color, std::string> colorStrings {
   {SILVER, "SILVER"}
 };
 
-enum class Piece : unsigned int {
+enum Piece {
   ANUBIS = 10,
   PHARAOH = 20,
   PYRAMID = 30,
@@ -33,11 +33,11 @@ const std::map<Piece, std::string> pieceStrings {
   {SPHINX, "SPHINX"}
 };
 
-enum class Direction : unsigned int {
-  NORTH = 1,
-  EAST = 2,
-  SOUTH = 3,
-  WEST = 4
+enum Direction {
+  NORTH = 0,
+  EAST = 1,
+  SOUTH = 2,
+  WEST = 3
 };
 
 const std::map<Direction, std::string> directionStrings {
@@ -47,7 +47,7 @@ const std::map<Direction, std::string> directionStrings {
   {WEST, "WEST"}
 };
 
-enum class Layout : unsigned int {
+enum Layout {
   CLASSIC,
   IMHOTEP,
   DYNASTY

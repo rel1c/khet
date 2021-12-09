@@ -21,10 +21,10 @@ public:
   std::vector<Action>& getActions();
   Board& getBoard();
   void genActions(Color);
-  void genMoves(Square, Bitboard&);
+  void genMoves(Square);
   void genSwaps(Square);
   void genRotations(Square);
-  void genSphinxAction(Square);
+  void genSphinxActions(Square);
 private:
   Board board_;
   Color player_;
