@@ -55,13 +55,10 @@ void Gamestate::genActions(Color turn) {
 }
 
 void Gamestate::genMoves(Square s, Bitboard& bb) {
-  Action act;
   Bitboard possible_moves = board_.moves_[s] & bb;
   for (Square t : board_.moves_sqrs_[s]) {
     if (possible_moves[t]) {
-      act.from_ = s;
-      act.to_ = t;
-      actions_.push_back(act);
+      actions_.push_back(Action(s,t));
     }
   }
 }

@@ -5,31 +5,22 @@
 
 namespace khet {
 
-enum Rotation {
-  NEGATIVE = -1,
-  NONE = 0,
-  POSITIVE = 1
-};
-
-const std::map<Rotation, std::string> rotationStrings {
-  {NEGATIVE, "NEGATIVE"},
-  {NONE, "NONE"},
-  {POSITIVE, "POSITIVE"}
-};
-
-
 struct Action {
+  unsigned int valid : 1;
+  unsigned int from : 7;
+  unsigned int to : 7;
+  unsigned int dir_old : 2;
+  unsigned int dir_new : 2;
+  unsigned int swap : 1;
+  unsigned int spare : 12;
+
   Action();
 
-  bool swap_;
-  Rotation rotate_;
-  Square from_;
-  Square to_;
-  Direction direction_;
+  Action(Square, Square, bool = false);
+
+  bool operator==(const Action& rhs) const;
 
   void print() const;
-
-  bool operator==(const Action&) const;
 
   friend std::ostream& operator<<(std::ostream&, const Action&);
 };
