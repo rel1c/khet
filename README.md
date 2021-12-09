@@ -30,7 +30,7 @@ extra "unneeded" bits to help with hash collisions (I'm planning on using
 something better comes my way).
 
 For the 128-bit bit-boards I am using the
-(bitset)[https://www.cplusplus.com/reference/bitset/bitset/] class from the
+[bitset](https://www.cplusplus.com/reference/bitset/bitset/) class from the
 C++ standard library. It may turn out that an array of 128 bools is faster, but
 it's arguably larger given the word size of each bool. This becomes an issue
 when storing trees of game states in memory. In the previous implementation
@@ -40,5 +40,4 @@ excessive, but nonetheless memory should be spared where it can.
 The goal of this project does not include a nice graphical representation of
 the game, but I am entertained by the prospect. Rather I would like to serve
 an API such that a GUI could take advantage of the engine, be it 2D, 3D or in
-the terminal. For usability I intend to develop a rudimentary ASCII 
-implementation which uses an algebraic notation similar to that of chess.
+the terminal.
