@@ -16,6 +16,11 @@ namespace khet {
 
 class BitboardTest : public::testing::Test {};
 
+TEST_F(BitboardTest, SizeTest) {
+  Bitboard bb;
+  ASSERT_EQ(sizeof(bb), 16) << "Bitboard is 16 bytes long";
+}
+
 /* Test the mapping of bitboard notation to actual indices */
 TEST_F(BitboardTest, SquareIndexTest) {
   ASSERT_EQ(A1, 0);
@@ -290,18 +295,15 @@ TEST_F(BoardTest, ConstructorClassicSphinxTest) {
   EXPECT_EQ(output, expect);
 }
 
-TEST_F(BoardTest, GetPieceAtTest) {
-  Board b = Board(CLASSIC);
-  EXPECT_EQ(b.getPieceAt(A8), RED_SPHINX_SOUTH);
-  EXPECT_EQ(b.getPieceAt(C1), SILVER_PYRAMID_WEST);
-  EXPECT_EQ(b.getPieceAt(D1), SILVER_ANUBIS_NORTH);
-  EXPECT_EQ(b.getPieceAt(E5), RED_SCARAB_NORTH);
-  EXPECT_EQ(b.getPieceAt(H8), RED_PYRAMID_EAST);
-}
-
 /// Action Tests ///////////////////////////////////////////////////////////////
 
 class ActionTest : public::testing::Test {};
+
+TEST_F(ActionTest, SizeTest) {
+  Action act;
+  ASSERT_EQ(sizeof(act), 4) << "Action is 4 bytes long";
+  EXPECT_EQ(sizeof(act), sizeof(int)) << "Action is same size as int";
+}
 
 /* Test ... */
 TEST_F(ActionTest, OutStreamTest) {

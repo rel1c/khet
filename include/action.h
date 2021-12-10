@@ -7,10 +7,10 @@ namespace khet {
 
 struct Action {
   unsigned int legal : 1;
-  unsigned int from : 7;
-  unsigned int to : 7;
-  unsigned int dir_old : 2;
-  unsigned int dir_new : 2;
+  Square from : 7;
+  Square to : 7;
+  Direction dir_old : 2;
+  Direction dir_new : 2;
   unsigned int swap : 1;
   unsigned int rotate : 1;
   unsigned int spare : 11;
