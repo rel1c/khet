@@ -28,28 +28,24 @@ Board& Gamestate::getBoard() {
  */
 void Gamestate::genActions(Color turn) {
   actions_.clear();
-  // copy in pieces for current turn
   Bitboard pieces;
   if (turn == RED)
     pieces = board_.red_;
   else
     pieces = board_.silver_;
-  int n_pieces = pieces.count();
-  // iterate over them and generate possible actions
   for (int i = 0; i < NSQUARES; i++) {
-    if (n_pieces <= 0)
-      break;
-    n_pieces--;
-    Square s = static_cast<Square>(i);
-    if (pieces[i] & board_.sphinx_[i]) { //TODO refactor to use less logic
-      genSphinxActions(s);
-      continue;
+    if (pieces[i]) {
+      Square s = static_cast<Square>(i);
+      if (board_.sphinx_[i]) {
+        genSphinxActions(s);
+        continue;
+      }
+      else if (board_.scarab_[i]) {
+        genSwaps(s);
+      }
+      genMoves(s);
+      genRotations(s);
     }
-    else if (pieces[i] & board_.scarab_[i]) {
-      genSwaps(s);
-    }
-    genMoves(s);
-    genRotations(s);
   }
 }
 

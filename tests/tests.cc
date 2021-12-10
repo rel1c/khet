@@ -316,13 +316,7 @@ TEST_F(ActionTest, OutStreamTest) {
 
 /// Gamestate Tests ////////////////////////////////////////////////////////////
 
-class GamestateTest : public::testing::Test {
-public:
-  void SetUp() {
-    actions_pass = false;
-  }
-  bool actions_pass;
-};
+class GamestateTest : public::testing::Test {};
 
 /* Test ... */
 TEST_F(GamestateTest, GenMovesTest) {
@@ -384,9 +378,31 @@ TEST_F(GamestateTest, GenSphinxActionTest) {
 
 /* Test ... */
 TEST_F(GamestateTest, GenActionsTest) {
-  if (!actions_pass)
-    GTEST_SKIP();//TODO
   Gamestate gs;
+  Board b = gs.getBoard();
+  std::vector<Action> actions;
+  std::vector<Square> squares {
+    C1, D1, E1, F1, J1, H2, C4, E4, F4, J4, C5, J5, D6
+  };
+  // wow look I rewrote it!
+  // how's that for a test case?
+  for (Square s : squares) {
+    if (b.sphinx_[s]) {
+      gs.genSphinxActions(s);
+      continue;
+    }
+    if (b.scarab_[s]) {
+      gs.genSwaps(s);
+    }
+    gs.genMoves(s);
+    gs.genRotations(s);
+  }
+  actions = gs.getActions();
+  gs = Gamestate();
+  ASSERT_TRUE(gs.getActions().size() == 0);
+  gs.genActions(SILVER); // first silver turn, classic
+  EXPECT_EQ(actions, gs.getActions());
 }
+// TODO manually add moves for each square, then check for containment and pop!
 
 } // namespace khet
