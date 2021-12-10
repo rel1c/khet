@@ -80,9 +80,9 @@ Bitboard initBitboard(const std::vector<Square>& v) {
 void displayBitboard(const Bitboard& bb) {
   std::string bb_str = bb.to_string();
   std::string out_str = "";
-  for (int i = 7; i >= 0; i--) {
-    for (int j = 0; j < 10; j++) {
-      std::cout << bb[i * 10 + j];
+  for (int i = NRANKS - 1; i >= 0; i--) {
+    for (int j = 0; j < NFILES; j++) {
+      std::cout << bb[i * NFILES + j];
     }
     std::cout << std::endl;
   }
