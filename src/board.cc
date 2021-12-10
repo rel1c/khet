@@ -314,34 +314,4 @@ const Bitboard Board::full_ = initBitboard(std::vector<Square> {
   J1, J2, J3, J4, J5, J6, J7, J8,
 });
 
-PieceCode Board::getPieceAt(Square sqr) {
-  unsigned int pc;
-  // color
-  if (red_[sqr])
-    pc += RED;
-  else if (silver_[sqr])
-    pc += SILVER;
-  // piece
-  if (anubis_[sqr])
-    pc += ANUBIS;
-  else if (pharaoh_[sqr])
-    pc += PHARAOH;
-  else if (pyramid_[sqr])
-    pc += PYRAMID;
-  else if (scarab_[sqr])
-    pc += SCARAB;
-  else if (sphinx_[sqr])
-    pc += SPHINX;
-  // direction
-  if (north_[sqr])
-    pc += NORTH;
-  else if (east_[sqr])
-    pc += EAST;
-  else if (south_[sqr])
-    pc += SOUTH;
-  else if (west_[sqr])
-    pc += WEST;
-  return static_cast <PieceCode>(pc);
-}
-
 } // namespace khet
