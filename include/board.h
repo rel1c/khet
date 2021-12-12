@@ -6,9 +6,10 @@
 
 #include "bitboard.h"
 #include "layout.h"
-#include "move.h"
 
 namespace khet {
+
+class Move; // forward declaration
 
 enum Color {
   RED,
@@ -33,8 +34,8 @@ enum Direction {
 class Board {
 public:
   Board();
-  Board(Layout); //TODO
-  Board(std::string); //TODO
+  Board(Layout);
+  Board(std::string);
 
   /**
    * @brief Set the board to specific PKN string.
@@ -42,30 +43,26 @@ public:
    */
   void setToPkn(std::string); //TODO
 
-  Bitboard& getColor(Color) const;
-  Bitboard& getDirection(Direction) const;
-  Bitboard& getPiece(Piece) const;
+  Bitboard getColor(Color) const;
+  Bitboard getDirection(Direction) const;
+  Bitboard getPiece(Piece) const;
 
-  Bitboard& getColorAtSquare(Square) const; //TODO
-  Bitboard& getDirectionAtSquare(Square) const; //TODO
-  Bitboard& getPieceAtSquare(Square) const; //TODO
+  Color getColorAt(Square) const; //TODO
+  Direction getDirectionAt(Square) const; //TODO
+  Piece getPieceAt(Square) const; //TODO
 
-  Bitboard& getAllPieces() const; //TODO
+  Bitboard getAllPieces() const; //TODO
+  Bitboard getSwappable() const; //TODO
 
   Color getPlayer() const; //TODO
 
   void doMove(Move); //TODO
 private:
-  static const std::array<std::vector<Square>, NSQUARES> moves_sqrs;
-  static const std::array<Bitboard, NSQUARES> moves;
-
-  static const Bitboard squares_red;
-  static const Bitboard squares_silver;
-
-  static const Bitboard empty;
-  static const Bitboard full;
-
-  static const Bitboard sphinx;
+  static const Bitboard _red_sqrs;
+  static const Bitboard _silver_sqrs;
+  static const Bitboard _empty;
+  static const Bitboard _full;
+  static const Bitboard _sphinx;
 
   Bitboard _red;
   Bitboard _silver;
@@ -82,11 +79,10 @@ private:
 
   Color _player;
 
-  void _updateBitboards(); //TODO
-
   void _addPiece(); //TODO
   void _movePiece(); //TODO
   void _removePiece(); //TODO
+  void _updateBitboards(); //TODO
 };
 
 } // namespace khet

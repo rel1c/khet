@@ -7,13 +7,6 @@
 
 namespace khet {
 
-const int NBITS = 128;
-const int NFILES = 10;
-const int NRANKS = 8;
-const int NSQUARES = NFILES * NRANKS;
-
-using Bitboard = std::bitset <NBITS>;
-
 enum Square {
   A1, B1, C1, D1, E1, F1, G1, H1, I1, J1,
   A2, B2, C2, D2, E2, F2, G2, H2, I2, J2,
@@ -24,6 +17,15 @@ enum Square {
   A7, B7, C7, D7, E7, F7, G7, H7, I7, J7,
   A8, B8, C8, D8, E8, F8, G8, H8, I8, J8,
 };
+
+using Squares = std::vector<Square>;
+
+const int NBITS = 128;
+const int NFILES = 10;
+const int NRANKS = 8;
+const int NSQUARES = NFILES * NRANKS;
+
+using Bitboard = std::bitset <NBITS>;
 
 const std::array<std::string, NSQUARES> squareStrings = {
   "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1",
@@ -56,7 +58,7 @@ extern const Bitboard RANK_6;
 extern const Bitboard RANK_7;
 extern const Bitboard RANK_8;
 
-Bitboard initBitboard(const std::vector<Square>&);
+Bitboard initBitboard(const Squares&);
 
 void displayBitboard(const Bitboard&);
 

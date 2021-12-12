@@ -4,28 +4,30 @@
 #include "board.h"
 #include "move.h"
 
-typedef std::vector<Move> Moves;
+class Move; // forward declaration
 
 namespace khet {
+
+using Moves = std::vector<Move>;
 
 class MoveGen {
 public:
   MoveGen();
-  MoveGen(const Board &board);
+  MoveGen(const Board&);
   Moves getMoves() const;
-  void setBoard(const Board &board);
+  void setBoard(const Board&);
 private:
   static const int NMOVES = 121;
+  static const std::array<Squares, NSQUARES> _lookup_sqrs;
+  static const std::array<Bitboard, NSQUARES> _lookup_moves;
+  static const std::array<Rotation, 4> _sphinxRotations;
+
   Moves _moves;
 
-  void _genActions(Color);
-  void _genMoves(Square);
-  void _genSwaps(Square);
-  void _genRotations(Square);
-  void _genSphinxActions(Square);
-  void _isLegal(const Action&) const;
-private:
-  
+  void _genMoves(const Board&);
+  void _genSwaps(const Board&, Square);
+  void _genSphinxRotation(const Board&, Square);
+  void _isLegal(const Move&) const;
 };
 
 } // namespace khet

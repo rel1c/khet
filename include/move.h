@@ -1,31 +1,36 @@
-#ifndef ACTION_H_
-#define ACTION_H_
+#ifndef MOVE_H_
+#define MOVE_H_
 
 #include "board.h"
 
 namespace khet {
 
-struct Action {
-  unsigned int legal : 1;
-  Square from : 7;
-  Square to : 7;
-  Direction dir_old : 2;
-  Direction dir_new : 2;
-  unsigned int swap : 1;
-  unsigned int rotate : 1;
-  unsigned int spare : 11;
+enum Rotation {
+  POSITIVE,
+  NEGATIVE
+};
 
-  Action();
+class Move {
+public:
+  Move();
 
-  Action(Square, Square, bool = false);
+  Move(Square, Square, bool swap = false);
 
-  Action(Square, Direction, Direction);
+  Move(Square, Rotation);
 
-  bool operator==(const Action& rhs) const;
+  bool operator==(const Move& rhs) const;
 
-  void print() const;
+  friend std::ostream& operator<<(std::ostream&, const Move&);
+private:
+  unsigned int _legal : 1;
+  unsigned int _swap : 1;
+  unsigned int _rotate : 1;
+  Square _from : 7;
+  Square _to : 7;
+  Rotation _rotation : 2;
+  unsigned int _spare : 13;
 
-  friend std::ostream& operator<<(std::ostream&, const Action&);
+  static const Move _empty_move;
 };
 
 } // namespace khet

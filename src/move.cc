@@ -1,57 +1,45 @@
 #include <iostream>
-#include "action.h"
+#include "move.h"
 
-#define ACTION_TO_INT(a) *(unsigned int *) &a
+#define MOVE_TO_INT(a) *(unsigned int *) &a
 
 namespace khet {
 
-static const Action empty_action;
+const Move Move::_empty_move;
 
-Action::Action() {
-  *this = empty_action;
+Move::Move() {
+  *this = _empty_move;
 }
 
-Action::Action(Square from, Square to, bool swap) {
-  *this = empty_action;
-  this->legal = 1;
-  this->from = from;
-  this->to = to;
-  this->swap = (swap) ? 1 : 0;
+Move::Move(Square from, Square to, bool swap) {
+  *this = _empty_move;
+  _legal = 1;
+  _from = from;
+  _to = to;
+  _swap = (swap) ? 1 : 0;
 }
 
-Action::Action(Square from, Direction dir_old, Direction dir_new) {
-  *this = empty_action;
-  this->legal = 1;
-  this->from = from;
-  this->dir_old = dir_old;
-  this->dir_new = dir_new;
-  this->rotate = 1;
+Move::Move(Square from, Rotation rotation) {
+  *this = _empty_move;
+  _legal = 1;
+  _rotate = 1;
+  _from = from;
+  _rotation = rotation;
 }
 
-bool Action::operator==(const Action& rhs) const {
-  return ACTION_TO_INT(*this) == ACTION_TO_INT(rhs);
+bool Move::operator==(const Move& rhs) const {
+  return MOVE_TO_INT(*this) == MOVE_TO_INT(rhs);
 }
 
-void Action::print() const {
-  std::cout << "displayAction not implemented" << std::endl;
-  //<< "swap:" << act.swap_
-  //<< ",rotate:" << rotationStrings.at(act.rotate_)
-  //<< ",from:" << squareStrings[act.from_]
-  //<< ",to:" << squareStrings[act.to_]
-  //<< ",direction:" << directionStrings.at(act.direction_)
-  //<< "}";
-}
-
-std::ostream& operator<<(std::ostream& os, const Action& act) {
+std::ostream& operator<<(std::ostream& os, const Move& mov) {
   return os //TODO make this more readable
-    << act.legal << ":"
-    << act.from << ":"
-    << act.to << ":"
-    << act.dir_old << ":"
-    << act.dir_new << ":"
-    << act.swap << ":"
-    << act.spare << ":"
-    << act.rotate;
+    << mov._legal << ":"
+    << mov._swap << ":"
+    << mov._rotate << ":"
+    << mov._from << ":"
+    << mov._to << ":"
+    << mov._rotation << ":"
+    << mov._spare;
 }
 
 } // namespace khet
