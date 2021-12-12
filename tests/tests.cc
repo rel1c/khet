@@ -20,7 +20,7 @@ class BitboardTest : public::testing::Test {};
 
 TEST_F(BitboardTest, SizeTest) {
   Bitboard bb;
-  ASSERT_EQ(sizeof(bb), 16) << "Bitboard is 16 bytes long";
+  EXPECT_EQ(sizeof(bb), 16) << "Bitboard is 16 bytes long";
 }
 
 // Test the mapping of bitboard notation to actual indices

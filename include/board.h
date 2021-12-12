@@ -16,6 +16,13 @@ enum Color {
   SILVER,
 };
 
+enum Direction {
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST
+};
+
 enum Piece {
   ANUBIS,
   PHARAOH,
@@ -24,37 +31,26 @@ enum Piece {
   SPHINX
 };
 
-enum Direction {
-  NORTH,
-  EAST,
-  SOUTH,
-  WEST
-};
-
 class Board {
 public:
   Board();
   Board(Layout);
   Board(std::string);
 
-  /**
-   * @brief Set the board to specific PKN string.
-   * @param pkn PKN string
-   */
-  void setToPkn(std::string); //TODO
+  void setToPkn(std::string);
 
   Bitboard getColor(Color) const;
   Bitboard getDirection(Direction) const;
   Bitboard getPiece(Piece) const;
 
-  Color getColorAt(Square) const; //TODO
-  Direction getDirectionAt(Square) const; //TODO
-  Piece getPieceAt(Square) const; //TODO
+  Color getColorAt(Square) const;
+  Direction getDirectionAt(Square) const;
+  Piece getPieceAt(Square) const;
 
-  Bitboard getAllPieces() const; //TODO
-  Bitboard getSwappable() const; //TODO
+  Bitboard getAllPieces() const;
+  Bitboard getSwappable() const;
 
-  Color getPlayer() const; //TODO
+  Color getPlayer() const;
 
   void doMove(Move); //TODO
 private:
@@ -78,10 +74,11 @@ private:
   Bitboard _scarab;
 
   Color _player;
+  unsigned int _turn;
 
-  void _addPiece(); //TODO
-  void _movePiece(); //TODO
-  void _removePiece(); //TODO
+  void _addPiece(Square, Color, Direction, Piece); //TODO
+  void _movePiece(Square, Square); //TODO
+  void _removePiece(Square); //TODO
   void _updateBitboards(); //TODO
 };
 
