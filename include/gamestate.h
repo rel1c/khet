@@ -25,6 +25,8 @@ public:
   void genSwaps(Square);
   void genRotations(Square);
   void genSphinxActions(Square);
+  //void isLegal(const Action&) const;
+  void doAction(const Action&);
 private:
   Board board_;
   Color player_;

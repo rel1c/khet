@@ -97,8 +97,19 @@ void Gamestate::genSphinxActions(Square s) {
     dir_old = WEST;
   else
     return; //TODO need an error case (should never happen)
-  dir_new = static_cast <Direction>(~dir_old);
+  dir_new = static_cast <Direction>(dir_old ^ 3);
   actions_.push_back(Action(s, dir_old, dir_new));
 }
+
+/* @brief Executes a move, any move legal or not and updates the game board
+ * @param Action
+ */
+void Gamestate::doAction(const Action& act) {
+  Square from = act.from;
+  if (act.rotate) {
+    Direction dir_old = act.dir_old;
+    Direction dir_new = act.dir_new;
+  }
+};
 
 } // namespace khet

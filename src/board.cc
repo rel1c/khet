@@ -105,8 +105,44 @@ Board::Board(Layout layout=CLASSIC) {
   }
 }
 
+Bitboard& Board::getColor(Color c) {
+  // TODO use better method, look-up table, map, etc
+  if (c == RED)
+    return red;
+  else
+    return silver;
+}
+
+Bitboard& Board::getDirection(Direction d) {
+  // TODO use better method, look-up table, map, etc
+  if (d == NORTH)
+    return north;
+  else if (d == EAST)
+    return east;
+  else if (d == SOUTH)
+    return south;
+  else
+    return west;
+}
+
+Bitboard& Board::getPiece(Piece p) {
+  // TODO use better method, look-up table, map, etc
+  if (p == ANUBIS)
+    return anubis;
+  else if (p == PHARAOH)
+    return pharaoh;
+  else if (p == PYRAMID)
+    return pyramid;
+  else
+    return scarab;
+  // no sphinx! it can't be moved...
+  // this isn't so clear and maybe it
+  // needs to be further abstracted
+  // away
+}
+
 //TODO DRY
-const std::array<std::vector<Square>, NSQUARES> Board::moves_sqrs_ = {
+const std::array<std::vector<Square>, NSQUARES> Board::moves_sqrs = {
   std::vector<Square> {A2, B1, B2},                     // A1
   std::vector<Square> {A1, A2, B2, C1, C2},             // B1
   std::vector<Square> {B1, B2, C2, D1, D2},             // C1
@@ -197,7 +233,7 @@ const std::array<std::vector<Square>, NSQUARES> Board::moves_sqrs_ = {
 };
 
 //TODO DRY
-const std::array<Bitboard, NSQUARES> Board::moves_ = {
+const std::array<Bitboard, NSQUARES> Board::moves = {
   initBitboard(moves_sqrs_[A1]),
   initBitboard(moves_sqrs_[B1]),
   initBitboard(moves_sqrs_[C1]),
@@ -287,21 +323,21 @@ const std::array<Bitboard, NSQUARES> Board::moves_ = {
   initBitboard(moves_sqrs_[J8])
 };
 
-const Bitboard Board::sphinx_ = initBitboard(std::vector<Square> {
+const Bitboard Board::sphinx = initBitboard(std::vector<Square> {
   A8, J1
 });
 
-const Bitboard Board::squares_red_ = initBitboard(std::vector<Square> {
+const Bitboard Board::squares_red = initBitboard(std::vector<Square> {
   A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
 });
 
-const Bitboard Board::squares_silver_ = initBitboard(std::vector<Square> {
+const Bitboard Board::squares_silver = initBitboard(std::vector<Square> {
   B1, B8, J1, J2, J3, J4, J5, J6, J7, J8
 });
 
-const Bitboard Board::empty_ = 0;
+const Bitboard Board::empty = 0;
 
-const Bitboard Board::full_ = initBitboard(std::vector<Square> {
+const Bitboard Board::full = initBitboard(std::vector<Square> {
   A1, A2, A3, A4, A5, A6, A7, A8,
   B1, B2, B3, B4, B5, B6, B7, B8,
   C1, C2, C3, C4, C5, C6, C7, C8,

@@ -3,18 +3,16 @@
 
 #include <vector>
 #include <map>
+
 #include "bitboard.h"
+#include "layout.h"
+#include "move.h"
 
 namespace khet {
 
 enum Color {
   RED,
   SILVER,
-};
-
-const std::array<std::string, 2> colorStrings {
-  "RED",
-  "SILVER",
 };
 
 enum Piece {
@@ -25,14 +23,6 @@ enum Piece {
   SPHINX
 };
 
-const std::array<std::string, 5> pieceStrings {
-  "ANUBIS",
-  "PHARAOH",
-  "PYRAMID",
-  "SCARAB",
-  "SPHINX"
-};
-
 enum Direction {
   NORTH,
   EAST,
@@ -40,47 +30,63 @@ enum Direction {
   WEST
 };
 
-const std::array<std::string, 5> directionStrings {
-  "NORTH",
-  "EAST",
-  "SOUTH",
-  "WEST"
-};
-
-enum Layout {
-  CLASSIC,
-  IMHOTEP,
-  DYNASTY
-};
-
 class Board {
 public:
   Board();
-  Board(Layout);
+  Board(Layout); //TODO
+  Board(std::string); //TODO
 
-  static const std::array<std::vector<Square>, NSQUARES> moves_sqrs_;
-  static const std::array<Bitboard, NSQUARES> moves_;
+  /**
+   * @brief Set the board to specific PKN string.
+   * @param pkn PKN string
+   */
+  void setToPkn(std::string); //TODO
 
-  static const Bitboard squares_red_; //TODO enforce with separate look-up tables
-  static const Bitboard squares_silver_; //TODO ^^^
+  Bitboard& getColor(Color) const;
+  Bitboard& getDirection(Direction) const;
+  Bitboard& getPiece(Piece) const;
 
-  static const Bitboard empty_;
-  static const Bitboard full_;
+  Bitboard& getColorAtSquare(Square) const; //TODO
+  Bitboard& getDirectionAtSquare(Square) const; //TODO
+  Bitboard& getPieceAtSquare(Square) const; //TODO
 
-  static const Bitboard sphinx_;
+  Bitboard& getAllPieces() const; //TODO
 
-  Bitboard red_;
-  Bitboard silver_;
+  Color getPlayer() const; //TODO
 
-  Bitboard north_;
-  Bitboard east_;
-  Bitboard south_;
-  Bitboard west_;
+  void doMove(Move); //TODO
+private:
+  static const std::array<std::vector<Square>, NSQUARES> moves_sqrs;
+  static const std::array<Bitboard, NSQUARES> moves;
 
-  Bitboard anubis_;
-  Bitboard pharaoh_;
-  Bitboard pyramid_;
-  Bitboard scarab_;
+  static const Bitboard squares_red;
+  static const Bitboard squares_silver;
+
+  static const Bitboard empty;
+  static const Bitboard full;
+
+  static const Bitboard sphinx;
+
+  Bitboard _red;
+  Bitboard _silver;
+
+  Bitboard _north;
+  Bitboard _east;
+  Bitboard _south;
+  Bitboard _west;
+
+  Bitboard _anubis;
+  Bitboard _pharaoh;
+  Bitboard _pyramid;
+  Bitboard _scarab;
+
+  Color _player;
+
+  void _updateBitboards(); //TODO
+
+  void _addPiece(); //TODO
+  void _movePiece(); //TODO
+  void _removePiece(); //TODO
 };
 
 } // namespace khet
