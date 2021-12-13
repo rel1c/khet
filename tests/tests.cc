@@ -74,14 +74,15 @@ TEST_F(BitboardTest, DisplayTest) {
   displayBitboard(bb);
   std::string output = testing::internal::GetCapturedStdout();
   std::string expect = 
-    "0000000010\n"
-    "0000001000\n"
-    "0001100001\n"
-    "0000000100\n"
-    "0000010000\n"
-    "0010000000\n"
-    "0100001000\n"
-    "1000000001\n";
+    "8 0000000010\n"
+    "7 0000001000\n"
+    "6 0001100001\n"
+    "5 0000000100\n"
+    "4 0000010000\n"
+    "3 0010000000\n"
+    "2 0100001000\n"
+    "1 1000000001\n"
+    "  abcdefghij\n";
   EXPECT_EQ(output, expect);
 }
 

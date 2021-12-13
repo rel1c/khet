@@ -18,7 +18,7 @@ public:
   void setBoard(const Board&);
 private:
   static const int NMOVES = 121;
-  static const std::array<Squares, NSQUARES> _lookup_sqrs;
+  static const std::array<SquareVec, NSQUARES> _lookup_sqrs;
   static const std::array<Bitboard, NSQUARES> _lookup_moves;
   static const std::array<Rotation, 4> _sphinxRotations;
 

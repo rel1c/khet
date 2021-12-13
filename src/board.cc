@@ -140,17 +140,17 @@ Color Board::getPlayer() const {
 void Board::doMove(Move) { //TODO
 }
 
-const Bitboard Board::_red_sqrs = initBitboard(Squares {
+const Bitboard Board::_red_sqrs = initBitboard(SquareVec {
   A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
 });
 
-const Bitboard Board::_silver_sqrs = initBitboard(Squares {
+const Bitboard Board::_silver_sqrs = initBitboard(SquareVec {
   B1, B8, J1, J2, J3, J4, J5, J6, J7, J8
 });
 
 const Bitboard Board::_empty = 0;
 
-const Bitboard Board::_full = initBitboard(Squares {
+const Bitboard Board::_full = initBitboard(SquareVec {
   A1, A2, A3, A4, A5, A6, A7, A8,
   B1, B2, B3, B4, B5, B6, B7, B8,
   C1, C2, C3, C4, C5, C6, C7, C8,
