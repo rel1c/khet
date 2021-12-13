@@ -48,6 +48,7 @@ public:
   Bitboard getDirection(Direction) const;
   Bitboard getPiece(Piece) const;
 
+  bool isPieceAt(Square) const;
   Color getColorAt(Square) const;
   Direction getDirectionAt(Square) const;
   Piece getPieceAt(Square) const;
@@ -58,6 +59,7 @@ public:
   Color getPlayer() const;
 
   void doMove(Move); //TODO
+  void display() const;
 private:
   static const Bitboard _red_sqrs;
   static const Bitboard _silver_sqrs;

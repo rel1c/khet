@@ -1,12 +1,15 @@
 #include "board.h"
 #include "util.h"
 
+#include <iostream>
 #include <regex>
 
 namespace khet {
 
 static Direction directionFromChar(char);
 static Piece pieceFromChar(char);
+static char charFromDirection(Direction d);
+static char charFromPiece(Piece p);
 static bool verifyPkn(const std::string);
 
 Board::Board() {}
@@ -88,6 +91,10 @@ Bitboard Board::getPiece(Piece p) const {
     return _sphinx;
 }
 
+bool Board::isPieceAt(Square s) const {
+  return (_red | _silver)[s] == 1;
+}
+
 Color Board::getColorAt(Square s) const {
   Color c;
   if (_red[s])
@@ -138,6 +145,51 @@ Color Board::getPlayer() const {
 }
 
 void Board::doMove(Move) { //TODO
+}
+
+/**
+ * 8 x...arap.. s...ssse..
+ * 7 ..p....... ..s.......
+ * 6 ...P...... ...w......
+ * 5 p.P.ss.p.P n.s.ne.e.w
+ * 4 p.P.SS.p.P e.w.ws.n.s
+ * 3 ......p... ......e...
+ * 2 .......P.. .......n..
+ * 1 ..PARA...X ..wnnn...n
+ *   abcdefghij abcdefghij
+ */
+void Board::display() const {
+  for (int i = NRANKS; i > 0; i--) {
+    std::cout << i << ' ';
+    // output pieces, capitalized according to color
+    for (int j = 0; j < NFILES; j++) {
+      int n = (i-1) * NFILES + j;
+      Square s = static_cast<Square>(n);
+      Color color = getColorAt(s);
+      Piece piece = getPieceAt(s);
+      char p = '.';
+      if (isPieceAt(s)) {
+        p = charFromPiece(piece);
+        if (color == SILVER)
+          p = std::toupper(p);
+      }
+      std::cout << p;
+    }
+    std::cout << ' ';
+    // output directions
+    for (int j = 0; j < NFILES; j++) {
+      int n = (i-1) * NFILES + j;
+      Square s = static_cast<Square>(n);
+      Direction direction = getDirectionAt(s);
+      char d = '.';
+      if (isPieceAt(s)) {
+        d = charFromDirection(direction);
+      }
+      std::cout << d;
+    }
+    std::cout << "\n";
+  }
+  std::cout << "  abcdefghij abcdefghij" << std::endl;
 }
 
 const Bitboard Board::_red_sqrs = initBitboard(SquareVec {
@@ -321,6 +373,47 @@ static Piece pieceFromChar(char ch) {
     break;
   }
   return p;
+}
+
+static char charFromDirection(Direction d) {
+  char ch;
+  switch (d) {
+  case NORTH:
+    ch = 'n';
+    break;
+  case EAST:
+    ch = 'e';
+    break;
+  case SOUTH:
+    ch = 's';
+    break;
+  case WEST:
+    ch = 'w';
+    break;
+  }
+  return ch;
+}
+
+static char charFromPiece(Piece p) {
+  char ch;
+  switch (p) {
+  case ANUBIS:
+    ch = 'a';
+    break;
+  case PHARAOH:
+    ch = 'r';
+    break;
+  case PYRAMID:
+    ch = 'p';
+    break;
+  case SCARAB:
+    ch = 's';
+    break;
+  case SPHINX:
+    ch = 'x';
+    break;
+  }
+  return ch;
 }
 
 static bool verifyPkn(const std::string pkn) {

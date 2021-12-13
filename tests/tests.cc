@@ -57,11 +57,21 @@ TEST_F(BitboardTest, RanksTest) {
   std::vector<Bitboard> ranks = {RANK_1, RANK_2, RANK_3, RANK_4,
                                  RANK_5, RANK_6, RANK_7, RANK_8};
   ASSERT_EQ(NRANKS, ranks.size());
-  for (int i = 0; i < NRANKS; i ++) {
+  for (int i = 0; i < NRANKS; i++) {
     Bitboard rank = ranks[i];
     for (int j = 0; j < NFILES; j++) {
       EXPECT_EQ(rank[i * NFILES + j], 1);
     }
+  }
+}
+
+// Test the square values
+TEST_F(BitboardTest, SquaresTest) {
+  ASSERT_EQ(NSQUARES, SQUARES.size());
+  for (int i = 0; i < NSQUARES; i++) {
+    Bitboard bb = SQUARES[i];
+    ASSERT_EQ(bb.count(), 1);
+    EXPECT_EQ(bb[i], 1);
   }
 }
 
@@ -87,18 +97,46 @@ TEST_F(BitboardTest, DisplayTest) {
 }
 
 /// Board Tests ////////////////////////////////////////////////////////////////
-/*
 class BoardTest : public::testing::Test {};
 
-// Test empty and full bitboards
-TEST_F(BoardTest, EmptyFullTest) {
-  Board b;
-  for (int i = 0; i < NFILES * NRANKS; i++) {
-    ASSERT_EQ(b.empty_[i], 0);
-    ASSERT_EQ(b.full_[i], 1);
-  }
+// Initialize a board from a PKN string
+TEST_F(BoardTest, PknTest) {
+  std::string pkn ("5RS2X/5A4/5S3p/0/0/n3s5/4a5/x2sr5 nsnnssnnssns s 0");
+  Board b (pkn);
+  EXPECT_TRUE(b.isPieceAt(F1));
+  EXPECT_TRUE(b.isPieceAt(G1));
+  EXPECT_TRUE(b.isPieceAt(J1));
+  EXPECT_TRUE(b.isPieceAt(F2));
+  EXPECT_TRUE(b.isPieceAt(F3));
+  EXPECT_TRUE(b.isPieceAt(J3));
+  EXPECT_TRUE(b.isPieceAt(A6));
+  EXPECT_TRUE(b.isPieceAt(E6));
+  EXPECT_TRUE(b.isPieceAt(E7));
+  EXPECT_TRUE(b.isPieceAt(A8));
+  EXPECT_TRUE(b.isPieceAt(D8));
+  EXPECT_TRUE(b.isPieceAt(E8));
 }
 
+// Display the board in a convenient format
+TEST_F(BoardTest, DisplayTest) {
+  Board b(CLASSIC);
+  testing::internal::CaptureStdout();
+  b.display();
+  std::string output = testing::internal::GetCapturedStdout();
+  std::string expect = 
+    "8 x...arap.. s...ssse..\n"
+    "7 ..p....... ..s.......\n"
+    "6 ...P...... ...w......\n"
+    "5 p.P.ss.p.P n.s.ne.e.w\n"
+    "4 p.P.SS.p.P e.w.ws.n.s\n"
+    "3 ......p... ......e...\n"
+    "2 .......P.. .......n..\n"
+    "1 ..PARA...X ..wnnn...n\n"
+    "  abcdefghij abcdefghij\n";
+  EXPECT_EQ(output, expect);
+}
+
+/*
 // Test the mapping of bitboard notation to actual indices
 TEST_F(BoardTest, ConstructorClassicRedTest) {
   Board classic = Board(CLASSIC);
@@ -299,7 +337,7 @@ TEST_F(BoardTest, ConstructorClassicSphinxTest) {
 }
 
 /// Action Tests ///////////////////////////////////////////////////////////////
-
+/*
 class ActionTest : public::testing::Test {};
 
 TEST_F(ActionTest, SizeTest) {
