@@ -1,14 +1,11 @@
 #ifndef MOVE_H_
 #define MOVE_H_
 
+#include <ostream>
+
 #include "board.h"
 
 namespace khet {
-
-enum Rotation {
-  POSITIVE,
-  NEGATIVE
-};
 
 class Move {
 public:

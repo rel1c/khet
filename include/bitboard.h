@@ -58,6 +58,8 @@ extern const Bitboard RANK_6;
 extern const Bitboard RANK_7;
 extern const Bitboard RANK_8;
 
+extern const std::array<Bitboard, NSQUARES> SQUARES;
+
 Bitboard initBitboard(const Squares&);
 
 void displayBitboard(const Bitboard&);

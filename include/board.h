@@ -31,6 +31,11 @@ enum Piece {
   SPHINX
 };
 
+enum Rotation {
+  POSITIVE = 1,
+  NEGATIVE = -1
+};
+
 class Board {
 public:
   Board();
@@ -58,7 +63,6 @@ private:
   static const Bitboard _silver_sqrs;
   static const Bitboard _empty;
   static const Bitboard _full;
-  static const Bitboard _sphinx;
 
   Bitboard _red;
   Bitboard _silver;
@@ -72,14 +76,20 @@ private:
   Bitboard _pharaoh;
   Bitboard _pyramid;
   Bitboard _scarab;
+  Bitboard _sphinx;
 
   Color _player;
   unsigned int _turn;
 
-  void _addPiece(Square, Color, Direction, Piece); //TODO
-  void _movePiece(Square, Square); //TODO
-  void _removePiece(Square); //TODO
-  void _updateBitboards(); //TODO
+  void _addPiece(Square, Color, Direction, Piece);
+  void _movePiece(Square, Square);
+  void _swapPieces(Square, Square);
+  void _rotatePiece(Square, Rotation);
+  void _removePiece(Square);
+
+  Bitboard& getColorRef(Color);
+  Bitboard& getDirectionRef(Direction);
+  Bitboard& getPieceRef(Piece);
 };
 
 } // namespace khet
