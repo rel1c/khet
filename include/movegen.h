@@ -1,7 +1,6 @@
 #ifndef MOVEGEN_H_
 #define MOVEGEN_H_
 
-#include "board.h"
 #include "move.h"
 
 class Move; // forward declaration

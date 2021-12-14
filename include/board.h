@@ -5,7 +5,6 @@
 #include <map>
 
 #include "bitboard.h"
-#include "layout.h"
 
 namespace khet {
 
@@ -21,6 +20,12 @@ enum Direction {
   EAST,
   SOUTH,
   WEST
+};
+
+enum Layout {
+  CLASSIC,
+  IMHOTEP,
+  DYNASTY
 };
 
 enum Piece {

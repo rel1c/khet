@@ -1,5 +1,3 @@
-#include "board.h"
-#include "layout.h"
 #include "move.h"
 
 #ifndef UTIL_H_

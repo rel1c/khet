@@ -1,7 +1,3 @@
-#include "bitboard.h"
-#include "board.h"
-#include "layout.h"
-#include "move.h"
 #include "movegen.h"
 #include "util.h"
 
@@ -119,12 +115,19 @@ TEST_F(BitboardTest, DisplayTest) {
 }
 
 /// Board Tests ////////////////////////////////////////////////////////////////
-class BoardTest : public::testing::Test {};
 
-// Initialize a board from a PKN string
-TEST_F(BoardTest, PknSquaresTest) {
-  std::string pkn = "";
-}
+class BoardTest : public::testing::Test {
+public:
+  void SetUp() {
+    board_c = Board(CLASSIC);
+    board_d = Board(DYNASTY);
+    board_i = Board(IMHOTEP);
+  }
+protected:
+  Board board_c;
+  Board board_d;
+  Board board_i;
+};
 
 // Initialize a board from a PKN string
 TEST_F(BoardTest, PknBoardTest) {
@@ -143,6 +146,42 @@ TEST_F(BoardTest, PknBoardTest) {
   EXPECT_TRUE(b.isPieceAt(A8));
   EXPECT_TRUE(b.isPieceAt(D8));
   EXPECT_TRUE(b.isPieceAt(E8));
+}
+
+TEST_F(BoardTest, getColorTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getDirectionTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getPieceTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, isPieceAtTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getColorAtTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getPieceAtTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getAllPiecesTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getSwappableTest) {
+  GTEST_SKIP();//TODO
+}
+
+TEST_F(BoardTest, getPlayerTest) {
+  GTEST_SKIP();//TODO
 }
 
 // Display the board in a convenient format
