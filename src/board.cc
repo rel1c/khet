@@ -44,13 +44,16 @@ void Board::setToPkn(std::string pkn) {
   unsigned int i = 0;
   while (p != piece_str.cend() && d != direction_str.cend()) {
     if (isdigit(*p)) {
-      i += *p - '0';
+      if (*p == '0')
+        i += 10;
+      else
+        i += *p - '0';
     }
     else if (*p != '/') {
       color = (isupper(*p)) ? SILVER : RED;
       piece = pieceFromChar(*p);
       direction = directionFromChar(*d);
-      Square square = static_cast<Square>(i);
+      Square square = static_cast<Square>(i++);
       _addPiece(square, color, direction, piece);
       d++;
     }
@@ -148,8 +151,8 @@ void Board::doMove(Move) { //TODO
 }
 
 /**
- * 8 x...arap.. s...ssse..
- * 7 ..p....... ..s.......
+ * 8 x...arap.. s...ssse.. SILVER
+ * 7 ..p....... ..s....... [0]
  * 6 ...P...... ...w......
  * 5 p.P.ss.p.P n.s.ne.e.w
  * 4 p.P.SS.p.P e.w.ws.n.s
@@ -187,6 +190,10 @@ void Board::display() const {
       }
       std::cout << d;
     }
+    if (i == NRANKS)
+      std::cout << " " << colorStrings[_player];
+    else if (i == NRANKS - 1)
+      std::cout << " turn: " << _turn;
     std::cout << "\n";
   }
   std::cout << "  abcdefghij abcdefghij" << std::endl;
@@ -419,12 +426,11 @@ static char charFromPiece(Piece p) {
 static bool verifyPkn(const std::string pkn) {
   if (pkn.empty())
     return false;
-  auto const pkn_regex = std::regex("[AaPpRrRSsXx/0-9]+ [nesw]+ [rs] [0-9]+");
+  auto const pkn_regex = std::regex("^[AaPpRrRSsXx/0-9]+ [nesw]+ [rs] [0-9]+");
   std::smatch m;
-  if (std::regex_match(pkn, m, pkn_regex) == false)
-    return false;
-  // TODO check number of each character and length boundaries
-  return true;
+  std::regex_match(pkn, m, pkn_regex);
+  // insert debugging here based on value of m
+  return m.size() > 0;
 }
 
 } // namespace khet

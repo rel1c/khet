@@ -10,9 +10,31 @@
 
 #include <cstdint>
 #include <iostream>
+#include <streambuf>
+#include <string>
+#include <tuple>
 #include <vector>
 
 namespace khet {
+
+class CoutRedirect {
+
+public:
+    CoutRedirect() {
+      old = std::cout.rdbuf(buffer.rdbuf()); // redirect cout to buffer stream
+    }
+
+    std::string getString() {
+      return buffer.str(); // get string
+    }
+
+    ~CoutRedirect() {
+      std::cout.rdbuf(old); // reverse redirect
+    }
+private:
+    std::stringstream buffer;
+    std::streambuf* old;
+};
 
 /// Bitboard Tests /////////////////////////////////////////////////////////////
 
@@ -80,9 +102,9 @@ TEST_F(BitboardTest, DisplayTest) {
   Bitboard bb = initBitboard(std::vector<Square> {
     A1, B2, C3, D6, E6, F4, G2, G7, H5, I8, J1, J6
   });
-  testing::internal::CaptureStdout();
+  CoutRedirect cr;
   displayBitboard(bb);
-  std::string output = testing::internal::GetCapturedStdout();
+  std::string output = cr.getString();
   std::string expect = 
     "8 0000000010\n"
     "7 0000001000\n"
@@ -100,9 +122,15 @@ TEST_F(BitboardTest, DisplayTest) {
 class BoardTest : public::testing::Test {};
 
 // Initialize a board from a PKN string
-TEST_F(BoardTest, PknTest) {
-  std::string pkn ("5RS2X/5A4/5S3p/0/0/n3s5/4a5/x2sr5 nsnnssnnssns s 0");
-  Board b (pkn);
+TEST_F(BoardTest, PknSquaresTest) {
+  std::string pkn = "";
+}
+
+// Initialize a board from a PKN string
+TEST_F(BoardTest, PknBoardTest) {
+  std::string pkn = "5RS2X/5A4/5S3p/0/0/p3s5/4a5/x2sr5 nsnnssnnssns s 0";
+  Board b(pkn);
+  ASSERT_EQ(b.getAllPieces().count(), 12);
   EXPECT_TRUE(b.isPieceAt(F1));
   EXPECT_TRUE(b.isPieceAt(G1));
   EXPECT_TRUE(b.isPieceAt(J1));
@@ -120,12 +148,13 @@ TEST_F(BoardTest, PknTest) {
 // Display the board in a convenient format
 TEST_F(BoardTest, DisplayTest) {
   Board b(CLASSIC);
-  testing::internal::CaptureStdout();
+  ASSERT_EQ(b.getAllPieces().count(), 26);
+  CoutRedirect cr;
   b.display();
-  std::string output = testing::internal::GetCapturedStdout();
+  std::string output = cr.getString();
   std::string expect = 
-    "8 x...arap.. s...ssse..\n"
-    "7 ..p....... ..s.......\n"
+    "8 x...arap.. s...ssse.. SILVER\n"
+    "7 ..p....... ..s....... turn: 0\n"
     "6 ...P...... ...w......\n"
     "5 p.P.ss.p.P n.s.ne.e.w\n"
     "4 p.P.SS.p.P e.w.ws.n.s\n"
@@ -135,6 +164,100 @@ TEST_F(BoardTest, DisplayTest) {
     "  abcdefghij abcdefghij\n";
   EXPECT_EQ(output, expect);
 }
+
+using pkn_tup_t = std::tuple<std::string, SquareVec, std::string>;
+class PknBoardTestsParam : public ::testing::TestWithParam <pkn_tup_t> {
+public:
+  std::string pkn;
+  SquareVec sv;
+  std::string expect;
+  unsigned int n_pieces;
+};
+
+TEST_P(PknBoardTestsParam, PknBoardTest) {
+  pkn = std::get<0>(GetParam());
+  sv = std::get<1>(GetParam());
+  expect = std::get<2>(GetParam());
+  Board b(pkn);
+  n_pieces = sv.size();
+  EXPECT_EQ(b.getAllPieces().count(), n_pieces);
+  CoutRedirect cr;
+  b.display();
+  std::string output = cr.getString();
+  EXPECT_EQ(output, expect);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+  PknBoardTests,
+  PknBoardTestsParam,
+  ::testing::Values(
+    std::make_tuple( //classic layout
+      "2PARA3X/7P2/6p3/p1P1SS1p1P/p1P1ss1p1P/3P6/2p7/x3arap2 wnnnnneewwsnsnsneewwssssse s 0",
+      SquareVec {C1,D1,E1,F1,J1,H2,G3,A4,C4,E4,F4,H4,J4,A5,C5,E5,F5,H5,J5,D6,C7,A8,E8,F8,G8,H8},
+      "8 x...arap.. s...ssse.. SILVER\n"
+      "7 ..p....... ..s....... turn: 0\n"
+      "6 ...P...... ...w......\n"
+      "5 p.P.ss.p.P n.s.ne.e.w\n"
+      "4 p.P.SS.p.P e.w.ws.n.s\n"
+      "3 ......p... ......e...\n"
+      "2 .......P.. .......n..\n"
+      "1 ..PARA...X ..wnnn...n\n"
+      "  abcdefghij abcdefghij\n"
+    ),
+    std::make_tuple( //dynasty layout
+      "3PAP3X/4R5/3SAP3P/3p1p1S1P/p1s1P1P3/p3pas3/5r4/x3pap3 wnnnnennswenweswensswsssse s 0",
+      SquareVec {D1,E1,F1,J1,E2,D3,E3,F3,J3,D4,F4,H4,J4,A5,C5,E5,G5,A6,E6,F6,G6,F7,A8,E8,F8,G8},
+      "8 x...pap... s...sse... SILVER\n"
+      "7 .....r.... .....s.... turn: 0\n"
+      "6 p...pas... n...ssw...\n"
+      "5 p.s.P.P... e.s.w.e...\n"
+      "4 ...p.p.S.P ...w.e.n.w\n"
+      "3 ...SAP...P ...enn...s\n"
+      "2 ....R..... ....n.....\n"
+      "1 ...PAP...X ...wnn...n\n"
+      "  abcdefghij abcdefghij\n"
+    ),
+    std::make_tuple( //imhotep layout
+      "2SARA3X/0/3P2p3/pP2Sp2pP/pP2Ps2pP/3P2p3/0/x3aras2 wnnnnseewwwnsnseeewwnsssse s 0",
+      SquareVec {C1,D1,E1,F1,J1,D3,G3,A4,B4,E4,F4,I4,J4,A5,B5,E5,F5,I5,J5,D6,G6,A8,E8,F8,G8,H8},
+      "8 x...aras.. s...ssse.. SILVER\n"
+      "7 .......... .......... turn: 0\n"
+      "6 ...P..p... ...w..n...\n"
+      "5 pP..Ps..pP ns..ee..ew\n"
+      "4 pP..Sp..pP ew..ww..ns\n"
+      "3 ...P..p... ...s..e...\n"
+      "2 .......... ..........\n"
+      "1 ..SARA...X ..wnnn...n\n"
+      "  abcdefghij abcdefghij\n"
+    ),
+    std::make_tuple( //minimal layout
+      "5SRS1X/0/0/0/0/0/0/x1srs5 nnnnssss r 99",
+      SquareVec {F1,G1,H1,J1,A8,C8,D8,E8},
+      "8 x.srs..... s.sss..... RED\n"
+      "7 .......... .......... turn: 99\n"
+      "6 .......... ..........\n"
+      "5 .......... ..........\n"
+      "4 .......... ..........\n"
+      "3 .......... ..........\n"
+      "2 .......... ..........\n"
+      "1 .....SRS.X .....nnn.n\n"
+      "  abcdefghij abcdefghij\n"
+    //),
+    //std::make_tuple( //empty layout
+    //  "0/0/0/0/0/0/0/0 r 2",
+    //  SquareVec {},
+    //  "8 .......... .......... RED\n"
+    //  "7 .......... .......... turn: 2\n"
+    //  "6 .......... ..........\n"
+    //  "5 .......... ..........\n"
+    //  "4 .......... ..........\n"
+    //  "3 .......... ..........\n"
+    //  "2 .......... ..........\n"
+    //  "1 .......... ..........\n"
+    //  "  abcdefghij abcdefghij\n"
+    )
+  )
+);
 
 /*
 // Test the mapping of bitboard notation to actual indices
@@ -448,4 +571,5 @@ TEST_F(GamestateTest, GenActionsTest) {
 }
 // TODO manually add moves for each square, then check for containment and pop!
 */
+
 } // namespace khet

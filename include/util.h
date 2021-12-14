@@ -30,7 +30,7 @@ const std::array<std::string, 5> directionStrings {
 const std::map<Layout, std::string> layoutToPkn {
   {
     CLASSIC,
-    "2PARA3X/7P2/6p3/p1P1SS1p1P/p1P1ss1s1P/3P6/2p7/x3arrap2 wnnnnneewwsnsnsneewwssssse s 0"
+    "2PARA3X/7P2/6p3/p1P1SS1p1P/p1P1ss1p1P/3P6/2p7/x3arap2 wnnnnneewwsnsnsneewwssssse s 0"
   },
   {
     IMHOTEP,
