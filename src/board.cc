@@ -160,7 +160,17 @@ void Board::doMove(Move m) {
 }
 
 void Board::undoMove(Move m) {
-  //TODO
+  if (!m.isLegal())
+    return; //TODO error!
+
+  if (m.isRotate()) {
+    Rotation inverse = static_cast<Rotation>(m.rotation() * -1);
+    _rotatePiece(m.from(), inverse);
+  }
+  else if (m.isSwap())
+    _swapPieces(m.to(), m.from());
+  else
+    _movePiece(m.to(), m.from());
 }
 
 /**
@@ -298,7 +308,7 @@ void Board::_swapPieces(Square from, Square to) {
 void Board::_rotatePiece(Square s, Rotation r) {
   Bitboard sqr = SQUARES[s];
   Direction d_from = getDirectionAt(s);
-  Direction d_to = static_cast<Direction>((s + r) % 4);
+  Direction d_to = static_cast<Direction>((d_from + r) % 4);
   Bitboard& direction_from = getDirectionRef(d_from);
   Bitboard& direction_to = getDirectionRef(d_to);
   direction_from &= ~sqr;
