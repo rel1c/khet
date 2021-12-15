@@ -159,6 +159,10 @@ void Board::doMove(Move m) {
     _movePiece(m.from(), m.to());
 }
 
+void Board::undoMove(Move m) {
+  //TODO
+}
+
 /**
  * 8 x...arap.. s...ssse.. SILVER
  * 7 ..p....... ..s....... [0]

@@ -704,4 +704,8 @@ TEST_F(MoveTest, MoveEqualityTest) {
   EXPECT_EQ(m, n);
 }
 
+TEST_F(MoveTest, MoveUndoTest) {
+  GTEST_SKIP();//TODO
+}
+
 } // namespace khet

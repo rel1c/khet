@@ -63,7 +63,8 @@ public:
 
   Color getPlayer() const;
 
-  void doMove(Move); //TODO
+  void doMove(Move);
+  void undoMove(Move);
   void display() const;
 private:
   static const Bitboard _red_sqrs;
