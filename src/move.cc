@@ -27,12 +27,44 @@ Move::Move(Square from, Rotation rotation) {
   _rotation = rotation;
 }
 
+bool Move::isLegal() const {
+  return _legal & 0x1;
+}
+
+bool Move::isSwap() const {
+  return _swap & 0x1;
+}
+
+bool Move::isRotate() const {
+  return _rotate & 0x1;
+}
+
+Square Move::from() const {
+  return _from;
+}
+
+Square Move::to() const {
+  return _to;
+}
+
+Rotation Move::rotation() const {
+  return _rotation;
+}
+
 bool Move::operator==(const Move& rhs) const {
   return MOVE_TO_INT(*this) == MOVE_TO_INT(rhs);
 }
 
+bool Move::operator!=(const Move& rhs) const {
+  return MOVE_TO_INT(*this) != MOVE_TO_INT(rhs);
+}
+
+void Move::display() const {
+  //TODO
+}
+
 std::ostream& operator<<(std::ostream& os, const Move& mov) {
-  return os //TODO make this more readable
+  return os
     << mov._legal << ":"
     << mov._swap << ":"
     << mov._rotate << ":"

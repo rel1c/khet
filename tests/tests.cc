@@ -114,7 +114,7 @@ TEST_F(BitboardTest, DisplayTest) {
   EXPECT_EQ(output, expect);
 }
 
-/// Board Tests ////////////////////////////////////////////////////////////////
+/// Simple Board Tests /////////////////////////////////////////////////////////
 
 class BoardTest : public::testing::Test {
 public:
@@ -641,116 +641,67 @@ INSTANTIATE_TEST_SUITE_P(
   )
 );
 
-/// Action Tests ///////////////////////////////////////////////////////////////
-/*
-class ActionTest : public::testing::Test {};
+/// Move Tests /////////////////////////////////////////////////////////////////
 
-TEST_F(ActionTest, SizeTest) {
-  Action act;
-  ASSERT_EQ(sizeof(act), 4) << "Action is 4 bytes long";
-  EXPECT_EQ(sizeof(act), sizeof(int)) << "Action is same size as int";
+class MoveTest : public::testing::Test {
+protected:
+  Move m;
+};
+
+TEST_F(MoveTest, SizeTest) {
+  ASSERT_EQ(sizeof(m), 4) << "Move is 4 bytes long";
+  EXPECT_EQ(sizeof(m), sizeof(int)) << "Move is same size as int";
 }
 
-// Test ...
-TEST_F(ActionTest, OutStreamTest) {
-  //Action act;
-  //testing::internal::CaptureStdout();
-  //std::cout << act;
-  //std::string output = testing::internal::GetCapturedStdout();
-  //std::string expect = "";
-  //EXPECT_EQ(output, expect);
+TEST_F(MoveTest, InitEmptyMoveTest) {
+  ASSERT_FALSE(m.isLegal());
 }
 
-/// Gamestate Tests ////////////////////////////////////////////////////////////
-
-class GamestateTest : public::testing::Test {};
-
-// Test ...
-TEST_F(GamestateTest, GenMovesTest) {
-  Gamestate gs;
-  Board b = gs.getBoard();
-  gs.genMoves(G3); // red pyramid south, classic board
-  Action mov1(G3, G4);
-  Action mov2(G3, F3);
-  Action mov3(G3, H3);
-  Action mov4(G3, F2);
-  Action mov5(G3, G2);
-  using namespace testing;
-  EXPECT_THAT(gs.getActions(), Contains(mov1));
-  EXPECT_THAT(gs.getActions(), Contains(mov2));
-  EXPECT_THAT(gs.getActions(), Contains(mov3));
-  EXPECT_THAT(gs.getActions(), Contains(mov4));
-  EXPECT_THAT(gs.getActions(), Contains(mov5));
+TEST_F(MoveTest, InitBasicMoveTest) {
+  m = Move(A1, B1);
+  EXPECT_FALSE(m.isSwap());
+  EXPECT_FALSE(m.isRotate());
+  EXPECT_EQ(m.from(), A1);
+  EXPECT_EQ(m.to(), B1);
 }
 
-// Test ...
-TEST_F(GamestateTest, GenSwapsTest) {
-  //TODO Could use a more thorough test with custom layout
-  Gamestate gs;
-  Board b = gs.getBoard();
-  ASSERT_TRUE(b.scarab_[F4] & b.south_[F4]); // silver scarab south, classic
-  gs.genSwaps(F4);
-  Action mov1(F4, G3, true);
-  using namespace testing;
-  EXPECT_THAT(gs.getActions(), Contains(mov1));
+TEST_F(MoveTest, InitSwapMoveTest) {
+  m = Move(I4, J5, true);
+  EXPECT_TRUE(m.isSwap());
+  EXPECT_FALSE(m.isRotate());
+  EXPECT_EQ(m.from(), I4);
+  EXPECT_EQ(m.to(), J5);
 }
 
-// Test ...
-TEST_F(GamestateTest, GenRotationsTest) {
-  Gamestate gs;
-  Board b = gs.getBoard();
-  ASSERT_TRUE(b.pharaoh_[E1] & b.north_[E1]); // silver pharaoh north, classic
-  gs.genRotations(E1);
-  Action mov1(E1, NORTH, WEST);
-  Action mov2(E1, NORTH, EAST);
-  using namespace testing;
-  EXPECT_THAT(gs.getActions(), Contains(mov1));
-  EXPECT_THAT(gs.getActions(), Contains(mov2));
+TEST_F(MoveTest, InitRotationMoveTest) {
+  m = Move(A1, POSITIVE);
+  EXPECT_FALSE(m.isSwap());
+  EXPECT_TRUE(m.isRotate());
+  EXPECT_EQ(m.from(), A1);
+  m = Move(J8, NEGATIVE);
+  EXPECT_FALSE(m.isSwap());
+  EXPECT_TRUE(m.isRotate());
+  EXPECT_EQ(m.from(), J8);
 }
 
-// Test ...
-TEST_F(GamestateTest, GenSphinxActionTest) {
-  Gamestate gs;
-  Board b = gs.getBoard();
-  ASSERT_TRUE(b.sphinx_[J1] & b.north_[J1]); // silver sphinx north, classic
-  gs.genSphinxActions(J1);
-  ASSERT_TRUE(b.sphinx_[A8] & b.south_[A8]); // red sphinx south, classic
-  gs.genSphinxActions(A8);
-  Action mov1(J1, NORTH, WEST);
-  Action mov2(A8, SOUTH, EAST);
-  using namespace testing;
-  EXPECT_THAT(gs.getActions(), Contains(mov1));
-  EXPECT_THAT(gs.getActions(), Contains(mov2));
+TEST_F(MoveTest, MoveEqualityTest) {
+  Move n;
+  ASSERT_EQ(m, n);
+  m = Move(C4, C5, true);
+  n = Move(C4, C5, true);
+  EXPECT_EQ(m, n);
+  m = Move(C4, C5, true);
+  n = Move(C4, C5, false);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, false);
+  n = Move(A8, POSITIVE);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, true);
+  n = Move(A8, B7);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, false);
+  n = Move(A8, B7);
+  EXPECT_EQ(m, n);
 }
-
-// Test ...
-TEST_F(GamestateTest, GenActionsTest) {
-  Gamestate gs;
-  Board b = gs.getBoard();
-  std::vector<Action> actions;
-  std::vector<Square> squares {
-    C1, D1, E1, F1, J1, H2, C4, E4, F4, J4, C5, J5, D6
-  };
-  // wow look I rewrote it!
-  // how's that for a test case?
-  for (Square s : squares) {
-    if (b.sphinx_[s]) {
-      gs.genSphinxActions(s);
-      continue;
-    }
-    if (b.scarab_[s]) {
-      gs.genSwaps(s);
-    }
-    gs.genMoves(s);
-    gs.genRotations(s);
-  }
-  actions = gs.getActions();
-  gs = Gamestate();
-  ASSERT_TRUE(gs.getActions().size() == 0);
-  gs.genActions(SILVER); // first silver turn, classic
-  EXPECT_EQ(actions, gs.getActions());
-}
-// TODO manually add moves for each square, then check for containment and pop!
-*/
 
 } // namespace khet

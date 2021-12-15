@@ -147,7 +147,16 @@ Color Board::getPlayer() const {
   return _player;
 }
 
-void Board::doMove(Move) { //TODO
+void Board::doMove(Move m) {
+  if (!m.isLegal())
+    return; //TODO error!
+
+  if (m.isRotate())
+    _rotatePiece(m.from(), m.rotation());
+  else if (m.isSwap())
+    _swapPieces(m.from(), m.to());
+  else
+    _movePiece(m.from(), m.to());
 }
 
 /**

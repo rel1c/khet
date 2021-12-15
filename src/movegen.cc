@@ -202,8 +202,8 @@ const std::array<Rotation, 4> MoveGen::_sphinxRotations {
 };
 
 /**
- * @brief
- * @param turn
+ * @brief Generate moves for the active player of a given board
+ * @param b A board
  */
 void MoveGen::_genMoves(const Board& b) {
   _moves.clear();

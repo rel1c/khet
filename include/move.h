@@ -15,7 +15,18 @@ public:
 
   Move(Square, Rotation);
 
+  bool isLegal() const;
+  bool isSwap() const;
+  bool isRotate() const;
+
+  Square from() const;
+  Square to() const;
+  Rotation rotation() const;
+
   bool operator==(const Move& rhs) const;
+  bool operator!=(const Move& rhs) const;
+
+  void display() const;
 
   friend std::ostream& operator<<(std::ostream&, const Move&);
 private:
