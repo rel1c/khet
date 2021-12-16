@@ -54,12 +54,6 @@ public:
   Bitboard getDirection(Direction) const;
   Bitboard getPiece(Piece) const;
 
-  /*
-  Bitboard getColor(Square) const;
-  Bitboard getDirection(Square) const;
-  Bitboard getPiece(Square) const;
-  */
-
   bool isPieceAt(Square) const;
   Color getColorAt(Square) const;
   Direction getDirectionAt(Square) const;
@@ -102,9 +96,13 @@ private:
   void _rotatePiece(Square, Rotation);
   void _removePiece(Square);
 
-  Bitboard& getColorRef(Color);
-  Bitboard& getDirectionRef(Direction);
-  Bitboard& getPieceRef(Piece);
+  Bitboard& _getColorRef(Color);
+  Bitboard& _getDirectionRef(Direction);
+  Bitboard& _getPieceRef(Piece);
+
+  Bitboard& _getColorRefAt(Square s);
+  Bitboard& _getDirectionRefAt(Square s);
+  Bitboard& _getPieceRefAt(Square s);
 };
 
 } // namespace khet

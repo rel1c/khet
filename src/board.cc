@@ -94,17 +94,6 @@ Bitboard Board::getPiece(Piece p) const {
     return _sphinx;
 }
 
-/*
-Bitboard Board::getColor(Square s) const {
-}
-
-Bitboard Board::getDirection(Square s) const {
-}
-
-Bitboard Board::getPiece(Square s) const {
-}
-*/
-
 bool Board::isPieceAt(Square s) const {
   return (_red | _silver)[s] == 1;
 }
@@ -258,9 +247,9 @@ const Bitboard Board::_full = initBitboard(SquareVec {
 
 void Board::_addPiece(Square s, Color c, Direction d, Piece p) {
   Bitboard sqr = SQUARES[s];
-  Bitboard& color = getColorRef(c);
-  Bitboard& direction = getDirectionRef(d);
-  Bitboard& piece = getPieceRef(p);
+  Bitboard& color = _getColorRef(c);
+  Bitboard& direction = _getDirectionRef(d);
+  Bitboard& piece = _getPieceRef(p);
   color |= sqr;
   direction |= sqr;
   piece |= sqr;
@@ -270,13 +259,9 @@ void Board::_movePiece(Square from, Square to) {
   Bitboard sqr_from = SQUARES[from];
   Bitboard sqr_to = SQUARES[to];
 
-  Color c = getColorAt(from);
-  Direction d = getDirectionAt(from);
-  Piece p = getPieceAt(from);
-
-  Bitboard& color = getColorRef(c);
-  Bitboard& direction = getDirectionRef(d);
-  Bitboard& piece = getPieceRef(p);
+  Bitboard& color = _getColorRefAt(from);
+  Bitboard& direction = _getDirectionRefAt(from);
+  Bitboard& piece = _getPieceRefAt(from);
 
   color &= ~sqr_from;
   direction &= ~sqr_from;
@@ -291,62 +276,51 @@ void Board::_swapPieces(Square from, Square to) {
   Bitboard sqr_from = SQUARES[from];
   Bitboard sqr_to = SQUARES[to];
 
-  Color c_from = getColorAt(from);
-  Direction d_from = getDirectionAt(from);
-  Piece p_from = getPieceAt(from);
+  Bitboard& color_from = _getColorRefAt(from);
+  Bitboard& direction_from = _getDirectionRefAt(from);
+  Bitboard& piece_from = _getPieceRefAt(from);
 
-  Color c_to = getColorAt(to);
-  Direction d_to = getDirectionAt(to);
-  Piece p_to = getPieceAt(to);
-  //TODO this is slow and complicated. get boards from square!
-  Bitboard& color_from = getColorRef(c_from);
-  Bitboard& direction_from = getDirectionRef(d_from);
-  Bitboard& piece_from = getPieceRef(p_from);
-
-  Bitboard& color_to = getColorRef(c_to);
-  Bitboard& direction_to = getDirectionRef(d_to);
-  Bitboard& piece_to = getPieceRef(p_to);
+  Bitboard& color_to = _getColorRefAt(to);
+  Bitboard& direction_to = _getDirectionRefAt(to);
+  Bitboard& piece_to = _getPieceRefAt(to);
 
   color_from = color_from & ~sqr_from | sqr_to;
   direction_from = direction_from  & ~sqr_from | sqr_to;
   piece_from = piece_from & ~sqr_from | sqr_to;
 
-  color_to = color_to | sqr_from & ~sqr_to;
-  direction_to = direction_to | sqr_from & ~sqr_to;
-  piece_to = piece_to | sqr_from & ~sqr_to;
+  color_to = color_to & ~sqr_to | sqr_from;
+  direction_to = direction_to & ~sqr_to | sqr_from;
+  piece_to = piece_to & ~sqr_to | sqr_from;
 }
 
 void Board::_rotatePiece(Square s, Rotation r) {
   Bitboard sqr = SQUARES[s];
   Direction d_from = getDirectionAt(s);
   Direction d_to = static_cast<Direction>((d_from + r) % 4);
-  Bitboard& direction_from = getDirectionRef(d_from);
-  Bitboard& direction_to = getDirectionRef(d_to);
+  Bitboard& direction_from = _getDirectionRef(d_from);
+  Bitboard& direction_to = _getDirectionRef(d_to);
   direction_from &= ~sqr;
   direction_to |= sqr;
 }
 
 void Board::_removePiece(Square s) {
   Bitboard sqr = SQUARES[s];
-  Color c = getColorAt(s);
-  Direction d = getDirectionAt(s);
-  Piece p = getPieceAt(s);
-  Bitboard& color = getColorRef(c);
-  Bitboard& direction = getDirectionRef(d);
-  Bitboard& piece = getPieceRef(p);
+  Bitboard& color = _getColorRefAt(s);
+  Bitboard& direction = _getDirectionRefAt(s);
+  Bitboard& piece = _getPieceRefAt(s);
   color &= ~sqr;
   direction &= ~sqr;
   piece &= ~sqr;
 }
 
-Bitboard& Board::getColorRef(Color c) {
+Bitboard& Board::_getColorRef(Color c) {
   if (c == RED)
     return _red;
   else
     return _silver;
 }
 
-Bitboard& Board::getDirectionRef(Direction d) {
+Bitboard& Board::_getDirectionRef(Direction d) {
   if (d == NORTH)
     return _north;
   else if (d == EAST)
@@ -357,7 +331,7 @@ Bitboard& Board::getDirectionRef(Direction d) {
     return _west;
 }
 
-Bitboard& Board::getPieceRef(Piece p) {
+Bitboard& Board::_getPieceRef(Piece p) {
   if (p == ANUBIS)
     return _anubis;
   else if (p == PHARAOH)
@@ -365,6 +339,37 @@ Bitboard& Board::getPieceRef(Piece p) {
   else if (p == PYRAMID)
     return _pyramid;
   else if (p == SCARAB)
+    return _scarab;
+  else
+    return _sphinx;
+}
+
+Bitboard& Board::_getColorRefAt(Square s) {
+  if (_red[s])
+    return _red;
+  else
+    return _silver;
+}
+
+Bitboard& Board::_getDirectionRefAt(Square s) {
+  if (_north[s])
+    return _north;
+  else if (_east[s])
+    return _east;
+  else if (_south[s])
+    return _south;
+  else
+    return _west;
+}
+
+Bitboard& Board::_getPieceRefAt(Square s) {
+  if (_anubis[s])
+    return _anubis;
+  else if (_pharaoh[s])
+    return _pharaoh;
+  else if (_pyramid[s])
+    return _pyramid;
+  else if (_scarab[s])
     return _scarab;
   else
     return _sphinx;
