@@ -48,10 +48,17 @@ public:
   Board(std::string);
 
   void setToPkn(std::string);
+  std::string toPkn() const; //TODO
 
   Bitboard getColor(Color) const;
   Bitboard getDirection(Direction) const;
   Bitboard getPiece(Piece) const;
+
+  /*
+  Bitboard getColor(Square) const;
+  Bitboard getDirection(Square) const;
+  Bitboard getPiece(Square) const;
+  */
 
   bool isPieceAt(Square) const;
   Color getColorAt(Square) const;

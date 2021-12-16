@@ -94,6 +94,17 @@ Bitboard Board::getPiece(Piece p) const {
     return _sphinx;
 }
 
+/*
+Bitboard Board::getColor(Square s) const {
+}
+
+Bitboard Board::getDirection(Square s) const {
+}
+
+Bitboard Board::getPiece(Square s) const {
+}
+*/
+
 bool Board::isPieceAt(Square s) const {
   return (_red | _silver)[s] == 1;
 }
@@ -287,7 +298,7 @@ void Board::_swapPieces(Square from, Square to) {
   Color c_to = getColorAt(to);
   Direction d_to = getDirectionAt(to);
   Piece p_to = getPieceAt(to);
-
+  //TODO this is slow and complicated. get boards from square!
   Bitboard& color_from = getColorRef(c_from);
   Bitboard& direction_from = getDirectionRef(d_from);
   Bitboard& piece_from = getPieceRef(p_from);
@@ -374,6 +385,8 @@ static Direction directionFromChar(char ch) {
   case 'w':
     d = WEST;
     break;
+  //default:
+    //TODO error!
   }
   return d;
 }
@@ -401,6 +414,8 @@ static Piece pieceFromChar(char ch) {
   case 'X':
     p = SPHINX;
     break;
+  //default:
+    //TODO error!
   }
   return p;
 }
@@ -420,6 +435,8 @@ static char charFromDirection(Direction d) {
   case WEST:
     ch = 'w';
     break;
+  default:
+    ch = '\0';
   }
   return ch;
 }
@@ -442,6 +459,8 @@ static char charFromPiece(Piece p) {
   case SPHINX:
     ch = 'x';
     break;
+  default:
+    ch = '\0';
   }
   return ch;
 }

@@ -15,6 +15,7 @@ public:
   MoveGen(const Board&);
   Moves getMoves() const;
   void setBoard(const Board&);
+  bool verifyMove(const Move) const; //TODO
 private:
   static const int NMOVES = 121;
   static const std::array<SquareVec, NSQUARES> _lookup_sqrs;

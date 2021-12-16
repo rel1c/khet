@@ -114,7 +114,70 @@ TEST_F(BitboardTest, DisplayTest) {
   EXPECT_EQ(output, expect);
 }
 
-/// Simple Board Tests /////////////////////////////////////////////////////////
+/// Move Tests /////////////////////////////////////////////////////////////////
+
+class MoveTest : public::testing::Test {
+protected:
+  Move m;
+};
+
+TEST_F(MoveTest, SizeTest) {
+  ASSERT_EQ(sizeof(m), 4) << "Move is 4 bytes long";
+  EXPECT_EQ(sizeof(m), sizeof(int)) << "Move is same size as int";
+}
+
+TEST_F(MoveTest, InitEmptyMoveTest) {
+  ASSERT_FALSE(m.isLegal());
+}
+
+TEST_F(MoveTest, InitBasicMoveTest) {
+  m = Move(A1, B1);
+  EXPECT_FALSE(m.isSwap());
+  EXPECT_FALSE(m.isRotate());
+  EXPECT_EQ(m.from(), A1);
+  EXPECT_EQ(m.to(), B1);
+}
+
+TEST_F(MoveTest, InitSwapMoveTest) {
+  m = Move(I4, J5, true);
+  EXPECT_TRUE(m.isSwap());
+  EXPECT_FALSE(m.isRotate());
+  EXPECT_EQ(m.from(), I4);
+  EXPECT_EQ(m.to(), J5);
+}
+
+TEST_F(MoveTest, InitRotationMoveTest) {
+  m = Move(A1, POSITIVE);
+  EXPECT_FALSE(m.isSwap());
+  EXPECT_TRUE(m.isRotate());
+  EXPECT_EQ(m.from(), A1);
+  m = Move(J8, NEGATIVE);
+  EXPECT_FALSE(m.isSwap());
+  EXPECT_TRUE(m.isRotate());
+  EXPECT_EQ(m.from(), J8);
+}
+
+TEST_F(MoveTest, MoveEqualityTest) {
+  Move n;
+  ASSERT_EQ(m, n);
+  m = Move(C4, C5, true);
+  n = Move(C4, C5, true);
+  EXPECT_EQ(m, n);
+  m = Move(C4, C5, true);
+  n = Move(C4, C5, false);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, false);
+  n = Move(A8, POSITIVE);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, true);
+  n = Move(A8, B7);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, false);
+  n = Move(A8, B7);
+  EXPECT_EQ(m, n);
+}
+
+/// Board Tests ////////////////////////////////////////////////////////////////
 
 class BoardTest : public::testing::Test {
 public:
@@ -641,71 +704,76 @@ INSTANTIATE_TEST_SUITE_P(
   )
 );
 
-/// Move Tests /////////////////////////////////////////////////////////////////
-
-class MoveTest : public::testing::Test {
+class BoardMoveTest : public::testing::Test {
+public:
+  void SetUp() {
+    board_c = Board(CLASSIC);
+    board_d = Board(DYNASTY);
+    board_i = Board(IMHOTEP);
+  }
 protected:
+  Board board_c;
+  Board board_d;
+  Board board_i;
   Move m;
 };
 
-TEST_F(MoveTest, SizeTest) {
-  ASSERT_EQ(sizeof(m), 4) << "Move is 4 bytes long";
-  EXPECT_EQ(sizeof(m), sizeof(int)) << "Move is same size as int";
+TEST_F(BoardMoveTest, DoMoveClassicTest) {
+  Color c = SILVER;
+  Direction d = NORTH;
+  Piece p = PHARAOH;
+  Square from = E1;
+  Square to = E2;
+  ASSERT_EQ(board_c.getColorAt(from), c);
+  ASSERT_EQ(board_c.getDirectionAt(from), d);
+  ASSERT_EQ(board_c.getPieceAt(from), p);
+  ASSERT_TRUE(board_c.isPieceAt(from));
+  ASSERT_FALSE(board_c.isPieceAt(to));
+  m = Move(E1, E2);
+  board_c.doMove(m);
+  EXPECT_EQ(board_c.getColorAt(to), c);
+  EXPECT_EQ(board_c.getDirectionAt(to), d);
+  EXPECT_EQ(board_c.getPieceAt(to), p);
+  EXPECT_FALSE(board_c.isPieceAt(from));
+  EXPECT_TRUE(board_c.isPieceAt(to));
 }
 
-TEST_F(MoveTest, InitEmptyMoveTest) {
-  ASSERT_FALSE(m.isLegal());
+TEST_F(BoardMoveTest, DoSwapClassicTest) {
+  Color color_a = SILVER;
+  Color color_b = RED;
+  Direction direction_a = SOUTH;
+  Direction direction_b = EAST;
+  Piece piece_a = SCARAB;
+  Piece piece_b = PYRAMID;
+  Square a = F4;
+  Square b = G3;
+  ASSERT_TRUE(board_c.isPieceAt(a));
+  ASSERT_TRUE(board_c.isPieceAt(a));
+  ASSERT_EQ(board_c.getPieceAt(a), piece_a);
+  ASSERT_EQ(board_c.getPieceAt(b), piece_b);
+  ASSERT_EQ(board_c.getColorAt(a), color_a);
+  ASSERT_EQ(board_c.getColorAt(b), color_b);
+  ASSERT_EQ(board_c.getDirectionAt(a), direction_a);
+  ASSERT_EQ(board_c.getDirectionAt(b), direction_b);
+  m = Move(a, b, true);
+  board_c.doMove(m);
+  EXPECT_TRUE(board_c.isPieceAt(b));
+  EXPECT_TRUE(board_c.isPieceAt(b));
+  EXPECT_EQ(board_c.getPieceAt(a), piece_b);
+  EXPECT_EQ(board_c.getPieceAt(b), piece_a);
+  EXPECT_EQ(board_c.getColorAt(a), color_b);
+  EXPECT_EQ(board_c.getColorAt(b), color_a);
+  EXPECT_EQ(board_c.getDirectionAt(a), direction_b);
+  EXPECT_EQ(board_c.getDirectionAt(b), direction_a);
 }
 
-TEST_F(MoveTest, InitBasicMoveTest) {
-  m = Move(A1, B1);
-  EXPECT_FALSE(m.isSwap());
-  EXPECT_FALSE(m.isRotate());
-  EXPECT_EQ(m.from(), A1);
-  EXPECT_EQ(m.to(), B1);
-}
-
-TEST_F(MoveTest, InitSwapMoveTest) {
-  m = Move(I4, J5, true);
-  EXPECT_TRUE(m.isSwap());
-  EXPECT_FALSE(m.isRotate());
-  EXPECT_EQ(m.from(), I4);
-  EXPECT_EQ(m.to(), J5);
-}
-
-TEST_F(MoveTest, InitRotationMoveTest) {
-  m = Move(A1, POSITIVE);
-  EXPECT_FALSE(m.isSwap());
-  EXPECT_TRUE(m.isRotate());
-  EXPECT_EQ(m.from(), A1);
-  m = Move(J8, NEGATIVE);
-  EXPECT_FALSE(m.isSwap());
-  EXPECT_TRUE(m.isRotate());
-  EXPECT_EQ(m.from(), J8);
-}
-
-TEST_F(MoveTest, MoveEqualityTest) {
-  Move n;
-  ASSERT_EQ(m, n);
-  m = Move(C4, C5, true);
-  n = Move(C4, C5, true);
-  EXPECT_EQ(m, n);
-  m = Move(C4, C5, true);
-  n = Move(C4, C5, false);
-  EXPECT_NE(m, n);
-  m = Move(A8, B7, false);
-  n = Move(A8, POSITIVE);
-  EXPECT_NE(m, n);
-  m = Move(A8, B7, true);
-  n = Move(A8, B7);
-  EXPECT_NE(m, n);
-  m = Move(A8, B7, false);
-  n = Move(A8, B7);
-  EXPECT_EQ(m, n);
-}
-
-TEST_F(MoveTest, MoveUndoTest) {
+TEST_F(BoardMoveTest, DoRotateClassicTest) {
   GTEST_SKIP();//TODO
 }
+
+TEST_F(BoardMoveTest, UndoMoveClassicTest) {
+  GTEST_SKIP();//TODO
+}
+
 
 } // namespace khet
