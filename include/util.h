@@ -1,4 +1,4 @@
-#include "move.h"
+#include "board.h"
 
 #ifndef UTIL_H_
 #define UTIL_H_
@@ -39,6 +39,14 @@ const std::map<Layout, std::string> layoutToPkn {
     "3PAP3X/4R5/3SAP3P/3p1p1S1P/p1s1P1P3/p3pas3/5r4/x3pap3 wnnnnennswenweswensswsssse s 0"
   },
 };
+
+Direction directionFromChar(char);
+
+Piece pieceFromChar(char);
+
+char charFromDirection(Direction);
+
+char charFromPiece(Piece);
 
 } // namespace khet
 

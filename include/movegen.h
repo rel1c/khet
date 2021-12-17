@@ -27,7 +27,6 @@ private:
   void _genMoves(const Board&);
   void _genSwaps(const Board&, Square);
   void _genSphinxRotation(const Board&, Square);
-  void _isLegal(const Move&) const;
 };
 
 } // namespace khet

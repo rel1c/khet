@@ -1,15 +1,11 @@
-#include "board.h"
 #include "util.h"
+#include "move.h"
 
 #include <iostream>
 #include <regex>
 
 namespace khet {
 
-static Direction directionFromChar(char);
-static Piece pieceFromChar(char);
-static char charFromDirection(Direction d);
-static char charFromPiece(Piece p);
 static bool verifyPkn(const std::string);
 
 Board::Board() {}
@@ -373,101 +369,6 @@ Bitboard& Board::_getPieceRefAt(Square s) {
     return _scarab;
   else
     return _sphinx;
-}
-
-static Direction directionFromChar(char ch) {
-  Direction d;
-  switch (ch) {
-  case 'n':
-    d = NORTH;
-    break;
-  case 'e':
-    d = EAST;
-    break;
-  case 's':
-    d = SOUTH;
-    break;
-  case 'w':
-    d = WEST;
-    break;
-  //default:
-    //TODO error!
-  }
-  return d;
-}
-
-static Piece pieceFromChar(char ch) {
-  Piece p;
-  switch (ch) {
-  case 'a':
-  case 'A':
-    p = ANUBIS;
-    break;
-  case 'p':
-  case 'P':
-    p = PYRAMID;
-    break;
-  case 'r':
-  case 'R':
-    p = PHARAOH;
-    break;
-  case 's':
-  case 'S':
-    p = SCARAB;
-    break;
-  case 'x':
-  case 'X':
-    p = SPHINX;
-    break;
-  //default:
-    //TODO error!
-  }
-  return p;
-}
-
-static char charFromDirection(Direction d) {
-  char ch;
-  switch (d) {
-  case NORTH:
-    ch = 'n';
-    break;
-  case EAST:
-    ch = 'e';
-    break;
-  case SOUTH:
-    ch = 's';
-    break;
-  case WEST:
-    ch = 'w';
-    break;
-  default:
-    ch = '\0';
-  }
-  return ch;
-}
-
-static char charFromPiece(Piece p) {
-  char ch;
-  switch (p) {
-  case ANUBIS:
-    ch = 'a';
-    break;
-  case PHARAOH:
-    ch = 'r';
-    break;
-  case PYRAMID:
-    ch = 'p';
-    break;
-  case SCARAB:
-    ch = 's';
-    break;
-  case SPHINX:
-    ch = 'x';
-    break;
-  default:
-    ch = '\0';
-  }
-  return ch;
 }
 
 static bool verifyPkn(const std::string pkn) {

@@ -117,8 +117,13 @@ TEST_F(BitboardTest, DisplayTest) {
 /// Move Tests /////////////////////////////////////////////////////////////////
 
 class MoveTest : public::testing::Test {
+public:
+  void SetUp() {
+    p = SCARAB;
+  }
 protected:
   Move m;
+  Piece p;
 };
 
 TEST_F(MoveTest, SizeTest) {
@@ -131,7 +136,7 @@ TEST_F(MoveTest, InitEmptyMoveTest) {
 }
 
 TEST_F(MoveTest, InitBasicMoveTest) {
-  m = Move(A1, B1);
+  m = Move(A1, B1, p);
   EXPECT_FALSE(m.isSwap());
   EXPECT_FALSE(m.isRotate());
   EXPECT_EQ(m.from(), A1);
@@ -139,7 +144,7 @@ TEST_F(MoveTest, InitBasicMoveTest) {
 }
 
 TEST_F(MoveTest, InitSwapMoveTest) {
-  m = Move(I4, J5, true);
+  m = Move(I4, J5, p, true);
   EXPECT_TRUE(m.isSwap());
   EXPECT_FALSE(m.isRotate());
   EXPECT_EQ(m.from(), I4);
@@ -147,11 +152,11 @@ TEST_F(MoveTest, InitSwapMoveTest) {
 }
 
 TEST_F(MoveTest, InitRotationMoveTest) {
-  m = Move(A1, POSITIVE);
+  m = Move(A1, p, POSITIVE);
   EXPECT_FALSE(m.isSwap());
   EXPECT_TRUE(m.isRotate());
   EXPECT_EQ(m.from(), A1);
-  m = Move(J8, NEGATIVE);
+  m = Move(J8, p, NEGATIVE);
   EXPECT_FALSE(m.isSwap());
   EXPECT_TRUE(m.isRotate());
   EXPECT_EQ(m.from(), J8);
@@ -160,22 +165,44 @@ TEST_F(MoveTest, InitRotationMoveTest) {
 TEST_F(MoveTest, MoveEqualityTest) {
   Move n;
   ASSERT_EQ(m, n);
-  m = Move(C4, C5, true);
-  n = Move(C4, C5, true);
+  m = Move(C4, C5, p, true);
+  n = Move(C4, C5, p, true);
   EXPECT_EQ(m, n);
-  m = Move(C4, C5, true);
-  n = Move(C4, C5, false);
+  m = Move(C4, C5, p, true);
+  n = Move(C4, C5, p, false);
   EXPECT_NE(m, n);
-  m = Move(A8, B7, false);
-  n = Move(A8, POSITIVE);
+  m = Move(A8, B7, p, false);
+  n = Move(A8, p, POSITIVE);
   EXPECT_NE(m, n);
-  m = Move(A8, B7, true);
-  n = Move(A8, B7);
+  m = Move(A8, B7, p, true);
+  n = Move(A8, B7, p);
   EXPECT_NE(m, n);
-  m = Move(A8, B7, false);
-  n = Move(A8, B7);
+  m = Move(A8, B7, p, false);
+  n = Move(A8, B7, p);
   EXPECT_EQ(m, n);
 }
+
+//TODO parameterize (this and others!)
+TEST_F(MoveTest, MoveToStrTest) {
+  std::string s;
+  m = Move(C3, D4, PYRAMID);
+  s = "c3 d4";
+  EXPECT_EQ(m.toStr(), s);
+  m = Move(C3, D4, PHARAOH);
+  s = "Rc3 d4";
+  EXPECT_EQ(m.toStr(), s);
+  m = Move(C3, D4, SCARAB);
+  s = "Sc3 d4";
+  EXPECT_EQ(m.toStr(), s);
+  m = Move(C3, D4, SCARAB, true);
+  s = "Sc3xd4";
+  m = Move(F7, ANUBIS, POSITIVE);
+  s = "Af7>";
+  EXPECT_EQ(m.toStr(), s);
+  m = Move(J8, SPHINX, NEGATIVE);
+  s = "Xj8<";
+  EXPECT_EQ(m.toStr(), s);
+};
 
 /// Board Tests ////////////////////////////////////////////////////////////////
 
@@ -729,7 +756,7 @@ TEST_F(BoardMoveTest, DoMoveClassicTest) {
   ASSERT_EQ(board_c.getPieceAt(from), p);
   ASSERT_TRUE(board_c.isPieceAt(from));
   ASSERT_FALSE(board_c.isPieceAt(to));
-  m = Move(E1, E2);
+  m = Move(E1, E2, p);
   board_c.doMove(m);
   EXPECT_EQ(board_c.getColorAt(to), c);
   EXPECT_EQ(board_c.getDirectionAt(to), d);
@@ -755,7 +782,7 @@ TEST_F(BoardMoveTest, DoSwapClassicTest) {
   ASSERT_EQ(board_c.getColorAt(b), color_b);
   ASSERT_EQ(board_c.getDirectionAt(a), direction_a);
   ASSERT_EQ(board_c.getDirectionAt(b), direction_b);
-  m = Move(a, b, true);
+  m = Move(a, b, piece_a, true);
   board_c.doMove(m);
   EXPECT_TRUE(board_c.isPieceAt(b));
   EXPECT_TRUE(board_c.isPieceAt(b));
@@ -767,8 +794,44 @@ TEST_F(BoardMoveTest, DoSwapClassicTest) {
   EXPECT_EQ(board_c.getDirectionAt(b), direction_a);
 }
 
-TEST_F(BoardMoveTest, DoRotateClassicTest) {
-  GTEST_SKIP();//TODO
+TEST_F(BoardMoveTest, DoRotatePosClassicTest) {
+  Color c = SILVER;
+  Direction d_from = NORTH;
+  Direction d_to = EAST;
+  Piece p = PHARAOH;
+  Square s = E1;
+  ASSERT_EQ(board_c.getColorAt(s), c);
+  ASSERT_EQ(board_c.getDirectionAt(s), d_from);
+  ASSERT_NE(board_c.getDirectionAt(s), d_to);
+  ASSERT_EQ(board_c.getPieceAt(s), p);
+  ASSERT_TRUE(board_c.isPieceAt(s));
+  m = Move(E1, p, POSITIVE);
+  board_c.doMove(m);
+  EXPECT_EQ(board_c.getColorAt(s), c);
+  EXPECT_NE(board_c.getDirectionAt(s), d_from);
+  EXPECT_EQ(board_c.getDirectionAt(s), d_to);
+  EXPECT_EQ(board_c.getPieceAt(s), p);
+  EXPECT_TRUE(board_c.isPieceAt(s));
+}
+
+TEST_F(BoardMoveTest, DoRotateNegClassicTest) {
+  Color c = SILVER;
+  Direction d_from = WEST;
+  Direction d_to = SOUTH;
+  Piece p = PYRAMID;
+  Square s = J5;
+  ASSERT_EQ(board_c.getColorAt(s), c);
+  ASSERT_EQ(board_c.getDirectionAt(s), d_from);
+  ASSERT_NE(board_c.getDirectionAt(s), d_to);
+  ASSERT_EQ(board_c.getPieceAt(s), p);
+  ASSERT_TRUE(board_c.isPieceAt(s));
+  m = Move(J5, p, NEGATIVE);
+  board_c.doMove(m);
+  EXPECT_EQ(board_c.getColorAt(s), c);
+  EXPECT_NE(board_c.getDirectionAt(s), d_from);
+  EXPECT_EQ(board_c.getDirectionAt(s), d_to);
+  EXPECT_EQ(board_c.getPieceAt(s), p);
+  EXPECT_TRUE(board_c.isPieceAt(s));
 }
 
 TEST_F(BoardMoveTest, UndoMoveClassicTest) {

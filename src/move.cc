@@ -11,19 +11,21 @@ Move::Move() {
   *this = _empty_move;
 }
 
-Move::Move(Square from, Square to, bool swap) {
+Move::Move(Square from, Square to, Piece piece, bool swap) {
   *this = _empty_move;
   _legal = 1;
   _from = from;
   _to = to;
+  _piece = piece;
   _swap = (swap) ? 1 : 0;
 }
 
-Move::Move(Square from, Rotation rotation) {
+Move::Move(Square from, Piece piece, Rotation rotation) {
   *this = _empty_move;
   _legal = 1;
   _rotate = 1;
   _from = from;
+  _piece = piece;
   _rotation = rotation;
 }
 
@@ -59,19 +61,33 @@ bool Move::operator!=(const Move& rhs) const {
   return MOVE_TO_INT(*this) != MOVE_TO_INT(rhs);
 }
 
-void Move::display() const {
-  //TODO
+std::string Move::toStr() const {
+  std::string str = "";
+  char from = charFromPiece(_piece);
+  if (from && from != 'p')
+    str += std::toupper(from);
+  str += squareStrings[_from];
+  if (_rotate && _rotation == POSITIVE)
+    str += '>';
+  else if (_rotate && _rotation == NEGATIVE)
+    str += '<';
+  else if (_swap)
+    str += 'x' + squareStrings[_to];
+  else
+    str += ' ' + squareStrings[_to];
+  return str;
 }
 
-std::ostream& operator<<(std::ostream& os, const Move& mov) {
+std::ostream& operator<<(std::ostream& os, const Move& m) {
   return os
-    << mov._legal << ":"
-    << mov._swap << ":"
-    << mov._rotate << ":"
-    << mov._from << ":"
-    << mov._to << ":"
-    << mov._rotation << ":"
-    << mov._spare;
+    << m._legal << ":"
+    << m._swap << ":"
+    << m._rotate << ":"
+    << m._from << ":"
+    << m._to << ":"
+    << m._rotation << ":"
+    << m._piece << ":"
+    << m._spare;
 }
 
 } // namespace khet

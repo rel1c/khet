@@ -214,25 +214,26 @@ void MoveGen::_genMoves(const Board& b) {
     pieces = b.getColor(SILVER);
   for (auto s : squares) {
     if (pieces[s]) {
+      Piece piece = b.getPieceAt(s);
       // If piece is sphinx, generate sphinx rotation
-      if (b.getPiece(SPHINX)[s]) {
+      if (piece == SPHINX) {
         _genSphinxRotation(b, s);
         continue;
       }
       // If piece is scarab, generate swap moves
-      else if (b.getPiece(SCARAB)[s]) {
+      else if (piece == SCARAB) {
         _genSwaps(b, s);
       }
       // Generate basic moves
       Bitboard able = _lookup_moves[s] & ~b.getAllPieces();
       for (Square t : _lookup_sqrs[s]) {
         if (able[t]) {
-          _moves.push_back(Move(s, t));
+          _moves.push_back(Move(s, t, piece));
         }
       }
       // Generate rotations
-      _moves.push_back(Move(s, POSITIVE));
-      _moves.push_back(Move(s, NEGATIVE));
+      _moves.push_back(Move(s, piece, POSITIVE));
+      _moves.push_back(Move(s, piece, NEGATIVE));
     }
   }
 }
@@ -242,7 +243,7 @@ void MoveGen::_genSwaps(const Board& b, Square s) {
   bool swap = true;
   for (Square t : _lookup_sqrs[s]) {
     if (able[t]) {
-      _moves.push_back(Move(s, t, swap));
+      _moves.push_back(Move(s, t, SCARAB, swap));
     }
   }
 }
@@ -250,7 +251,7 @@ void MoveGen::_genSwaps(const Board& b, Square s) {
 void MoveGen::_genSphinxRotation(const Board& b, Square s) {
   Direction d = b.getDirectionAt(s);
   Rotation r = _sphinxRotations[d];
-  _moves.push_back(Move(s, r));
+  _moves.push_back(Move(s, SPHINX, r));
 }
 
 } // namespace khet

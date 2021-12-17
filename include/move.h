@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#include "board.h"
+#include "util.h"
 
 namespace khet {
 
@@ -11,9 +11,9 @@ class Move {
 public:
   Move();
 
-  Move(Square, Square, bool swap = false);
+  Move(Square, Square, Piece, bool swap = false);
 
-  Move(Square, Rotation);
+  Move(Square, Piece, Rotation);
 
   bool isLegal() const;
   bool isSwap() const;
@@ -26,7 +26,7 @@ public:
   bool operator==(const Move& rhs) const;
   bool operator!=(const Move& rhs) const;
 
-  void display() const;
+  std::string toStr() const;
 
   friend std::ostream& operator<<(std::ostream&, const Move&);
 private:
@@ -36,7 +36,8 @@ private:
   Square _from : 7;
   Square _to : 7;
   Rotation _rotation : 2;
-  unsigned int _spare : 13;
+  Piece _piece : 3;
+  unsigned int _spare : 9;
 
   static const Move _empty_move;
 };
