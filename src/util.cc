@@ -52,6 +52,17 @@ Piece pieceFromChar(char ch) {
   return p;
 }
 
+char charFromColor(Color c) {
+  char ch;
+  switch (c) {
+  case RED:
+    ch = 'r';
+  case SILVER:
+    ch = 's';
+  }
+  return ch;
+}
+
 char charFromDirection(Direction d) {
   char ch;
   switch (d) {

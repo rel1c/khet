@@ -265,6 +265,18 @@ TEST_F(BoardTest, ToPknClassicBoardTest) {
   EXPECT_EQ(expect, output);
 }
 
+TEST_F(BoardTest, ToPknDynastyBoardTest) {
+  std::string expect = "3PAP3X/4R5/3SAP3P/3p1p1S1P/p1s1P1P3/p3pas3/5r4/x3pap3 wnnnnennswenweswensswsssse s 0";
+  std::string output = board_d.toPkn();
+  EXPECT_EQ(expect, output);
+}
+
+TEST_F(BoardTest, ToPknImhotepBoardTest) {
+  std::string expect = "2SARA3X/0/3P2p3/pP2Sp2pP/pP2Ps2pP/3P2p3/0/x3aras2 wnnnnseewwwnsnseeewwnsssse s 0";
+  std::string output = board_i.toPkn();
+  EXPECT_EQ(expect, output);
+}
+
 TEST_F(BoardTest, getColorClassicTest) {
   Bitboard red_c = initBitboard(std::vector<Square> {
     A4, A5, A8, C7, E5, E8, F5, F8, G3, G8, H4, H5, H8

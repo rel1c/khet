@@ -57,25 +57,38 @@ void Board::setToPkn(const std::string& pkn) {
 }
 
 const std::string Board::toPkn() const {
-  std::string pkn = "";
+  std::string pieces, directions, player, turn;
+  // construct piece and direction sub-strings
   int empty = 0;
   for (auto s : squares) {
-    if (!isPieceAt(s)) {
+    bool is_piece = isPieceAt(s);
+    bool end_of_rank = FILE_J[s];
+    if (!is_piece) {
       empty++;
-      continue;
     }
-    char piece = charFromPiece(getPieceAt(s));
-    piece = (_silver[s]) ? std::toupper(piece) : piece;
-    if (empty) {
-      int e = (empty == 10) ? 0 : empty;
-      pkn += std::to_string(e);
-      empty = 0;
+    if (is_piece || end_of_rank) {
+      if (empty) {
+        // account for "0" = "10" in PKN
+        int e = (empty == 10) ? 0 : empty;
+        pieces += std::to_string(e);
+        empty = 0;
+      }
+      if (is_piece) {
+        char piece = charFromPiece(getPieceAt(s));
+        piece = (_silver[s]) ? std::toupper(piece) : piece;
+        pieces += piece;
+        char direction = charFromDirection(getDirectionAt(s));
+        directions += direction;
+      }
+      if (s != J8 && end_of_rank) {
+        pieces += '/';
+      }
     }
-    pkn += piece;
-    if (FILE_J[s])
-      pkn += "/";
   }
-  return pkn;
+  // combine it all together
+  player = charFromColor(_player);
+  turn = std::to_string(_turn);
+  return pieces + ' ' + directions + ' ' + player + ' ' + turn;
 }
 
 bool Board::isLegal() const {

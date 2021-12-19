@@ -44,6 +44,8 @@ Direction directionFromChar(char);
 
 Piece pieceFromChar(char);
 
+char charFromColor(Color);
+
 char charFromDirection(Direction);
 
 char charFromPiece(Piece);
