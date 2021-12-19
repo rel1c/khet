@@ -1,17 +1,22 @@
 #include "movegen.h"
-#include "util.h"
 
 namespace khet {
 
-MoveGen::MoveGen() {}
+MoveGen::MoveGen() {
+  gen(Board());
+}
 
-MoveGen::MoveGen(const Board &board) {}
+MoveGen::MoveGen(const Board &b) {
+  gen(b);
+}
 
 Moves MoveGen::getMoves() const {
   return _moves;
 }
 
-void MoveGen::setBoard(const Board &board) {
+void MoveGen::gen(const Board& b) {
+  _moves.clear();
+  _genMoves(b);
 }
 
 const std::array<SquareVec, NSQUARES> MoveGen::_lookup_sqrs = {
@@ -206,7 +211,7 @@ const std::array<Rotation, 4> MoveGen::_sphinxRotations {
  * @param b A board
  */
 void MoveGen::_genMoves(const Board& b) {
-  _moves.clear();
+  _moves.reserve(MAX_MOVES);
   Bitboard pieces;
   if (b.getPlayer() == RED)
     pieces = b.getColor(RED);

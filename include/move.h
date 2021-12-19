@@ -10,9 +10,7 @@ namespace khet {
 class Move {
 public:
   Move();
-
   Move(Square, Square, Piece, bool swap = false);
-
   Move(Square, Piece, Rotation);
 
   bool isLegal() const;

@@ -190,7 +190,7 @@ Bitboard initBitboard(const SquareVec& v) {
  * player.
  * @param bb The bitboard
  */
-void displayBitboard(const Bitboard& bb){
+void displayBitboard(const Bitboard& bb) {
   std::string bb_str = bb.to_string();
   for (int i = NRANKS; i > 0; i--) {
     std::cout << i << " ";

@@ -8,7 +8,7 @@ namespace khet {
 
 Board::Board() {}
 
-Board::Board(std::string pkn) {
+Board::Board(const std::string& pkn) {
   setToPkn(pkn);
 }
 
@@ -16,7 +16,7 @@ Board::Board(Layout layout=CLASSIC) {
   setToPkn(layoutToPkn.at(layout));
 }
 
-void Board::setToPkn(std::string pkn) {
+void Board::setToPkn(const std::string& pkn) {
 
   // extract fields
   std::istringstream iss(pkn);

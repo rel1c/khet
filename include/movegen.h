@@ -14,10 +14,9 @@ public:
   MoveGen();
   MoveGen(const Board&);
   Moves getMoves() const;
-  void setBoard(const Board&);
-  bool verifyMove(const Move) const; //TODO
+  void gen(const Board&);
 private:
-  static const int NMOVES = 121;
+  static const int MAX_MOVES = 121;
   static const std::array<SquareVec, NSQUARES> _lookup_sqrs;
   static const std::array<Bitboard, NSQUARES> _lookup_moves;
   static const std::array<Rotation, 4> _sphinxRotations;

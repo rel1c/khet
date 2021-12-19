@@ -51,9 +51,9 @@ class Board {
 public:
   Board();
   Board(Layout);
-  Board(std::string);
+  Board(const std::string&);
 
-  void setToPkn(std::string); //TODO const string
+  void setToPkn(const std::string&);
   std::string toPkn() const; //TODO
   bool isLegal() const;
 
@@ -61,7 +61,7 @@ public:
   Bitboard getDirection(Direction) const;
   Bitboard getPiece(Piece) const;
 
-  bool isPieceAt(Square) const; //TODO const below funcs
+  bool isPieceAt(Square) const;
   Color getColorAt(Square) const;
   Direction getDirectionAt(Square) const;
   Piece getPieceAt(Square) const;
