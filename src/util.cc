@@ -67,8 +67,6 @@ char charFromDirection(Direction d) {
   case WEST:
     ch = 'w';
     break;
-  default:
-    ch = '\0';
   }
   return ch;
 }
@@ -91,8 +89,6 @@ char charFromPiece(Piece p) {
   case SPHINX:
     ch = 'x';
     break;
-  default:
-    ch = '\0';
   }
   return ch;
 }

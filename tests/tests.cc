@@ -259,6 +259,12 @@ TEST_F(BoardTest, IsLegalEmptyBoardTest) {
   EXPECT_FALSE(b.isLegal());
 }
 
+TEST_F(BoardTest, ToPknClassicBoardTest) {
+  std::string expect = "2PARA3X/7P2/6p3/p1P1SS1p1P/p1P1ss1p1P/3P6/2p7/x3arap2 wnnnnneewwsnsnsneewwssssse s 0";
+  std::string output = board_c.toPkn();
+  EXPECT_EQ(expect, output);
+}
+
 TEST_F(BoardTest, getColorClassicTest) {
   Bitboard red_c = initBitboard(std::vector<Square> {
     A4, A5, A8, C7, E5, E8, F5, F8, G3, G8, H4, H5, H8

@@ -54,7 +54,7 @@ public:
   Board(const std::string&);
 
   void setToPkn(const std::string&);
-  std::string toPkn() const; //TODO
+  const std::string toPkn() const;
   bool isLegal() const;
 
   Bitboard getColor(Color) const;

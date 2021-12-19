@@ -56,6 +56,28 @@ void Board::setToPkn(const std::string& pkn) {
   _turn = std::stoi(turn_str);
 }
 
+const std::string Board::toPkn() const {
+  std::string pkn = "";
+  int empty = 0;
+  for (auto s : squares) {
+    if (!isPieceAt(s)) {
+      empty++;
+      continue;
+    }
+    char piece = charFromPiece(getPieceAt(s));
+    piece = (_silver[s]) ? std::toupper(piece) : piece;
+    if (empty) {
+      int e = (empty == 10) ? 0 : empty;
+      pkn += std::to_string(e);
+      empty = 0;
+    }
+    pkn += piece;
+    if (FILE_J[s])
+      pkn += "/";
+  }
+  return pkn;
+}
+
 bool Board::isLegal() const {
   const Bitboard anubis_red = _anubis & _red;
   const Bitboard pharaoh_red = _pharaoh & _red;
