@@ -6,7 +6,7 @@
 
 namespace khet {
 
-static bool verifyPkn(const std::string);
+static bool verifyPkn(const std::string&);
 
 Board::Board() {}
 
@@ -371,13 +371,12 @@ Bitboard& Board::_getPieceRefAt(Square s) {
     return _sphinx;
 }
 
-static bool verifyPkn(const std::string pkn) {
+static bool verifyPkn(const std::string& pkn) {
   if (pkn.empty())
     return false;
-  auto const pkn_regex = std::regex("^[AaPpRrRSsXx/0-9]+ [nesw]+ [rs] [0-9]+");
+  auto const pkn_regex = std::regex("^[AaPpRrSsXx/0-9]+ [nesw]+ [rs] [0-9]+");
   std::smatch m;
   std::regex_match(pkn, m, pkn_regex);
-  // insert debugging here based on value of m
   return m.size() > 0;
 }
 

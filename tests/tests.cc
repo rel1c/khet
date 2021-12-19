@@ -131,6 +131,26 @@ TEST_F(MoveTest, SizeTest) {
   EXPECT_EQ(sizeof(m), sizeof(int)) << "Move is same size as int";
 }
 
+TEST_F(MoveTest, MoveEqualityTest) {
+  Move n;
+  ASSERT_EQ(m, n);
+  m = Move(C4, C5, p, true);
+  n = Move(C4, C5, p, true);
+  EXPECT_EQ(m, n);
+  m = Move(C4, C5, p, true);
+  n = Move(C4, C5, p, false);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, p, false);
+  n = Move(A8, p, POSITIVE);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, p, true);
+  n = Move(A8, B7, p);
+  EXPECT_NE(m, n);
+  m = Move(A8, B7, p, false);
+  n = Move(A8, B7, p);
+  EXPECT_EQ(m, n);
+}
+
 TEST_F(MoveTest, InitEmptyMoveTest) {
   ASSERT_FALSE(m.isLegal());
 }
@@ -160,26 +180,6 @@ TEST_F(MoveTest, InitRotationMoveTest) {
   EXPECT_FALSE(m.isSwap());
   EXPECT_TRUE(m.isRotate());
   EXPECT_EQ(m.from(), J8);
-}
-
-TEST_F(MoveTest, MoveEqualityTest) {
-  Move n;
-  ASSERT_EQ(m, n);
-  m = Move(C4, C5, p, true);
-  n = Move(C4, C5, p, true);
-  EXPECT_EQ(m, n);
-  m = Move(C4, C5, p, true);
-  n = Move(C4, C5, p, false);
-  EXPECT_NE(m, n);
-  m = Move(A8, B7, p, false);
-  n = Move(A8, p, POSITIVE);
-  EXPECT_NE(m, n);
-  m = Move(A8, B7, p, true);
-  n = Move(A8, B7, p);
-  EXPECT_NE(m, n);
-  m = Move(A8, B7, p, false);
-  n = Move(A8, B7, p);
-  EXPECT_EQ(m, n);
 }
 
 //TODO parameterize (this and others!)
@@ -835,8 +835,96 @@ TEST_F(BoardMoveTest, DoRotateNegClassicTest) {
 }
 
 TEST_F(BoardMoveTest, UndoMoveClassicTest) {
-  GTEST_SKIP();//TODO
+  Color c = SILVER;
+  Direction d = NORTH;
+  Piece p = PHARAOH;
+  Square from = E1;
+  Square to = E2;
+  ASSERT_EQ(board_c.getColorAt(from), c);
+  ASSERT_EQ(board_c.getDirectionAt(from), d);
+  ASSERT_EQ(board_c.getPieceAt(from), p);
+  ASSERT_TRUE(board_c.isPieceAt(from));
+  ASSERT_FALSE(board_c.isPieceAt(to));
+  m = Move(E1, E2, p);
+  board_c.doMove(m);
+  board_c.undoMove(m);
+  EXPECT_EQ(board_c.getColorAt(from), c);
+  EXPECT_EQ(board_c.getDirectionAt(from), d);
+  EXPECT_EQ(board_c.getPieceAt(from), p);
+  EXPECT_TRUE(board_c.isPieceAt(from));
+  EXPECT_FALSE(board_c.isPieceAt(to));
 }
 
+TEST_F(BoardMoveTest, UndoSwapClassicTest) {
+  Color color_a = SILVER;
+  Color color_b = RED;
+  Direction direction_a = SOUTH;
+  Direction direction_b = EAST;
+  Piece piece_a = SCARAB;
+  Piece piece_b = PYRAMID;
+  Square a = F4;
+  Square b = G3;
+  ASSERT_TRUE(board_c.isPieceAt(a));
+  ASSERT_TRUE(board_c.isPieceAt(a));
+  ASSERT_EQ(board_c.getPieceAt(a), piece_a);
+  ASSERT_EQ(board_c.getPieceAt(b), piece_b);
+  ASSERT_EQ(board_c.getColorAt(a), color_a);
+  ASSERT_EQ(board_c.getColorAt(b), color_b);
+  ASSERT_EQ(board_c.getDirectionAt(a), direction_a);
+  ASSERT_EQ(board_c.getDirectionAt(b), direction_b);
+  m = Move(a, b, piece_a, true);
+  board_c.doMove(m);
+  board_c.undoMove(m);
+  EXPECT_TRUE(board_c.isPieceAt(a));
+  EXPECT_TRUE(board_c.isPieceAt(a));
+  EXPECT_EQ(board_c.getPieceAt(a), piece_a);
+  EXPECT_EQ(board_c.getPieceAt(b), piece_b);
+  EXPECT_EQ(board_c.getColorAt(a), color_a);
+  EXPECT_EQ(board_c.getColorAt(b), color_b);
+  EXPECT_EQ(board_c.getDirectionAt(a), direction_a);
+  EXPECT_EQ(board_c.getDirectionAt(b), direction_b);
+}
+
+TEST_F(BoardMoveTest, UndoRotatePosClassicTest) {
+  Color c = SILVER;
+  Direction d_from = NORTH;
+  Direction d_to = EAST;
+  Piece p = PHARAOH;
+  Square s = E1;
+  ASSERT_EQ(board_c.getColorAt(s), c);
+  ASSERT_EQ(board_c.getDirectionAt(s), d_from);
+  ASSERT_NE(board_c.getDirectionAt(s), d_to);
+  ASSERT_EQ(board_c.getPieceAt(s), p);
+  ASSERT_TRUE(board_c.isPieceAt(s));
+  m = Move(E1, p, POSITIVE);
+  board_c.doMove(m);
+  board_c.undoMove(m);
+  EXPECT_EQ(board_c.getColorAt(s), c);
+  EXPECT_EQ(board_c.getDirectionAt(s), d_from);
+  EXPECT_NE(board_c.getDirectionAt(s), d_to);
+  EXPECT_EQ(board_c.getPieceAt(s), p);
+  EXPECT_TRUE(board_c.isPieceAt(s));
+}
+
+TEST_F(BoardMoveTest, UndoRotateNegClassicTest) {
+  Color c = SILVER;
+  Direction d_from = WEST;
+  Direction d_to = SOUTH;
+  Piece p = PYRAMID;
+  Square s = J5;
+  ASSERT_EQ(board_c.getColorAt(s), c);
+  ASSERT_EQ(board_c.getDirectionAt(s), d_from);
+  ASSERT_NE(board_c.getDirectionAt(s), d_to);
+  ASSERT_EQ(board_c.getPieceAt(s), p);
+  ASSERT_TRUE(board_c.isPieceAt(s));
+  m = Move(J5, p, NEGATIVE);
+  board_c.doMove(m);
+  board_c.undoMove(m);
+  EXPECT_EQ(board_c.getColorAt(s), c);
+  EXPECT_EQ(board_c.getDirectionAt(s), d_from);
+  EXPECT_NE(board_c.getDirectionAt(s), d_to);
+  EXPECT_EQ(board_c.getPieceAt(s), p);
+  EXPECT_TRUE(board_c.isPieceAt(s));
+}
 
 } // namespace khet
