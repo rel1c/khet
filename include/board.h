@@ -94,8 +94,8 @@ private:
   Bitboard _scarab;
   Bitboard _sphinx;
 
-  Color _player;
-  unsigned int _turn;
+  Color _player = SILVER;
+  unsigned int _turn = 0;
 
   bool _verifyPkn(const std::string&);
 
