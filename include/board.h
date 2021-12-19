@@ -8,6 +8,12 @@
 
 namespace khet {
 
+const unsigned int NUM_ANUBIS = 2;
+const unsigned int NUM_PHARAOH = 1;
+const unsigned int NUM_PYRAMID = 7;
+const unsigned int NUM_SCARAB = 2;
+const unsigned int NUM_SPHINX = 1;
+
 class Move; // forward declaration
 
 enum Color {
@@ -47,14 +53,15 @@ public:
   Board(Layout);
   Board(std::string);
 
-  void setToPkn(std::string);
+  void setToPkn(std::string); //TODO const string
   std::string toPkn() const; //TODO
+  bool isLegal() const;
 
   Bitboard getColor(Color) const;
   Bitboard getDirection(Direction) const;
   Bitboard getPiece(Piece) const;
 
-  bool isPieceAt(Square) const;
+  bool isPieceAt(Square) const; //TODO const below funcs
   Color getColorAt(Square) const;
   Direction getDirectionAt(Square) const;
   Piece getPieceAt(Square) const;
@@ -89,6 +96,8 @@ private:
 
   Color _player;
   unsigned int _turn;
+
+  bool _verifyPkn(const std::string&);
 
   void _addPiece(Square, Color, Direction, Piece);
   void _movePiece(Square, Square);

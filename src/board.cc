@@ -6,8 +6,6 @@
 
 namespace khet {
 
-static bool verifyPkn(const std::string&);
-
 Board::Board() {}
 
 Board::Board(std::string pkn) {
@@ -19,9 +17,6 @@ Board::Board(Layout layout=CLASSIC) {
 }
 
 void Board::setToPkn(std::string pkn) {
-  // make sure given string is a valid PKN string
-  if (!verifyPkn(pkn))
-    return; //TODO error!
 
   // extract fields
   std::istringstream iss(pkn);
@@ -37,7 +32,9 @@ void Board::setToPkn(std::string pkn) {
   Piece piece;
   auto p = piece_str.cbegin();
   auto d = direction_str.cbegin();
-  unsigned int i = 0;
+  int i = 0;
+
+  // walk through both piece and direction "stacks"
   while (p != piece_str.cend() && d != direction_str.cend()) {
     if (isdigit(*p)) {
       if (*p == '0')
@@ -57,6 +54,49 @@ void Board::setToPkn(std::string pkn) {
   }
   _player = (player_str == "r") ? RED : SILVER;
   _turn = std::stoi(turn_str);
+}
+
+bool Board::isLegal() const {
+  const Bitboard anubis_red = _anubis & _red;
+  const Bitboard pharaoh_red = _pharaoh & _red;
+  const Bitboard pyramid_red = _pyramid & _red;
+  const Bitboard scarab_red = _scarab & _red;
+  const Bitboard sphinx_red = _sphinx & _red;
+  const Bitboard anubis_silver = _anubis & _silver;
+  const Bitboard pharaoh_silver = _pharaoh & _silver;
+  const Bitboard pyramid_silver = _pyramid & _silver;
+  const Bitboard scarab_silver = _scarab & _silver;
+  const Bitboard sphinx_silver = _sphinx & _silver;
+  return (
+    (anubis_red.count() <= NUM_ANUBIS) &&
+    (pharaoh_red.count() <= NUM_PHARAOH) &&
+    (pyramid_red.count() <= NUM_PYRAMID) &&
+    (scarab_red.count() <= NUM_SCARAB) &&
+    (sphinx_red.count() <= NUM_SPHINX) &&
+    (anubis_silver.count() <= NUM_ANUBIS) &&
+    (pharaoh_silver.count() <= NUM_PHARAOH) &&
+    (pyramid_silver.count() <= NUM_PYRAMID) &&
+    (scarab_silver.count() <= NUM_SCARAB) &&
+    (sphinx_silver.count() <= NUM_SPHINX) &&
+    (!isPieceAt(A1) || (getColorAt(A1) == RED)) &&
+    (!isPieceAt(A2) || (getColorAt(A2) == RED)) &&
+    (!isPieceAt(A3) || (getColorAt(A3) == RED)) &&
+    (!isPieceAt(A4) || (getColorAt(A4) == RED)) &&
+    (!isPieceAt(A5) || (getColorAt(A5) == RED)) &&
+    (!isPieceAt(A6) || (getColorAt(A6) == RED)) &&
+    (!isPieceAt(A7) || (getColorAt(A7) == RED)) &&
+    (!isPieceAt(A8) || (getColorAt(A8) == RED)) &&
+    (!isPieceAt(J1) || (getColorAt(J1) == SILVER)) &&
+    (!isPieceAt(J2) || (getColorAt(J2) == SILVER)) &&
+    (!isPieceAt(J3) || (getColorAt(J3) == SILVER)) &&
+    (!isPieceAt(J4) || (getColorAt(J4) == SILVER)) &&
+    (!isPieceAt(J5) || (getColorAt(J5) == SILVER)) &&
+    (!isPieceAt(J6) || (getColorAt(J6) == SILVER)) &&
+    (!isPieceAt(J7) || (getColorAt(J7) == SILVER)) &&
+    (!isPieceAt(J8) || (getColorAt(J8) == SILVER)) &&
+    (getPieceAt(A8) == SPHINX) &&
+    (getPieceAt(J1) == SPHINX)
+  );
 }
 
 Bitboard Board::getColor(Color c) const {
@@ -145,7 +185,7 @@ Color Board::getPlayer() const {
 
 void Board::doMove(Move m) {
   if (!m.isLegal())
-    return; //TODO error!
+    return; //TODO warn!
 
   if (m.isRotate())
     _rotatePiece(m.from(), m.rotation());
@@ -157,7 +197,7 @@ void Board::doMove(Move m) {
 
 void Board::undoMove(Move m) {
   if (!m.isLegal())
-    return; //TODO error!
+    return; //TODO warn!
 
   if (m.isRotate()) {
     Rotation inverse = static_cast<Rotation>(m.rotation() * -1);
@@ -218,28 +258,86 @@ void Board::display() const {
   std::cout << "  abcdefghij abcdefghij" << std::endl;
 }
 
-const Bitboard Board::_red_sqrs = initBitboard(SquareVec {
-  A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
-});
+const Bitboard Board::_red_sqrs = initBitboard(
+  SquareVec {
+    A1, A2, A3, A4, A5, A6, A7, A8, I1, I8
+  }
+);
 
-const Bitboard Board::_silver_sqrs = initBitboard(SquareVec {
-  B1, B8, J1, J2, J3, J4, J5, J6, J7, J8
-});
+const Bitboard Board::_silver_sqrs = initBitboard(
+  SquareVec {
+    B1, B8, J1, J2, J3, J4, J5, J6, J7, J8
+  }
+);
 
 const Bitboard Board::_empty = 0;
 
-const Bitboard Board::_full = initBitboard(SquareVec {
-  A1, A2, A3, A4, A5, A6, A7, A8,
-  B1, B2, B3, B4, B5, B6, B7, B8,
-  C1, C2, C3, C4, C5, C6, C7, C8,
-  D1, D2, D3, D4, D5, D6, D7, D8,
-  E1, E2, E3, E4, E5, E6, E7, E8,
-  F1, F2, F3, F4, F5, F6, F7, F8,
-  G1, G2, G3, G4, G5, G6, G7, G8,
-  H1, H2, H3, H4, H5, H6, H7, H8,
-  I1, I2, I3, I4, I5, I6, I7, I8,
-  J1, J2, J3, J4, J5, J6, J7, J8,
-});
+const Bitboard Board::_full = initBitboard(
+  SquareVec {
+    A1, A2, A3, A4, A5, A6, A7, A8,
+    B1, B2, B3, B4, B5, B6, B7, B8,
+    C1, C2, C3, C4, C5, C6, C7, C8,
+    D1, D2, D3, D4, D5, D6, D7, D8,
+    E1, E2, E3, E4, E5, E6, E7, E8,
+    F1, F2, F3, F4, F5, F6, F7, F8,
+    G1, G2, G3, G4, G5, G6, G7, G8,
+    H1, H2, H3, H4, H5, H6, H7, H8,
+    I1, I2, I3, I4, I5, I6, I7, I8,
+    J1, J2, J3, J4, J5, J6, J7, J8,
+  }
+);
+
+bool Board::_verifyPkn(const std::string& pkn) {
+  // verify basic layout
+  if (pkn.empty())
+    return false;
+  auto const pkn_regex = std::regex("^[AaPpRrSsXx/0-9]+ [nesw]+ [rs] [0-9]+");
+  std::smatch m;
+  std::regex_match(pkn, m, pkn_regex);
+  if (m.size() > 0)
+    return false;
+
+  // verify fields and piece counts
+  std::istringstream iss(pkn);
+  std::string pieces, directions;
+  getline(iss, pieces, ' ');
+  getline(iss, directions, ' ');
+  if ((std::count(pieces.begin(), pieces.end(), '/') != 7))
+    return false;
+  unsigned int A, a, P, p, R, r, S, s, X, x;
+  A = std::count(pieces.begin(), pieces.end(), 'A');
+  a = std::count(pieces.begin(), pieces.end(), 'a');
+  P = std::count(pieces.begin(), pieces.end(), 'P');
+  p = std::count(pieces.begin(), pieces.end(), 'p');
+  R = std::count(pieces.begin(), pieces.end(), 'R');
+  r = std::count(pieces.begin(), pieces.end(), 'r');
+  S = std::count(pieces.begin(), pieces.end(), 'S');
+  s = std::count(pieces.begin(), pieces.end(), 's');
+  X = std::count(pieces.begin(), pieces.end(), 'X');
+  x = std::count(pieces.begin(), pieces.end(), 'x');
+
+  // check for too many of any piece
+  if ((A > NUM_ANUBIS) || (a > NUM_ANUBIS) ||
+      (P > NUM_PYRAMID) || (p > NUM_PYRAMID) ||
+      (R > NUM_PHARAOH) || (r > NUM_PHARAOH) ||
+      (S > NUM_SCARAB) || (s > NUM_SCARAB))
+    return false;
+  // check for too few pharaohs
+  if ((R < NUM_PHARAOH) && (r < NUM_PHARAOH))
+    return false;
+  // check for wrong number of sphinxes
+  if ((X != NUM_SPHINX) || (x != NUM_SPHINX))
+    return false;
+
+  // check for correct number of direction symbols
+  unsigned int sum = A + a + P + p + R + r + S + s + X + x;
+  if (directions.length() != sum)
+    return false;
+
+  // check if we missed anything positional
+  Board b(pkn);
+  return b.isLegal();
+}
 
 void Board::_addPiece(Square s, Color c, Direction d, Piece p) {
   Bitboard sqr = SQUARES[s];
@@ -369,15 +467,6 @@ Bitboard& Board::_getPieceRefAt(Square s) {
     return _scarab;
   else
     return _sphinx;
-}
-
-static bool verifyPkn(const std::string& pkn) {
-  if (pkn.empty())
-    return false;
-  auto const pkn_regex = std::regex("^[AaPpRrSsXx/0-9]+ [nesw]+ [rs] [0-9]+");
-  std::smatch m;
-  std::regex_match(pkn, m, pkn_regex);
-  return m.size() > 0;
 }
 
 } // namespace khet

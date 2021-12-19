@@ -238,6 +238,22 @@ TEST_F(BoardTest, PknBoardTest) {
   EXPECT_TRUE(b.isPieceAt(E8));
 }
 
+TEST_F(BoardTest, IsLegalBoardTest) {
+  //TODO parameterize for every conditional
+  EXPECT_TRUE(board_c.isLegal());
+  EXPECT_TRUE(board_d.isLegal());
+  EXPECT_TRUE(board_i.isLegal());
+  // swapped sphinx
+  Board bad_board_c("2PARA3x/7P2/6p3/p1P1SS1p1P/p1P1ss1p1P/3P6/2p7/X3arap2 wnnnnneewwsnsnsneewwssssse s 0");
+  // red on silver square
+  Board bad_board_d("P3AP3X/4R5/3SAP3P/3p1p1S1P/p1s1P1P3/p3pas3/5r4/x3pap3 wnnnnennswenweswensswsssse s 0");
+  // too many scarab
+  Board bad_board_i("2SARA3X/0/3P2p3/pP2Sp2pP/sP2Ps2pP/3P2p3/0/x3aras2 wnnnnseewwwnsnseeewwnsssse s 0");
+  EXPECT_FALSE(bad_board_c.isLegal());
+  EXPECT_FALSE(bad_board_d.isLegal());
+  EXPECT_FALSE(bad_board_i.isLegal());
+}
+
 TEST_F(BoardTest, getColorClassicTest) {
   Bitboard red_c = initBitboard(std::vector<Square> {
     A4, A5, A8, C7, E5, E8, F5, F8, G3, G8, H4, H5, H8
