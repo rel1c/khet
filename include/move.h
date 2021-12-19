@@ -24,7 +24,7 @@ public:
   bool operator==(const Move& rhs) const;
   bool operator!=(const Move& rhs) const;
 
-  std::string toStr() const;
+  const std::string toStr() const;
 
   friend std::ostream& operator<<(std::ostream&, const Move&);
 private:

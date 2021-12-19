@@ -3,8 +3,6 @@
 
 #include "move.h"
 
-class Move; // forward declaration
-
 namespace khet {
 
 using Moves = std::vector<Move>;

@@ -61,7 +61,7 @@ bool Move::operator!=(const Move& rhs) const {
   return MOVE_TO_INT(*this) != MOVE_TO_INT(rhs);
 }
 
-std::string Move::toStr() const {
+const std::string Move::toStr() const {
   std::string str = "";
   char from = charFromPiece(_piece);
   if (from && from != 'p')
