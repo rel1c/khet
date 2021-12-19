@@ -221,7 +221,7 @@ Color Board::getPlayer() const {
   return _player;
 }
 
-void Board::doMove(Move m) {
+void Board::doMove(const Move& m) {
   if (!m.isLegal())
     return; //TODO warn!
 
@@ -233,7 +233,7 @@ void Board::doMove(Move m) {
     _movePiece(m.from(), m.to());
 }
 
-void Board::undoMove(Move m) {
+void Board::undoMove(const Move& m) {
   if (!m.isLegal())
     return; //TODO warn!
 

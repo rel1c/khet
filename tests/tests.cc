@@ -966,4 +966,40 @@ TEST_F(BoardMoveTest, UndoRotateNegClassicTest) {
   EXPECT_TRUE(board_c.isPieceAt(s));
 }
 
+class PerftTest : public::testing::Test {
+public:
+  void SetUp() {
+    board_c = Board(CLASSIC);
+    board_d = Board(DYNASTY);
+    board_i = Board(IMHOTEP);
+    nodes = 0;
+  }
+  unsigned long long perft(const Board& board, int depth) {
+    if (depth == 0)
+      return 1;
+    unsigned long long nodes = 0;
+    MoveGen mg(board);
+    Moves moves = mg.getMoves();
+    Board moved_board = board;
+    //std::cout << "number of moves: " << moves.size() << std::endl;
+    for (auto move : moves) {
+      //std::cout << move.toStr() << std::endl;
+      moved_board.doMove(move);
+      nodes += perft(board, depth - 1);
+      moved_board.undoMove(move);
+    }
+    return nodes;
+  }
+protected:
+  Board board_c;
+  Board board_d;
+  Board board_i;
+  unsigned long long nodes;
+};
+
+TEST_F(PerftTest, PerftClassicTest) {
+  nodes = perft(board_c, 5);
+  std::cout << "nodes: " << nodes << std::endl;
+}
+
 } // namespace khet
