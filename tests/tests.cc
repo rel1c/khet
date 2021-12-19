@@ -254,6 +254,11 @@ TEST_F(BoardTest, IsLegalBoardTest) {
   EXPECT_FALSE(bad_board_i.isLegal());
 }
 
+TEST_F(BoardTest, IsLegalEmptyBoardTest) {
+  Board b;
+  EXPECT_FALSE(b.isLegal());
+}
+
 TEST_F(BoardTest, getColorClassicTest) {
   Bitboard red_c = initBitboard(std::vector<Square> {
     A4, A5, A8, C7, E5, E8, F5, F8, G3, G8, H4, H5, H8

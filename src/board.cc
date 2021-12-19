@@ -8,12 +8,12 @@ namespace khet {
 
 Board::Board() {}
 
-Board::Board(const std::string& pkn) {
-  setToPkn(pkn);
+Board::Board(Layout layout) {
+  setToPkn(layoutToPkn.at(layout));
 }
 
-Board::Board(Layout layout=CLASSIC) {
-  setToPkn(layoutToPkn.at(layout));
+Board::Board(const std::string& pkn) {
+  setToPkn(pkn);
 }
 
 void Board::setToPkn(const std::string& pkn) {
@@ -68,6 +68,24 @@ bool Board::isLegal() const {
   const Bitboard scarab_silver = _scarab & _silver;
   const Bitboard sphinx_silver = _sphinx & _silver;
   return (
+    (_sphinx[A8] && _red[A8]) &&
+    (_sphinx[J1] && _silver[J1]) &&
+    (_east[A8] || _south[A8]) &&
+    (_north[J1] || _west[J1]) &&
+    (!isPieceAt(A1) || _red[A1]) &&
+    (!isPieceAt(A2) || _red[A2]) &&
+    (!isPieceAt(A3) || _red[A3]) &&
+    (!isPieceAt(A4) || _red[A4]) &&
+    (!isPieceAt(A5) || _red[A5]) &&
+    (!isPieceAt(A6) || _red[A6]) &&
+    (!isPieceAt(A7) || _red[A7]) &&
+    (!isPieceAt(J2) || _silver[J2]) &&
+    (!isPieceAt(J3) || _silver[J3]) &&
+    (!isPieceAt(J4) || _silver[J4]) &&
+    (!isPieceAt(J5) || _silver[J5]) &&
+    (!isPieceAt(J6) || _silver[J6]) &&
+    (!isPieceAt(J7) || _silver[J7]) &&
+    (!isPieceAt(J8) || _silver[J8]) &&
     (anubis_red.count() <= NUM_ANUBIS) &&
     (pharaoh_red.count() <= NUM_PHARAOH) &&
     (pyramid_red.count() <= NUM_PYRAMID) &&
@@ -77,25 +95,7 @@ bool Board::isLegal() const {
     (pharaoh_silver.count() <= NUM_PHARAOH) &&
     (pyramid_silver.count() <= NUM_PYRAMID) &&
     (scarab_silver.count() <= NUM_SCARAB) &&
-    (sphinx_silver.count() <= NUM_SPHINX) &&
-    (!isPieceAt(A1) || (getColorAt(A1) == RED)) &&
-    (!isPieceAt(A2) || (getColorAt(A2) == RED)) &&
-    (!isPieceAt(A3) || (getColorAt(A3) == RED)) &&
-    (!isPieceAt(A4) || (getColorAt(A4) == RED)) &&
-    (!isPieceAt(A5) || (getColorAt(A5) == RED)) &&
-    (!isPieceAt(A6) || (getColorAt(A6) == RED)) &&
-    (!isPieceAt(A7) || (getColorAt(A7) == RED)) &&
-    (!isPieceAt(A8) || (getColorAt(A8) == RED)) &&
-    (!isPieceAt(J1) || (getColorAt(J1) == SILVER)) &&
-    (!isPieceAt(J2) || (getColorAt(J2) == SILVER)) &&
-    (!isPieceAt(J3) || (getColorAt(J3) == SILVER)) &&
-    (!isPieceAt(J4) || (getColorAt(J4) == SILVER)) &&
-    (!isPieceAt(J5) || (getColorAt(J5) == SILVER)) &&
-    (!isPieceAt(J6) || (getColorAt(J6) == SILVER)) &&
-    (!isPieceAt(J7) || (getColorAt(J7) == SILVER)) &&
-    (!isPieceAt(J8) || (getColorAt(J8) == SILVER)) &&
-    (getPieceAt(A8) == SPHINX) &&
-    (getPieceAt(J1) == SPHINX)
+    (sphinx_silver.count() <= NUM_SPHINX)
   );
 }
 
@@ -131,7 +131,10 @@ Bitboard Board::getPiece(Piece p) const {
 }
 
 bool Board::isPieceAt(Square s) const {
-  return (_red | _silver)[s] == 1;
+  //TODO could possibly include all boards in the unlikely
+  // case that there are missing bits in direction and piece
+  // boards
+  return (_red | _silver)[s];
 }
 
 Color Board::getColorAt(Square s) const {
@@ -227,13 +230,12 @@ void Board::display() const {
     for (int j = 0; j < NFILES; j++) {
       int n = (i-1) * NFILES + j;
       Square s = static_cast<Square>(n);
-      Color color = getColorAt(s);
-      Piece piece = getPieceAt(s);
       char p = '.';
       if (isPieceAt(s)) {
+        Color color = getColorAt(s);
+        Piece piece = getPieceAt(s);
         p = charFromPiece(piece);
-        if (color == SILVER)
-          p = std::toupper(p);
+        p = (color == SILVER) ? std::toupper(p) : p;
       }
       std::cout << p;
     }
@@ -242,9 +244,9 @@ void Board::display() const {
     for (int j = 0; j < NFILES; j++) {
       int n = (i-1) * NFILES + j;
       Square s = static_cast<Square>(n);
-      Direction direction = getDirectionAt(s);
       char d = '.';
       if (isPieceAt(s)) {
+        Direction direction = getDirectionAt(s);
         d = charFromDirection(direction);
       }
       std::cout << d;
