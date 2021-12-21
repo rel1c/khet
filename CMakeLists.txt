@@ -5,6 +5,9 @@ project(khet LANGUAGES CXX)
 # GoogleTest requires at least C++11
 set(CMAKE_CXX_STANDARD 11)
 
+# Optimization
+# SET(CMAKE_CXX_FLAGS "-O3")
+
 # Compile with debugging information
 # set(CMAKE_BUILD_TYPE Debug)
 

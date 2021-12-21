@@ -5,9 +5,15 @@
 
 namespace khet {
 
+const unsigned int NDIRECTIONS = 4;
+
+using BounceTable = std::array<std::array<Bitboard, NSQUARES>, NDIRECTIONS>;
+
 class Laser {
 public:
 private:
+  static const BounceTable _bounces;
+};
 
 } // namespace khet
 
@@ -34,3 +40,4 @@ private:
  * red_anubis_north might be faster than looking up the color
  * then the piece and then the direction. this requires more
  * thought.
+ */
