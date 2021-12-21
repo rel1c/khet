@@ -231,6 +231,8 @@ void Board::doMove(const Move& m) {
     _swapPieces(m.from(), m.to());
   else
     _movePiece(m.from(), m.to());
+  _player = (_player == SILVER) ? RED : SILVER;
+  _turn--;
 }
 
 void Board::undoMove(const Move& m) {
@@ -245,6 +247,8 @@ void Board::undoMove(const Move& m) {
     _swapPieces(m.to(), m.from());
   else
     _movePiece(m.to(), m.from());
+  _player = (_player == SILVER) ? RED : SILVER;
+  _turn++;
 }
 
 /**

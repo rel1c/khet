@@ -998,8 +998,8 @@ protected:
 };
 
 TEST_F(PerftTest, PerftClassicTest) {
-  nodes = perft(board_c, 5);
-  std::cout << "nodes: " << nodes << std::endl;
+  nodes = perft(board_c, 3);
+  //std::cout << "nodes: " << nodes << std::endl;
 }
 
 } // namespace khet
