@@ -5,12 +5,11 @@
 
 namespace khet {
 
-const unsigned int NDIRECTIONS = 4;
-
 using BounceTable = std::array<std::array<Bitboard, NSQUARES>, NDIRECTIONS>;
 
 class Laser {
 public:
+  void showBounceTable() const;
 private:
   static const BounceTable _bounces;
 };

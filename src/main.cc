@@ -1,5 +1,6 @@
 #include <iostream>
 #include "movegen.h"
+#include "laser.h"
 
 using namespace khet;
 
@@ -21,8 +22,8 @@ unsigned long long perft(const Board& board, int depth) {
 }
 
 int main(int argc, const char **argv) {
-  Board b(CLASSIC);
-  unsigned long long nodes = perft(b, 4);
-  std::cout << "nodes: " << nodes << std::endl;
+  displayBitboard(FILE_A);
+  Laser l;
+  l.showBounceTable();
   return 0;
 }

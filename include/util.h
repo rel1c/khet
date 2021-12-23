@@ -5,6 +5,30 @@
 
 namespace khet {
 
+const unsigned int NCOLORS = 2;
+const unsigned int NPIECES = 5;
+const unsigned int NDIRECTIONS = 4;
+
+const std::array<Color, NCOLORS> colors {
+  RED,
+  SILVER,
+};
+
+const std::array<Piece, NPIECES> pieces {
+  ANUBIS,
+  PHARAOH,
+  PYRAMID,
+  SCARAB,
+  SPHINX
+};
+
+const std::array<Direction, NDIRECTIONS> directions {
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST
+};
+
 const std::array<std::string, 2> colorStrings {
   "RED",
   "SILVER",
