@@ -3,55 +3,65 @@
 
 namespace khet {
 
-static const BounceTable genBounceTable();
-static const Bitboard genBouncePath(const Square, const Direction);
+static ReflectTable genReflectTable();
+static Bitboard genReflectPath(Square, Direction);
 
-const BounceTable Laser::_bounces = genBounceTable();
+const ReflectTable Laser::_reflections = genReflectTable();
 
-void Laser::showBounceTable() const {
+/**
+ * @brief Debugging function to display reflection look-up table.
+ */
+void Laser::showReflectTable() const {
   for (auto s : squares) {
-    for (auto d : directions) {
-      std::cout << "s:" << s << std::endl;
-      std::cout << "d:" << d << std::endl;
-      displayBitboard(_bounces[s][d]);
+    for (auto d : {NORTH, EAST, SOUTH, WEST}) {
+      std::cout << "[" << squareStrings[s] << "][";
+      std::cout << directionStrings[d] << "]:" << std::endl;
+      displayBitboard(_reflections[s][d]);
     }
   }
 }
 
-static const BounceTable genBounceTable() {
-  BounceTable bt;
+/**
+ * @brief Generate reflection look-up table at compile time.
+ */
+static ReflectTable genReflectTable() {
+  ReflectTable bt;
+  bt.fill({});
   for (auto s : squares) {
-    for (auto d : directions) {
-      bt[s][d] = genBouncePath(s, d);
+    for (auto d : {NORTH, EAST, SOUTH, WEST}) {
+      bt[s][d] = genReflectPath(s, d);
     }
   }
-  return (const BounceTable) bt;
+  return bt;
 }
 
-static const Bitboard genBouncePath(const Square s, const Direction d) {
-  static const Bitboard edge = FILE_A | FILE_J | RANK_1 | RANK_8;
-  Bitboard bb;
+/**
+ * @brief Helper function for generating the reflection table. Traces out a
+ * laser path from each square to an edge and stores it at the squares location
+ * in the table.
+ */
+static Bitboard genReflectPath(Square s, Direction d) {
+  Bitboard bb = 0;
   Square t = s;
   while (true) {
-    if (edge[t]) {
-      break;
-    }
-
-    if (d == NORTH) {
+    if (d == NORTH && !RANK_8[t]) {
       t = static_cast<Square>(t + NFILES);
     }
-    else if (d == EAST) {
+    else if (d == EAST && !FILE_J[t]) {
       t = static_cast<Square>(t + 1);
     }
-    else if (d == SOUTH) {
+    else if (d == SOUTH && !RANK_1[t]) {
       t = static_cast<Square>(t - NFILES);
     }
-    else {
+    else if (d == WEST && !FILE_A[t]) {
       t = static_cast<Square>(t - 1);
+    }
+    else {
+      break;
     }
     bb.flip(t);
   }
-  return (const Bitboard) bb;
+  return bb;
 }
 
 } // namespace khet

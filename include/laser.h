@@ -5,13 +5,13 @@
 
 namespace khet {
 
-using BounceTable = std::array<std::array<Bitboard, NSQUARES>, NDIRECTIONS>;
+using ReflectTable = std::array<std::array<Bitboard, NDIRECTIONS>, NSQUARES>;
 
 class Laser {
 public:
-  void showBounceTable() const;
+  void showReflectTable() const;
 private:
-  static const BounceTable _bounces;
+  static const ReflectTable _reflections;
 };
 
 } // namespace khet

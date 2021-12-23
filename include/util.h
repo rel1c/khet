@@ -29,12 +29,12 @@ const std::array<Direction, NDIRECTIONS> directions {
   WEST
 };
 
-const std::array<std::string, 2> colorStrings {
+const std::array<std::string, NCOLORS> colorStrings {
   "RED",
   "SILVER",
 };
 
-const std::array<std::string, 5> pieceStrings {
+const std::array<std::string, NPIECES> pieceStrings {
   "ANUBIS",
   "PHARAOH",
   "PYRAMID",
@@ -42,7 +42,7 @@ const std::array<std::string, 5> pieceStrings {
   "SPHINX"
 };
 
-const std::array<std::string, 5> directionStrings {
+const std::array<std::string, NDIRECTIONS> directionStrings {
   "NORTH",
   "EAST",
   "SOUTH",
