@@ -5,13 +5,21 @@
 
 namespace khet {
 
+enum BitPosition {
+  LSB,
+  MSB
+}
+
 using ReflectTable = std::array<std::array<Bitboard, NDIRECTIONS>, NSQUARES>;
+using OrderTable = std::array<BitPosition, NDIRECTIONS>;
 
 class Laser {
 public:
+  Bitboard fire(const Board&);
   void showReflectTable() const;
 private:
   static const ReflectTable _reflections;
+  static const OrderTable _reflectOrder;
 };
 
 } // namespace khet

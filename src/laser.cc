@@ -8,6 +8,22 @@ static Bitboard genReflectPath(Square, Direction);
 
 const ReflectTable Laser::_reflections = genReflectTable();
 
+const OrderTable _reflectOrder = {
+  LSB,
+  LSB,
+  MSB,
+  MSB
+};
+
+/**
+ * @brief Fires the laser and returns the outcome, a bitboard serving as a
+ * negative bit mask for an eliminated piece.
+ * @param b The board
+ */
+Bitboard fire(const Board& b) {
+  
+}
+
 /**
  * @brief Debugging function to display reflection look-up table.
  */
