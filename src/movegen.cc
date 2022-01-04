@@ -6,7 +6,7 @@ MoveGen::MoveGen() {
   gen(Board());
 }
 
-MoveGen::MoveGen(const Board &b) {
+MoveGen::MoveGen(const Board& b) {
   gen(b);
 }
 

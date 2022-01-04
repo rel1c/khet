@@ -24,6 +24,5 @@ unsigned long long perft(const Board& board, int depth) {
 int main(int argc, const char **argv) {
   displayBitboard(FILE_A);
   Laser l;
-  l.showReflectTable();
   return 0;
 }
