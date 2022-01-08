@@ -1,7 +1,20 @@
 #include "laser.h"
 #include <iostream>
+#include <map>
 
 namespace khet {
+
+const std::array<std::array<Direction, NDIRECTIONS>, NDIRECTIONS> REFLECTS {
+  {
+    {WEST, SOUTH, EAST, NORTH},
+    {EAST, NORTH, WEST, SOUTH},
+    {WEST, SOUTH, EAST, NORTH},
+    {EAST, NORTH, WEST, SOUTH}
+  }
+};
+
+const std::array<std::array<Direction, NDIRECTIONS>, NDIRECTIONS> PYRAMID_REFLECTS {
+};
 
 Laser::Laser() {
   fire(Board());
@@ -44,7 +57,9 @@ void Laser::fire(const Board& b) {
       _where = s;
       break;
     }
-    //else if (
+    else {
+      d = _getReflection(b, s, d);
+    }
   }
 }
 
@@ -71,9 +86,18 @@ Bitboard Laser::_getVulnerable(const Board& b, Direction d) {
  * @param b The board
  * @param s The square of the reflecting piece
  * @param d The laser's direction
+ * @details It is assumed that vulnerable pieces have already been found and
+ * taken care of. This is important because pyramid reflections are only valid
+ * given the pyramid hasn't been eliminated.
  */
-Direction Laser::_getReflection(const Board& b, Direction d) {
-  return d; //TODO
+Direction Laser::_getReflection(const Board& b, Square s, Direction d) {
+  //TODO you wrote this drunk, maybe have a look-see ;)
+  Direction r = d;
+  Piece p = b.getPieceAt(s);
+  if (p == SCARAB || p == PYRAMID) {
+    r = REFLECTS[b.getDirectionAt(s)][d];
+  }
+  return r;
 }
 
 /*

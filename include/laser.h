@@ -8,6 +8,8 @@ namespace khet {
 const Square SILVER_LASER = J1;
 const Square RED_LASER = A8;
 
+extern const std::array<std::array<Direction, NDIRECTIONS>, NDIRECTIONS> REFLECTS;
+
 class Laser {
 public:
   Laser();
@@ -25,7 +27,7 @@ private:
   Square _where;
 
   Bitboard _getVulnerable(const Board&, Direction);
-  Direction _getReflection(const Board&, Direction);
+  Direction _getReflection(const Board&, Square, Direction);
 };
 
 } // namespace khet
