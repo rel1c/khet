@@ -14,6 +14,7 @@ public:
   Moves getMoves() const;
   void gen(const Board&);
 private:
+  // 1 sphinx rotation + 12 pieces * 8 moves + 2 rotations
   static const int MAX_MOVES = 121;
   static const std::array<SquareVec, NSQUARES> _lookup_sqrs;
   static const std::array<Bitboard, NSQUARES> _lookup_moves;

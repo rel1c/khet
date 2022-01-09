@@ -966,6 +966,48 @@ TEST_F(BoardMoveTest, UndoRotateNegClassicTest) {
   EXPECT_TRUE(board_c.isPieceAt(s));
 }
 
+class MoveGenTest : public::testing::Test {
+};
+
+TEST_F(MoveGenTest, BasicMoveGenTest) {
+  Board b("5RS2X/5A4/5S3p/0/0/n3s5/4a5/x2sr5 nsnnssnnssns s 0");
+  MoveGen mg(b);
+  Moves expect_moves = {
+    Move(F1, E1, PHARAOH),
+    Move(F1, E2, PHARAOH),
+    Move(F1, G2, PHARAOH),
+    Move(F1, PHARAOH, POSITIVE),
+    Move(F1, PHARAOH, NEGATIVE),
+    Move(G1, F2, SCARAB, true),
+    Move(G1, G2, SCARAB),
+    Move(G1, H1, SCARAB),
+    Move(G1, H2, SCARAB),
+    Move(G1, SCARAB, POSITIVE),
+    Move(G1, SCARAB, NEGATIVE),
+    Move(J1, SPHINX, NEGATIVE),
+    Move(F2, E1, ANUBIS),
+    Move(F2, E2, ANUBIS),
+    Move(F2, E3, ANUBIS),
+    Move(F2, G2, ANUBIS),
+    Move(F2, G3, ANUBIS),
+    Move(F2, ANUBIS, POSITIVE),
+    Move(F2, ANUBIS, NEGATIVE),
+    Move(F3, F2, SCARAB, true),
+    Move(F3, E2, SCARAB),
+    Move(F3, E3, SCARAB),
+    Move(F3, E4, SCARAB),
+    Move(F3, F4, SCARAB),
+    Move(F3, G2, SCARAB),
+    Move(F3, G3, SCARAB),
+    Move(F3, G4, SCARAB),
+    Move(F3, SCARAB, POSITIVE),
+    Move(F3, SCARAB, NEGATIVE),
+  };
+  Moves actual_moves = mg.getMoves();
+  EXPECT_EQ(expect_moves.size(), actual_moves.size());
+  EXPECT_EQ(expect_moves, actual_moves);
+}
+
 class PerftTest : public::testing::Test {
 public:
   void SetUp() {
