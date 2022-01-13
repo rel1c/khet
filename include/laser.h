@@ -5,8 +5,8 @@
 
 namespace khet {
 
-const Square SILVER_LASER = J1;
-const Square RED_LASER = A8;
+const Square SILVER_LASER_SQR = J1;
+const Square RED_LASER_SQR = A8;
 
 extern const std::array<std::array<Direction, NDIRECTIONS>, NDIRECTIONS> REFLECTS;
 

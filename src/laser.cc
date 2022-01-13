@@ -42,7 +42,7 @@ Square Laser::getWhere() {
  */
 void Laser::fire(const Board& b) {
   // Prepare to fire...
-  Square s = (b.getPlayer() == SILVER) ? SILVER_LASER : RED_LASER;
+  Square s = (b.getPlayer() == SILVER) ? SILVER_LASER_SQR : RED_LASER_SQR;
   Direction d = b.getDirectionAt(s);
   _hit = false;
   _path = 0;
@@ -50,15 +50,33 @@ void Laser::fire(const Board& b) {
   // Fire away!
   Bitboard vulnerable;
   while (true) {
+    // Move laser (TODO move this to function or table or both)
+    if (d == NORTH)
+      s = static_cast<Square>(s + 10);
+    else if (d == EAST)
+      s = static_cast<Square>(s + 1);
+    else if (d == SOUTH)
+      s = static_cast<Square>(s - 10);
+    else
+      s = static_cast<Square>(s - 1);
+    _where = s;
     _path.set(s);
+    // Did we hit a piece?
     vulnerable = _getVulnerable(b, d);
     if (vulnerable[s]) {
       _hit = true;
-      _where = s;
       break;
     }
+    // We must have reflected
     else {
       d = _getReflection(b, s, d);
+    }
+    // Is the laser heading out of bounds?
+    if ((d == NORTH && RANK_8[s]) ||
+        (d == EAST  && FILE_J[s]) ||
+        (d == SOUTH && RANK_1[s]) ||
+        (d == WEST  && FILE_A[s])) {
+      break;
     }
   }
 }

@@ -1,5 +1,6 @@
 #include "movegen.h"
 #include "util.h"
+#include "laser.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -1006,6 +1007,20 @@ TEST_F(MoveGenTest, BasicMoveGenTest) {
   Moves actual_moves = mg.getMoves();
   EXPECT_EQ(expect_moves.size(), actual_moves.size());
   EXPECT_EQ(expect_moves, actual_moves);
+}
+
+class LaserTest : public::testing::Test {
+};
+
+TEST_F(LaserTest, LaserPathClassicTest) {
+  Board b(CLASSIC);
+  Laser l(b);
+  Bitboard path = initBitboard(std::vector<Square> {
+    J2, J3, J4, I4, H4, H5, I5, J5, J6, J7, J8
+  });
+  EXPECT_FALSE(l.didHit());
+  EXPECT_EQ(path, l.getPath());
+  EXPECT_EQ(J8, l.getWhere());
 }
 
 class PerftTest : public::testing::Test {
