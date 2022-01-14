@@ -115,6 +115,27 @@ TEST_F(BitboardTest, DisplayTest) {
   EXPECT_EQ(output, expect);
 }
 
+/// PieceCode Tests ////////////////////////////////////////////////////////////
+
+class PieceCodeTest : public::testing::Test {
+};
+
+TEST_F(PieceCodeTest, PieceCodeInitTest) {
+  PieceCode pc(RED, ANUBIS, SOUTH);
+  ASSERT_EQ(pc.color, RED);
+  ASSERT_EQ(pc.piece, ANUBIS);
+  ASSERT_EQ(pc.direction, SOUTH);
+}
+
+TEST_F(PieceCodeTest, PieceCodeCoutTest) {
+  PieceCode pc(RED, ANUBIS, SOUTH);
+  CoutRedirect cr;
+  std::cout << pc;
+  std::string output = cr.getString();
+  std::string expect = "1:0:2";
+  EXPECT_EQ(output, expect);
+}
+
 /// Move Tests /////////////////////////////////////////////////////////////////
 
 class MoveTest : public::testing::Test {

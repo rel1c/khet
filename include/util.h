@@ -30,8 +30,8 @@ const std::array<Direction, NDIRECTIONS> directions {
 };
 
 const std::array<std::string, NCOLORS> colorStrings {
-  "RED",
   "SILVER",
+  "RED",
 };
 
 const std::array<std::string, NPIECES> pieceStrings {

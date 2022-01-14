@@ -5,6 +5,7 @@
 #include <map>
 
 #include "bitboard.h"
+#include "piececode.h"
 
 namespace khet {
 
@@ -16,30 +17,10 @@ const unsigned int NUM_SPHINX = 1;
 
 class Move; // forward declaration
 
-enum Color {
-  RED,
-  SILVER,
-};
-
-enum Direction {
-  NORTH,
-  EAST,
-  SOUTH,
-  WEST
-};
-
 enum Layout {
   CLASSIC,
   IMHOTEP,
   DYNASTY
-};
-
-enum Piece {
-  ANUBIS,
-  PHARAOH,
-  PYRAMID,
-  SCARAB,
-  SPHINX
 };
 
 enum Rotation {
