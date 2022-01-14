@@ -78,6 +78,8 @@ private:
   Color _player = SILVER;
   unsigned int _turn = 0;
 
+  std::array<PieceCode, NSQUARES> _pieces;
+
   bool _verifyPkn(const std::string&);
 
   void _addPiece(Square, Color, Direction, Piece);

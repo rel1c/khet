@@ -22,7 +22,9 @@ unsigned long long perft(const Board& board, int depth) {
 }
 
 int main(int argc, const char **argv) {
-  displayBitboard(FILE_A);
-  Laser l;
+  Board b(CLASSIC);
+  int d = 5;
+  unsigned long long n = perft(b, d);
+  std::cout << "perft at depth " << d << " : " << n << " nodes" << std::endl;
   return 0;
 }

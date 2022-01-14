@@ -2,6 +2,12 @@
 
 namespace khet {
 
+PieceCode::PieceCode() {
+  color = SILVER;
+  piece = ANUBIS;
+  direction = NORTH;
+}
+
 PieceCode::PieceCode(Color c, Piece p, Direction d) {
   color = c;
   piece = p;

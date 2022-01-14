@@ -381,6 +381,7 @@ bool Board::_verifyPkn(const std::string& pkn) {
 }
 
 void Board::_addPiece(Square s, Color c, Direction d, Piece p) {
+  _pieces[s] = PieceCode(c, p, d);
   Bitboard sqr = SQUARES[s];
   Bitboard& color = _getColorRef(c);
   Bitboard& direction = _getDirectionRef(d);
@@ -405,6 +406,8 @@ void Board::_movePiece(Square from, Square to) {
   color |= sqr_to;
   direction |= sqr_to;
   piece |= sqr_to;
+
+  _pieces[to] = _pieces[from];
 }
 
 void Board::_swapPieces(Square from, Square to) {
@@ -426,6 +429,10 @@ void Board::_swapPieces(Square from, Square to) {
   color_to = color_to & ~sqr_to | sqr_from;
   direction_to = direction_to & ~sqr_to | sqr_from;
   piece_to = piece_to & ~sqr_to | sqr_from;
+
+  PieceCode tmp = _pieces[to];
+  _pieces[to] = _pieces[from];
+  _pieces[from] = tmp;
 }
 
 void Board::_rotatePiece(Square s, Rotation r) {
@@ -436,6 +443,8 @@ void Board::_rotatePiece(Square s, Rotation r) {
   Bitboard& direction_to = _getDirectionRef(d_to);
   direction_from &= ~sqr;
   direction_to |= sqr;
+
+  _pieces[s].direction = d_to;
 }
 
 void Board::_removePiece(Square s) {
@@ -446,6 +455,8 @@ void Board::_removePiece(Square s) {
   color &= ~sqr;
   direction &= ~sqr;
   piece &= ~sqr;
+
+  //TODO need null PieceCode!
 }
 
 Bitboard& Board::_getColorRef(Color c) {
@@ -480,34 +491,15 @@ Bitboard& Board::_getPieceRef(Piece p) {
 }
 
 Bitboard& Board::_getColorRefAt(Square s) {
-  if (_red[s])
-    return _red;
-  else
-    return _silver;
+  return _getColorRef(_pieces[s].color);
 }
 
 Bitboard& Board::_getDirectionRefAt(Square s) {
-  if (_north[s])
-    return _north;
-  else if (_east[s])
-    return _east;
-  else if (_south[s])
-    return _south;
-  else
-    return _west;
+  return _getDirectionRef(_pieces[s].direction);
 }
 
 Bitboard& Board::_getPieceRefAt(Square s) {
-  if (_anubis[s])
-    return _anubis;
-  else if (_pharaoh[s])
-    return _pharaoh;
-  else if (_pyramid[s])
-    return _pyramid;
-  else if (_scarab[s])
-    return _scarab;
-  else
-    return _sphinx;
+  return _getPieceRef(_pieces[s].piece);
 }
 
 } // namespace khet

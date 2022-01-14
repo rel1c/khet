@@ -30,6 +30,7 @@ struct PieceCode {
   Piece piece;
   Direction direction;
 
+  PieceCode();
   PieceCode(Color, Piece, Direction);
 
   friend std::ostream& operator<<(std::ostream&, const PieceCode&);
