@@ -122,6 +122,14 @@ constexpr PieceType typeOf(Piece p) {
   return PieceType(p & 0b111);
 }
 
+constexpr File fileOf(Square s) {
+  return File(s % 10);
+}
+
+constexpr Rank rankOf(Square s) {
+  return Rank(s / 10);
+}
+
 using Bitboard = std::bitset <NUM_SQUARES>;
 
 #endif
