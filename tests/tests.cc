@@ -30,6 +30,8 @@ private:
 
 class TypesTest : public::testing::Test {};
 
+using TypesDeathTest = TypesTest;
+
 TEST_F(TypesTest, ColorOfPieceTest) {
   EXPECT_EQ(SILVER, colorOf(SILVER_NORTH_ANUBIS));
   EXPECT_EQ(SILVER, colorOf(SILVER_EAST_EYE_OF_HORUS));
@@ -38,7 +40,7 @@ TEST_F(TypesTest, ColorOfPieceTest) {
   EXPECT_EQ(RED, colorOf(RED_NORTH_ANUBIS));
   EXPECT_EQ(RED, colorOf(RED_EAST_EYE_OF_HORUS));
   EXPECT_EQ(RED, colorOf(RED_SOUTH_PYRAMID));
-  EXPECT_EQ(RED, colorOf(RED_WEST_SCARAB));
+  EXPECT_EQ(RED, colorOf(RED_WEST_SPHINX));
 }
 
 TEST_F(TypesTest, DirectionOfPieceTest) {
@@ -49,7 +51,7 @@ TEST_F(TypesTest, DirectionOfPieceTest) {
   EXPECT_EQ(SOUTH, directionOf(SILVER_SOUTH_PYRAMID));
   EXPECT_EQ(SOUTH, directionOf(RED_SOUTH_PYRAMID));
   EXPECT_EQ(WEST, directionOf(SILVER_WEST_SCARAB));
-  EXPECT_EQ(WEST, directionOf(RED_WEST_SCARAB));
+  EXPECT_EQ(WEST, directionOf(RED_WEST_SPHINX));
 }
 
 TEST_F(TypesTest, TypeOfPieceTest) {
@@ -60,5 +62,13 @@ TEST_F(TypesTest, TypeOfPieceTest) {
   EXPECT_EQ(PYRAMID, typeOf(SILVER_SOUTH_PYRAMID));
   EXPECT_EQ(PYRAMID, typeOf(RED_SOUTH_PYRAMID));
   EXPECT_EQ(SCARAB, typeOf(SILVER_WEST_SCARAB));
-  EXPECT_EQ(SCARAB, typeOf(RED_WEST_SCARAB));
+  EXPECT_EQ(SPHINX, typeOf(RED_WEST_SPHINX));
+}
+
+TEST_F(TypesDeathTest, ColorOfPieceDeathTest) {
+  EXPECT_DEATH(colorOf(NO_PIECE), "");
+}
+
+TEST_F(TypesDeathTest, DirectionOfPieceDeathTest) {
+  EXPECT_DEATH(directionOf(NO_PIECE), "");
 }

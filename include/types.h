@@ -104,6 +104,7 @@ const int NUM_FILES = 10;
 const int NUM_RANKS = 8;
 const int NUM_SQUARES = 80;
 const int MAX_MOVES = 121;
+
 const Square SILVER_SPHINX_SQUARE = SQ_J1;
 const Square RED_SPHINX_SQUARE = SQ_A8;
 
