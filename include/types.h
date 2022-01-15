@@ -1,3 +1,6 @@
+#include <bitset>
+#include <cassert>
+
 #ifndef TYPES_H_
 #define TYPES_H_
 
@@ -14,17 +17,17 @@ enum Square : int {
 };
 
 enum Color {
+  NO_COLOR,
   SILVER,
   RED
-  NO_COLOR,
 };
 
 enum Direction {
+  NO_DIRECTION,
   NORTH,
   EAST,
   SOUTH,
   WEST
-  NO_DIRECTION,
 };
 
 enum PieceType {
@@ -34,91 +37,59 @@ enum PieceType {
   PHARAOH,
   PYRAMID,
   SCARAB,
+  SPHINX
 };
 
 enum Piece {
   NO_PIECE,
-  SILVER_NORTH_ANUBIS       = SILVER << 5 | NORTH << 3 | ANUBIS,
-  SILVER_NORTH_EYE_OF_HORUS = SILVER << 5 | NORTH << 3 | EYE_OF_HORUS,
-  SILVER_NORTH_PHARAOH      = SILVER << 5 | NORTH << 3 | PHARAOH,
-  SILVER_NORTH_PYRAMID      = SILVER << 5 | NORTH << 3 | PYRAMID,
-  SILVER_NORTH_SCARAB       = SILVER << 5 | NORTH << 3 | SCARAB,
-  SILVER_EAST_ANUBIS        = SILVER << 5 | EAST  << 3 | ANUBIS,
-  SILVER_EAST_EYE_OF_HORUS  = SILVER << 5 | EAST  << 3 | EYE_OF_HORUS,
-  SILVER_EAST_PHARAOH       = SILVER << 5 | EAST  << 3 | PHARAOH,
-  SILVER_EAST_PYRAMID       = SILVER << 5 | EAST  << 3 | PYRAMID,
-  SILVER_EAST_SCARAB        = SILVER << 5 | EAST  << 3 | SCARAB,
-  SILVER_SOUTH_ANUBIS       = SILVER << 5 | SOUTH << 3 | ANUBIS,
-  SILVER_SOUTH_EYE_OF_HORUS = SILVER << 5 | SOUTH << 3 | EYE_OF_HORUS,
-  SILVER_SOUTH_PHARAOH      = SILVER << 5 | SOUTH << 3 | PHARAOH,
-  SILVER_SOUTH_PYRAMID      = SILVER << 5 | SOUTH << 3 | PYRAMID,
-  SILVER_SOUTH_SCARAB       = SILVER << 5 | SOUTH << 3 | SCARAB,
-  SILVER_WEST_ANUBIS        = SILVER << 5 | WEST  << 3 | ANUBIS,
-  SILVER_WEST_EYE_OF_HORUS  = SILVER << 5 | WEST  << 3 | EYE_OF_HORUS,
-  SILVER_WEST_PHARAOH       = SILVER << 5 | WEST  << 3 | PHARAOH,
-  SILVER_WEST_PYRAMID       = SILVER << 5 | WEST  << 3 | PYRAMID,
-  SILVER_WEST_SCARAB        = SILVER << 5 | WEST  << 3 | SCARAB,
-  RED_NORTH_ANUBIS          = RED    << 5 | NORTH << 3 | ANUBIS,
-  RED_NORTH_EYE_OF_HORUS    = RED    << 5 | NORTH << 3 | EYE_OF_HORUS,
-  RED_NORTH_PHARAOH         = RED    << 5 | NORTH << 3 | PHARAOH,
-  RED_NORTH_PYRAMID         = RED    << 5 | NORTH << 3 | PYRAMID,
-  RED_NORTH_SCARAB          = RED    << 5 | NORTH << 3 | SCARAB,
-  RED_EAST_ANUBIS           = RED    << 5 | EAST  << 3 | ANUBIS,
-  RED_EAST_EYE_OF_HORUS     = RED    << 5 | EAST  << 3 | EYE_OF_HORUS,
-  RED_EAST_PHARAOH          = RED    << 5 | EAST  << 3 | PHARAOH,
-  RED_EAST_PYRAMID          = RED    << 5 | EAST  << 3 | PYRAMID,
-  RED_EAST_SCARAB           = RED    << 5 | EAST  << 3 | SCARAB,
-  RED_SOUTH_ANUBIS          = RED    << 5 | SOUTH << 3 | ANUBIS,
-  RED_SOUTH_EYE_OF_HORUS    = RED    << 5 | SOUTH << 3 | EYE_OF_HORUS,
-  RED_SOUTH_PHARAOH         = RED    << 5 | SOUTH << 3 | PHARAOH,
-  RED_SOUTH_PYRAMID         = RED    << 5 | SOUTH << 3 | PYRAMID,
-  RED_SOUTH_SCARAB          = RED    << 5 | SOUTH << 3 | SCARAB,
-  RED_WEST_ANUBIS           = RED    << 5 | WEST  << 3 | ANUBIS,
-  RED_WEST_EYE_OF_HORUS     = RED    << 5 | WEST  << 3 | EYE_OF_HORUS,
-  RED_WEST_PHARAOH          = RED    << 5 | WEST  << 3 | PHARAOH,
-  RED_WEST_PYRAMID          = RED    << 5 | WEST  << 3 | PYRAMID,
-  RED_WEST_SCARAB           = RED    << 5 | WEST  << 3 | SCARAB,
-  NO_PIECE,
-  SILVER_NORTH_ANUBIS       = 0b0'00'001,
-  SILVER_NORTH_EYE_OF_HORUS = 0b0'00'010,
-  SILVER_NORTH_PHARAOH      = 0b0'00'011,
-  SILVER_NORTH_PYRAMID      = 0b0'00'100,
-  SILVER_NORTH_SCARAB       = 0b0'00'101,
-  SILVER_EAST_ANUBIS        = 0b0'01'001,
-  SILVER_EAST_EYE_OF_HORUS  = 0b0'01'010,
-  SILVER_EAST_PHARAOH       = 0b0'01'011,
-  SILVER_EAST_PYRAMID       = 0b0'01'100,
-  SILVER_EAST_SCARAB        = 0b0'01'101,
-  SILVER_SOUTH_ANUBIS       = 0b0'10'001,
-  SILVER_SOUTH_EYE_OF_HORUS = 0b0'10'010,
-  SILVER_SOUTH_PHARAOH      = 0b0'10'011,
-  SILVER_SOUTH_PYRAMID      = 0b0'10'100,
-  SILVER_SOUTH_SCARAB       = 0b0'10'101,
-  SILVER_WEST_ANUBIS        = 0b0'11'001,
-  SILVER_WEST_EYE_OF_HORUS  = 0b0'11'010,
-  SILVER_WEST_PHARAOH       = 0b0'11'011,
-  SILVER_WEST_PYRAMID       = 0b0'11'100,
-  SILVER_WEST_SCARAB        = 0b0'11'101,
-  RED_NORTH_ANUBIS          = 0b1'00'001,
-  RED_NORTH_EYE_OF_HORUS    = 0b1'00'010,
-  RED_NORTH_PHARAOH         = 0b1'00'011,
-  RED_NORTH_PYRAMID         = 0b1'00'100,
-  RED_NORTH_SCARAB          = 0b1'00'101,
-  RED_EAST_ANUBIS           = 0b1'01'001,
-  RED_EAST_EYE_OF_HORUS     = 0b1'01'010,
-  RED_EAST_PHARAOH          = 0b1'01'011,
-  RED_EAST_PYRAMID          = 0b1'01'100,
-  RED_EAST_SCARAB           = 0b1'01'101,
-  RED_SOUTH_ANUBIS          = 0b1'10'001,
-  RED_SOUTH_EYE_OF_HORUS    = 0b1'10'010,
-  RED_SOUTH_PHARAOH         = 0b1'10'011,
-  RED_SOUTH_PYRAMID         = 0b1'10'100,
-  RED_SOUTH_SCARAB          = 0b1'10'101,
-  RED_WEST_ANUBIS           = 0b1'11'001,
-  RED_WEST_EYE_OF_HORUS     = 0b1'11'010,
-  RED_WEST_PHARAOH          = 0b1'11'011,
-  RED_WEST_PYRAMID          = 0b1'11'100,
-  RED_WEST_SCARAB           = 0b1'11'101,
+  SILVER_NORTH_ANUBIS       = SILVER << 6 | NORTH << 3 | ANUBIS,
+  SILVER_NORTH_EYE_OF_HORUS = SILVER << 6 | NORTH << 3 | EYE_OF_HORUS,
+  SILVER_NORTH_PHARAOH      = SILVER << 6 | NORTH << 3 | PHARAOH,
+  SILVER_NORTH_PYRAMID      = SILVER << 6 | NORTH << 3 | PYRAMID,
+  SILVER_NORTH_SCARAB       = SILVER << 6 | NORTH << 3 | SCARAB,
+  SILVER_NORTH_SPHINX       = SILVER << 6 | NORTH << 3 | SPHINX,
+  SILVER_EAST_ANUBIS        = SILVER << 6 | EAST  << 3 | ANUBIS,
+  SILVER_EAST_EYE_OF_HORUS  = SILVER << 6 | EAST  << 3 | EYE_OF_HORUS,
+  SILVER_EAST_PHARAOH       = SILVER << 6 | EAST  << 3 | PHARAOH,
+  SILVER_EAST_PYRAMID       = SILVER << 6 | EAST  << 3 | PYRAMID,
+  SILVER_EAST_SCARAB        = SILVER << 6 | EAST  << 3 | SCARAB,
+  SILVER_EAST_SPHINX        = SILVER << 6 | EAST  << 3 | SPHINX,
+  SILVER_SOUTH_ANUBIS       = SILVER << 6 | SOUTH << 3 | ANUBIS,
+  SILVER_SOUTH_EYE_OF_HORUS = SILVER << 6 | SOUTH << 3 | EYE_OF_HORUS,
+  SILVER_SOUTH_PHARAOH      = SILVER << 6 | SOUTH << 3 | PHARAOH,
+  SILVER_SOUTH_PYRAMID      = SILVER << 6 | SOUTH << 3 | PYRAMID,
+  SILVER_SOUTH_SCARAB       = SILVER << 6 | SOUTH << 3 | SCARAB,
+  SILVER_SOUTH_SPHINX       = SILVER << 6 | SOUTH << 3 | SPHINX,
+  SILVER_WEST_ANUBIS        = SILVER << 6 | WEST  << 3 | ANUBIS,
+  SILVER_WEST_EYE_OF_HORUS  = SILVER << 6 | WEST  << 3 | EYE_OF_HORUS,
+  SILVER_WEST_PHARAOH       = SILVER << 6 | WEST  << 3 | PHARAOH,
+  SILVER_WEST_PYRAMID       = SILVER << 6 | WEST  << 3 | PYRAMID,
+  SILVER_WEST_SCARAB        = SILVER << 6 | WEST  << 3 | SCARAB,
+  SILVER_WEST_SPHINX        = SILVER << 6 | WEST  << 3 | SPHINX,
+  RED_NORTH_ANUBIS          = RED    << 6 | NORTH << 3 | ANUBIS,
+  RED_NORTH_EYE_OF_HORUS    = RED    << 6 | NORTH << 3 | EYE_OF_HORUS,
+  RED_NORTH_PHARAOH         = RED    << 6 | NORTH << 3 | PHARAOH,
+  RED_NORTH_PYRAMID         = RED    << 6 | NORTH << 3 | PYRAMID,
+  RED_NORTH_SCARAB          = RED    << 6 | NORTH << 3 | SCARAB,
+  RED_NORTH_SPHINX          = RED    << 6 | NORTH << 3 | SPHINX,
+  RED_EAST_ANUBIS           = RED    << 6 | EAST  << 3 | ANUBIS,
+  RED_EAST_EYE_OF_HORUS     = RED    << 6 | EAST  << 3 | EYE_OF_HORUS,
+  RED_EAST_PHARAOH          = RED    << 6 | EAST  << 3 | PHARAOH,
+  RED_EAST_PYRAMID          = RED    << 6 | EAST  << 3 | PYRAMID,
+  RED_EAST_SCARAB           = RED    << 6 | EAST  << 3 | SCARAB,
+  RED_EAST_SPHINX           = RED    << 6 | EAST  << 3 | SPHINX,
+  RED_SOUTH_ANUBIS          = RED    << 6 | SOUTH << 3 | ANUBIS,
+  RED_SOUTH_EYE_OF_HORUS    = RED    << 6 | SOUTH << 3 | EYE_OF_HORUS,
+  RED_SOUTH_PHARAOH         = RED    << 6 | SOUTH << 3 | PHARAOH,
+  RED_SOUTH_PYRAMID         = RED    << 6 | SOUTH << 3 | PYRAMID,
+  RED_SOUTH_SCARAB          = RED    << 6 | SOUTH << 3 | SCARAB,
+  RED_SOUTH_SPHINX          = RED    << 6 | SOUTH << 3 | SPHINX,
+  RED_WEST_ANUBIS           = RED    << 6 | WEST  << 3 | ANUBIS,
+  RED_WEST_EYE_OF_HORUS     = RED    << 6 | WEST  << 3 | EYE_OF_HORUS,
+  RED_WEST_PHARAOH          = RED    << 6 | WEST  << 3 | PHARAOH,
+  RED_WEST_PYRAMID          = RED    << 6 | WEST  << 3 | PYRAMID,
+  RED_WEST_SCARAB           = RED    << 6 | WEST  << 3 | SCARAB,
+  RED_WEST_SPHINX           = RED    << 6 | WEST  << 3 | SPHINX,
 };
 
 enum Rank : int {
@@ -134,7 +105,21 @@ const int NUM_RANKS = 8;
 const int NUM_SQUARES = 80;
 const int MAX_MOVES = 121;
 const Square SILVER_SPHINX_SQUARE = SQ_J1;
-const Square RED = SQ_A8;
+const Square RED_SPHINX_SQUARE = SQ_A8;
+
+inline Color colorOf(Piece p) {
+  assert(p != NO_PIECE);
+  return Color((p & 0b11000000) >> 6);
+}
+
+inline Direction directionOf(Piece p) {
+  assert(p != NO_PIECE);
+  return Direction((p & 0b111000) >> 3);
+}
+
+constexpr PieceType typeOf(Piece p) {
+  return PieceType(p & 0b111);
+}
 
 using Bitboard = std::bitset <NUM_SQUARES>;
 
