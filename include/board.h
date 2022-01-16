@@ -105,13 +105,13 @@ private:
   void _rotatePiece(Square, Rotation);
   void _removePiece(Square);
 
-  Bitboard& _getColorRef(Color);
-  Bitboard& _getDirectionRef(Direction);
-  Bitboard& _getPieceRef(Piece);
+  inline Bitboard& _getColorRef(Color);
+  inline Bitboard& _getDirectionRef(Direction);
+  inline Bitboard& _getPieceRef(Piece);
 
-  Bitboard& _getColorRefAt(Square s);
-  Bitboard& _getDirectionRefAt(Square s);
-  Bitboard& _getPieceRefAt(Square s);
+  inline Bitboard& _getColorRefAt(Square s);
+  inline Bitboard& _getDirectionRefAt(Square s);
+  inline Bitboard& _getPieceRefAt(Square s);
 };
 
 } // namespace khet

@@ -448,14 +448,14 @@ void Board::_removePiece(Square s) {
   piece &= ~sqr;
 }
 
-Bitboard& Board::_getColorRef(Color c) {
+inline Bitboard& Board::_getColorRef(Color c) {
   if (c == RED)
     return _red;
   else
     return _silver;
 }
 
-Bitboard& Board::_getDirectionRef(Direction d) {
+inline Bitboard& Board::_getDirectionRef(Direction d) {
   if (d == NORTH)
     return _north;
   else if (d == EAST)
@@ -466,7 +466,7 @@ Bitboard& Board::_getDirectionRef(Direction d) {
     return _west;
 }
 
-Bitboard& Board::_getPieceRef(Piece p) {
+inline Bitboard& Board::_getPieceRef(Piece p) {
   if (p == ANUBIS)
     return _anubis;
   else if (p == PHARAOH)
@@ -479,14 +479,14 @@ Bitboard& Board::_getPieceRef(Piece p) {
     return _sphinx;
 }
 
-Bitboard& Board::_getColorRefAt(Square s) {
+inline Bitboard& Board::_getColorRefAt(Square s) {
   if (_red[s])
     return _red;
   else
     return _silver;
 }
 
-Bitboard& Board::_getDirectionRefAt(Square s) {
+inline Bitboard& Board::_getDirectionRefAt(Square s) {
   if (_north[s])
     return _north;
   else if (_east[s])
@@ -497,7 +497,7 @@ Bitboard& Board::_getDirectionRefAt(Square s) {
     return _west;
 }
 
-Bitboard& Board::_getPieceRefAt(Square s) {
+inline Bitboard& Board::_getPieceRefAt(Square s) {
   if (_anubis[s])
     return _anubis;
   else if (_pharaoh[s])
