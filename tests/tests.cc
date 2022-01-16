@@ -12,17 +12,17 @@
 
 class CoutRedirect {
 public:
-    CoutRedirect() {
-      old = std::cout.rdbuf(buffer.rdbuf());
-    }
+  CoutRedirect() {
+    old = std::cout.rdbuf(buffer.rdbuf());
+  }
 
-    std::string getString() {
-      return buffer.str();
-    }
+  std::string getString() {
+    return buffer.str();
+  }
 
-    ~CoutRedirect() {
-      std::cout.rdbuf(old);
-    }
+  ~CoutRedirect() {
+    std::cout.rdbuf(old);
+  }
 private:
     std::stringstream buffer;
     std::streambuf* old;
@@ -64,6 +64,40 @@ TEST_F(TypesTest, TypeOfPieceTest) {
   ASSERT_EQ(SCARAB, typeOf(SILVER_WEST_SCARAB));
   ASSERT_EQ(SPHINX, typeOf(RED_WEST_SPHINX));
 }
+
+TEST_F(TypesTest, RotatePosTest) {
+  ASSERT_EQ(EAST, rotatePos(NORTH));
+  ASSERT_EQ(SOUTH, rotatePos(EAST));
+  ASSERT_EQ(WEST, rotatePos(SOUTH));
+  ASSERT_EQ(NORTH, rotatePos(WEST));
+}
+
+TEST_F(TypesTest, RotateNegTest) {
+  ASSERT_EQ(WEST, rotateNeg(NORTH));
+  ASSERT_EQ(NORTH, rotateNeg(EAST));
+  ASSERT_EQ(EAST, rotateNeg(SOUTH));
+  ASSERT_EQ(SOUTH, rotateNeg(WEST));
+}
+
+TEST_F(TypesTest, FlipTest) {
+  ASSERT_EQ(WEST, flip(NORTH));
+  ASSERT_EQ(SOUTH, flip(EAST));
+  ASSERT_EQ(EAST, flip(SOUTH));
+  ASSERT_EQ(NORTH, flip(WEST));
+}
+
+/*
+TEST_F(TypesTest, RotatePieceTest) {
+  ASSERT_EQ(rotate(SILVER_NORTH_ANUBIS, POSITIVE), SILVER_EAST_ANUBIS);
+  ASSERT_EQ(rotate(SILVER_EAST_ANUBIS, POSITIVE), SILVER_SOUTH_ANUBIS);
+  ASSERT_EQ(rotate(SILVER_SOUTH_ANUBIS, POSITIVE), SILVER_WEST_ANUBIS);
+  ASSERT_EQ(rotate(SILVER_WEST_ANUBIS, POSITIVE), SILVER_NORTH_ANUBIS);
+  ASSERT_EQ(rotate(RED_NORTH_ANUBIS, POSITIVE), RED_EAST_ANUBIS);
+  ASSERT_EQ(rotate(RED_EAST_ANUBIS, POSITIVE), RED_SOUTH_ANUBIS);
+  ASSERT_EQ(rotate(RED_SOUTH_ANUBIS, POSITIVE), RED_WEST_ANUBIS);
+  ASSERT_EQ(rotate(RED_WEST_ANUBIS, POSITIVE), RED_NORTH_ANUBIS);
+}
+*/
 
 TEST_F(TypesTest, FileOfTest) {
   ASSERT_EQ(FILE_A, fileOf(SQ_A1));
