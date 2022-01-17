@@ -1,8 +1,11 @@
 #include <gtest/gtest.h>
 
+#include "test_util.h"
 #include "board.h"
 
 class BoardTest : public::testing::Test {};
+
+using BoardDeathTest = BoardTest;
 
 TEST_F(BoardTest, FileOfTest) {
   ASSERT_EQ(FILE_A, fileOf(SQ_A1));

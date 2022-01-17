@@ -1,3 +1,8 @@
+#include <tuple>
+
+#ifndef TEST_UTIL_H_
+#define TEST_UTIL_H_
+
 const bool SKIP_DEATH = 1;
 
 class CoutRedirect {
@@ -17,3 +22,5 @@ private:
     std::stringstream buffer;
     std::streambuf* old;
 };
+
+#endif

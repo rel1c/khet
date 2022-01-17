@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <tuple>
 
+#include "test_util.h"
 #include "piece.h"
 
 class PieceTest : public::testing::Test {};
@@ -48,18 +48,52 @@ TEST_P(PieceTestParam, ReflectTest) {
   }
 }
 
-TEST_P(PieceTestParam, MakeTest) {
-  Piece p = std::get<0>(GetParam());
-  Color c = std::get<1>(GetParam());
-  PieceType pt = std::get<2>(GetParam());
-  Direction d = std::get<3>(GetParam());
-  ASSERT_EQ(p, make(c, pt, d));
+TEST_F(PieceTest, DirectionFromCharTest) {
+  ASSERT_EQ(NORTH, directionFromChar('n'));
+  ASSERT_EQ(EAST, directionFromChar('e'));
+  ASSERT_EQ(SOUTH, directionFromChar('s'));
+  ASSERT_EQ(WEST, directionFromChar('w'));
+}
+
+TEST_F(PieceTest, DirectionToCharTest) {
+  ASSERT_EQ('n', toChar(NORTH));
+  ASSERT_EQ('e', toChar(EAST));
+  ASSERT_EQ('s', toChar(SOUTH));
+  ASSERT_EQ('w', toChar(WEST));
 }
 
 TEST_P(PieceTestParam, TypeOfTest) {
   Piece p = std::get<0>(GetParam());
   PieceType pt = std::get<2>(GetParam());
   ASSERT_EQ(pt, typeOf(p));
+}
+
+TEST_F(PieceTest, PieceTypeToCharTest) {
+  ASSERT_EQ(' ', toChar(NO_PIECE_TYPE));
+  ASSERT_EQ('a', toChar(ANUBIS));
+  ASSERT_EQ('x', toChar(SPHINX));
+  ASSERT_EQ('r', toChar(PHARAOH));
+  ASSERT_EQ('p', toChar(PYRAMID));
+  ASSERT_EQ('s', toChar(SCARAB));
+  ASSERT_EQ('e', toChar(EYE_OF_HORUS));
+  ASSERT_EQ(' ', toChar(ALL_PIECES));
+}
+
+TEST_F(PieceTest, PieceTypeFromCharTest) {
+  ASSERT_EQ(ANUBIS, pieceTypeFromChar('a'));
+  ASSERT_EQ(SPHINX, pieceTypeFromChar('x'));
+  ASSERT_EQ(PHARAOH, pieceTypeFromChar('r'));
+  ASSERT_EQ(PYRAMID, pieceTypeFromChar('p'));
+  ASSERT_EQ(SCARAB, pieceTypeFromChar('s'));
+  ASSERT_EQ(EYE_OF_HORUS, pieceTypeFromChar('e'));
+}
+
+TEST_P(PieceTestParam, MakeTest) {
+  Piece p = std::get<0>(GetParam());
+  Color c = std::get<1>(GetParam());
+  PieceType pt = std::get<2>(GetParam());
+  Direction d = std::get<3>(GetParam());
+  ASSERT_EQ(p, make(c, pt, d));
 }
 
 TEST_P(PieceTestParam, RotatePosTest) {
@@ -131,6 +165,8 @@ TEST_P(PieceTestParam, FlipTest) {
     EXPECT_EQ(d2, NORTH);
 }
 
+// DEATH TESTS //
+
 TEST_F(PieceDeathTest, ColorOfDeathTest) {
   ASSERT_DEATH(colorOf(NO_PIECE), "");
 }
@@ -149,6 +185,17 @@ TEST_F(PieceDeathTest, ReflectDeathTest) {
   ASSERT_DEATH(reflect(RED_SPHINX_NORTH, NORTH), "");
 }
 
+TEST_F(PieceTest, DirectionFromCharDeathTest) {
+  ASSERT_DEATH(directionFromChar('A'), "");
+  ASSERT_DEATH(directionFromChar(' '), "");
+  ASSERT_DEATH(directionFromChar('?'), "");
+}
+
+TEST_F(PieceTest, PieceTypeFromCharDeathTest) {
+  ASSERT_DEATH(pieceTypeFromChar('A'), "");
+  ASSERT_DEATH(pieceTypeFromChar(' '), "");
+  ASSERT_DEATH(pieceTypeFromChar('?'), "");
+}
 
 INSTANTIATE_TEST_SUITE_P(
   PieceTests,

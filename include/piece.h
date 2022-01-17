@@ -12,6 +12,9 @@ const unsigned int COLOR_MASK = 0b1100000;
 const unsigned int PIECE_MASK = 0b11100;
 const unsigned int REFLECTOR_MASK = 0b10000;
 
+const std::string direction_chars = "nesw";
+const std::string piecetype_chars = " AXRPSE  axrpse ";
+
 enum Color : unsigned int {
   NO_COLOR,
   SILVER,
@@ -32,7 +35,8 @@ enum PieceType : unsigned int {
   PHARAOH,
   PYRAMID,
   SCARAB,
-  EYE_OF_HORUS
+  EYE_OF_HORUS,
+  ALL_PIECES
 };
 
 enum Piece : unsigned int {
@@ -111,12 +115,43 @@ inline Direction reflect(Piece p, Direction d) {
   return Direction(p & 1 ? d ^ EAST : d ^ WEST);
 }
 
-constexpr Piece make(Color c, PieceType pt, Direction d) {
-  return Piece(c << 5 | pt << 2 | d);
+inline Direction directionFromChar(char ch) {
+  switch(ch) {
+    case 'n' : return NORTH;
+    case 'e' : return EAST;
+    case 's' : return SOUTH;
+    case 'w' : return WEST;
+    default  : abort();
+  }
+}
+
+inline char toChar(Direction d) {
+  return direction_chars[d];
 }
 
 constexpr PieceType typeOf(Piece p) {
   return PieceType((p & PIECE_MASK) >> 2);
+}
+
+inline char toChar(PieceType pt) {
+  return piecetype_chars[pt + 8];
+}
+
+inline PieceType pieceTypeFromChar(char ch) {
+  std::tolower(ch);
+  switch(ch) {
+    case 'a' : return ANUBIS;
+    case 'x' : return SPHINX;
+    case 'r' : return PHARAOH;
+    case 'p' : return PYRAMID;
+    case 's' : return SCARAB;
+    case 'e' : return EYE_OF_HORUS;
+    default  : abort();
+  }
+}
+
+constexpr Piece make(Color c, PieceType pt, Direction d) {
+  return Piece(c << 5 | pt << 2 | d);
 }
 
 constexpr Piece rotatePos(Piece p) {
