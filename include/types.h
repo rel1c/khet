@@ -91,6 +91,16 @@ enum Piece : unsigned int {
   RED_WEST_SPHINX           = RED    << 6 | SPHINX       << 2 | WEST,
 };
 
+enum Mirror : unsigned int {
+  BACKWARD = 3,
+  FORWARD = 1,
+};
+
+enum Rotation : unsigned int {
+  POSITIVE,
+  NEGATIVE
+};
+
 enum Rank : unsigned int {
   RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8
 };
@@ -105,7 +115,6 @@ const unsigned int NUM_RANKS = 8;
 const unsigned int NUM_SQUARES = 80;
 const unsigned int MAX_MOVES = 121;
 const unsigned int COLOR_MASK = 0b11000000;
-const unsigned int DIRECTION_MASK = 0b11;
 const unsigned int PIECE_MASK = 0b11100;
 
 const Square SILVER_SPHINX_SQUARE = SQ_J1;
@@ -116,9 +125,13 @@ inline Color colorOf(Piece p) {
   return Color((p & COLOR_MASK) >> 6);
 }
 
+constexpr Direction operator~(Direction d) {
+  return Direction(d ^ SOUTH);
+}
+
 inline Direction directionOf(Piece p) {
   assert(p != NO_PIECE);
-  return Direction(p & DIRECTION_MASK);
+  return Direction(p & WEST);
 }
 
 constexpr PieceType typeOf(Piece p) {
@@ -126,15 +139,19 @@ constexpr PieceType typeOf(Piece p) {
 }
 
 constexpr Piece rotatePos(Piece p) {
-  return Piece((p & DIRECTION_MASK) == WEST ? p - 3 : p + 1);
+  return Piece((p & WEST) == WEST ? p - 3 : p + 1);
 }
 
 constexpr Piece rotateNeg(Piece p) {
-  return Piece((p & DIRECTION_MASK) == NORTH ? p + 3 : p - 1);
+  return Piece((p & WEST) == NORTH ? p + 3 : p - 1);
 }
 
 constexpr Piece flip(Piece p) {
-  return Piece(p ^ DIRECTION_MASK);
+  return Piece(p ^ WEST);
+}
+
+constexpr Direction reflect(Mirror m, Direction d) {
+  return Direction(m ^ d);
 }
 
 constexpr File fileOf(Square s) {
