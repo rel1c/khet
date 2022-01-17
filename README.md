@@ -55,12 +55,12 @@ A PKN record contains 4 fields, delimited by a space.
 1. Piece placement from A1 to J8, where uppercase letters denote silver 
    pieces and lowercase denote red pieces. A series of blank spaces is given by 
    a digit, where 0 represents 10 spaces. A forward slash `/` signifies
-   the end of a row. Pieces are represented as such, anubis='A', pharaoh='R',
+   the end of a row. Pieces are represented as such, Anubis='A', pharaoh='R',
    pyramid='P', scarab='S' and sphinx='X'.
 2. Piece rotation, in order of placed pieces. Directions are represented by only
    lowercase letters, one for each cardinal direction, 'n', 'e', 's' and 'w'.
-2. The color whose turn is next.
-3. The number of moves since the beginning of the game.
+2. The color of the active player.
+3. The current turn, incremented after the Red player makes a move.
 
 For example, here is the PKN for the starting configuration of the Classic game
 arrangement.
