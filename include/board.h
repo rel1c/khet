@@ -1,4 +1,5 @@
 #include <bitset>
+#include "piece.h"
 
 #ifndef BOARD_H_
 #define BOARD_H_
@@ -39,5 +40,32 @@ constexpr Rank rankOf(Square s) {
 }
 
 using Bitboard = std::bitset <NUM_SQUARES>;
+
+class Board {
+public:
+  Board() = default;
+  Board(const Board&) = delete;
+  Board& operator=(const Board&) = delete;
+
+  Bitboard pieces() const;
+  Bitboard pieces(PieceType pt) const;
+  Bitboard pieces(Color c) const;
+  Bitboard pieces(Direction d) const;
+  Piece pieceOn(Square s) const;
+
+  void fromPkn(const std::string&);
+  const std::string toPkn() const;
+
+  //void doMove(const Move&);
+  //void undoMove(const Move&);
+
+  void display() const;
+private:
+  Piece _pieces[NUM_SQUARES];
+  Bitboard _color_bb[NUM_COLORS];
+  Bitboard _direction_bb[NUM_DIRECTIONS];
+  Bitboard _type_bb[NUM_PIECE_TYPES];
+  Color _player;
+};
 
 #endif

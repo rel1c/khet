@@ -4,7 +4,9 @@
 #ifndef PIECE_H_
 #define PIECE_H_
 
+const unsigned int NUM_COLORS = 2;
 const unsigned int NUM_DIRECTIONS = 4;
+const unsigned int NUM_PIECE_TYPES = 6;
 const unsigned int MAX_MOVES = 121;
 const unsigned int COLOR_MASK = 0b1100000;
 const unsigned int PIECE_MASK = 0b11100;
