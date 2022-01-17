@@ -1,20 +1,18 @@
 #include <gtest/gtest.h>
+#include <tuple>
 
 #include "piece.h"
 
 class PieceTest : public::testing::Test {};
+class PieceTestParam : public ::testing::TestWithParam<std::tuple<Piece, Color, PieceType, Direction>> {};
 
 using PieceDeathTest = PieceTest;
+using PieceDeathTestParam = PieceTestParam;
 
-TEST_F(PieceTest, ColorOfPieceTest) {
-  ASSERT_EQ(SILVER, colorOf(SILVER_NORTH_ANUBIS));
-  ASSERT_EQ(SILVER, colorOf(SILVER_EAST_EYE_OF_HORUS));
-  ASSERT_EQ(SILVER, colorOf(SILVER_SOUTH_PYRAMID));
-  ASSERT_EQ(SILVER, colorOf(SILVER_WEST_SCARAB));
-  ASSERT_EQ(RED, colorOf(RED_NORTH_ANUBIS));
-  ASSERT_EQ(RED, colorOf(RED_EAST_EYE_OF_HORUS));
-  ASSERT_EQ(RED, colorOf(RED_SOUTH_PYRAMID));
-  ASSERT_EQ(RED, colorOf(RED_WEST_SPHINX));
+TEST_P(PieceTestParam, ColorOfTest) {
+  Piece p = std::get<0>(GetParam());
+  Color c = std::get<1>(GetParam());
+  ASSERT_EQ(c, colorOf(p));
 }
 
 TEST_F(PieceTest, DirectionNegationTest) {
@@ -24,137 +22,185 @@ TEST_F(PieceTest, DirectionNegationTest) {
   ASSERT_EQ(WEST, ~EAST);
 }
 
-TEST_F(PieceTest, DirectionOfPieceTest) {
-  ASSERT_EQ(NORTH, directionOf(SILVER_NORTH_ANUBIS));
-  ASSERT_EQ(NORTH, directionOf(RED_NORTH_ANUBIS));
-  ASSERT_EQ(EAST, directionOf(SILVER_EAST_EYE_OF_HORUS));
-  ASSERT_EQ(EAST, directionOf(RED_EAST_EYE_OF_HORUS));
-  ASSERT_EQ(SOUTH, directionOf(SILVER_SOUTH_PYRAMID));
-  ASSERT_EQ(SOUTH, directionOf(RED_SOUTH_PYRAMID));
-  ASSERT_EQ(WEST, directionOf(SILVER_WEST_SCARAB));
-  ASSERT_EQ(WEST, directionOf(RED_WEST_SPHINX));
+TEST_P(PieceTestParam, DirectionOfTest) {
+  Piece p = std::get<0>(GetParam());
+  Direction d = std::get<3>(GetParam());
+  ASSERT_EQ(d, directionOf(p));
 }
 
-TEST_F(PieceTest, ReflectTest) {
-  ASSERT_EQ(NORTH, reflect(SILVER_NORTH_EYE_OF_HORUS, WEST));
-  ASSERT_EQ(NORTH, reflect(SILVER_NORTH_PYRAMID, WEST));
-  ASSERT_EQ(NORTH, reflect(SILVER_NORTH_SCARAB, WEST));
-  ASSERT_EQ(EAST, reflect(SILVER_NORTH_EYE_OF_HORUS, SOUTH));
-  ASSERT_EQ(EAST, reflect(SILVER_NORTH_PYRAMID, SOUTH));
-  ASSERT_EQ(EAST, reflect(SILVER_NORTH_SCARAB, SOUTH));
-    //TODO fill this in... repeat for scarab/eyes N=S, W=E
+TEST_P(PieceTestParam, ReflectTest) {
+  Piece p = std::get<0>(GetParam());
+  Direction d = std::get<3>(GetParam());
+  PieceType pt = std::get<2>(GetParam());
+  if (pt != EYE_OF_HORUS || pt != PYRAMID || pt != SCARAB)
+    return;
+  if (d == NORTH || d == SOUTH) {
+    ASSERT_EQ(WEST, reflect(p, NORTH));
+    ASSERT_EQ(SOUTH, reflect(p, EAST));
+    ASSERT_EQ(EAST, reflect(p, SOUTH));
+    ASSERT_EQ(NORTH, reflect(p, WEST));
+  }
+  else {
+    ASSERT_EQ(EAST, reflect(p, NORTH));
+    ASSERT_EQ(SOUTH, reflect(p, WEST));
+    ASSERT_EQ(WEST, reflect(p, SOUTH));
+    ASSERT_EQ(NORTH, reflect(p, EAST));
+  }
 }
 
-TEST_F(PieceTest, MakePieceTest) {
-  //TODO NO_PIECE,
-  ASSERT_EQ(SILVER_NORTH_ANUBIS, make(SILVER, ANUBIS, NORTH));
-  ASSERT_EQ(SILVER_EAST_ANUBIS, make(SILVER, ANUBIS, EAST));
-  ASSERT_EQ(SILVER_SOUTH_ANUBIS, make(SILVER, ANUBIS, SOUTH));
-  ASSERT_EQ(SILVER_WEST_ANUBIS, make(SILVER, ANUBIS, WEST));
-  ASSERT_EQ(SILVER_NORTH_EYE_OF_HORUS, make(SILVER, EYE_OF_HORUS, NORTH));
-  ASSERT_EQ(SILVER_EAST_EYE_OF_HORUS, make(SILVER, EYE_OF_HORUS, EAST));
-  ASSERT_EQ(SILVER_SOUTH_EYE_OF_HORUS, make(SILVER, EYE_OF_HORUS, SOUTH));
-  ASSERT_EQ(SILVER_WEST_EYE_OF_HORUS, make(SILVER, EYE_OF_HORUS, WEST));
-  ASSERT_EQ(SILVER_NORTH_PHARAOH, make(SILVER, PHARAOH, NORTH));
-  ASSERT_EQ(SILVER_EAST_PHARAOH, make(SILVER, PHARAOH, EAST));
-  ASSERT_EQ(SILVER_SOUTH_PHARAOH, make(SILVER, PHARAOH, SOUTH));
-  ASSERT_EQ(SILVER_WEST_PHARAOH, make(SILVER, PHARAOH, WEST));
-  ASSERT_EQ(SILVER_NORTH_PYRAMID, make(SILVER, PYRAMID, NORTH));
-  ASSERT_EQ(SILVER_EAST_PYRAMID, make(SILVER, PYRAMID, EAST));
-  ASSERT_EQ(SILVER_SOUTH_PYRAMID, make(SILVER, PYRAMID, SOUTH));
-  ASSERT_EQ(SILVER_WEST_PYRAMID, make(SILVER, PYRAMID, WEST));
-  ASSERT_EQ(SILVER_NORTH_SCARAB, make(SILVER, SCARAB, NORTH));
-  ASSERT_EQ(SILVER_EAST_SCARAB, make(SILVER, SCARAB, EAST));
-  ASSERT_EQ(SILVER_SOUTH_SCARAB, make(SILVER, SCARAB, SOUTH));
-  ASSERT_EQ(SILVER_WEST_SCARAB, make(SILVER, SCARAB, WEST));
-  ASSERT_EQ(SILVER_NORTH_SPHINX, make(SILVER, SPHINX, NORTH));
-  ASSERT_EQ(SILVER_EAST_SPHINX, make(SILVER, SPHINX, EAST));
-  ASSERT_EQ(SILVER_SOUTH_SPHINX, make(SILVER, SPHINX, SOUTH));
-  ASSERT_EQ(SILVER_WEST_SPHINX, make(SILVER, SPHINX, WEST));
-  ASSERT_EQ(RED_NORTH_ANUBIS, make(RED, ANUBIS, NORTH));
-  ASSERT_EQ(RED_EAST_ANUBIS, make(RED, ANUBIS, EAST));
-  ASSERT_EQ(RED_SOUTH_ANUBIS, make(RED, ANUBIS, SOUTH));
-  ASSERT_EQ(RED_WEST_ANUBIS, make(RED, ANUBIS, WEST));
-  ASSERT_EQ(RED_NORTH_EYE_OF_HORUS, make(RED, EYE_OF_HORUS, NORTH));
-  ASSERT_EQ(RED_EAST_EYE_OF_HORUS, make(RED, EYE_OF_HORUS, EAST));
-  ASSERT_EQ(RED_SOUTH_EYE_OF_HORUS, make(RED, EYE_OF_HORUS, SOUTH));
-  ASSERT_EQ(RED_WEST_EYE_OF_HORUS, make(RED, EYE_OF_HORUS, WEST));
-  ASSERT_EQ(RED_NORTH_PHARAOH, make(RED, PHARAOH, NORTH));
-  ASSERT_EQ(RED_EAST_PHARAOH, make(RED, PHARAOH, EAST));
-  ASSERT_EQ(RED_SOUTH_PHARAOH, make(RED, PHARAOH, SOUTH));
-  ASSERT_EQ(RED_WEST_PHARAOH, make(RED, PHARAOH, WEST));
-  ASSERT_EQ(RED_NORTH_PYRAMID, make(RED, PYRAMID, NORTH));
-  ASSERT_EQ(RED_EAST_PYRAMID, make(RED, PYRAMID, EAST));
-  ASSERT_EQ(RED_SOUTH_PYRAMID, make(RED, PYRAMID, SOUTH));
-  ASSERT_EQ(RED_WEST_PYRAMID, make(RED, PYRAMID, WEST));
-  ASSERT_EQ(RED_NORTH_SCARAB, make(RED, SCARAB, NORTH));
-  ASSERT_EQ(RED_EAST_SCARAB, make(RED, SCARAB, EAST));
-  ASSERT_EQ(RED_SOUTH_SCARAB, make(RED, SCARAB, SOUTH));
-  ASSERT_EQ(RED_WEST_SCARAB, make(RED, SCARAB, WEST));
-  ASSERT_EQ(RED_NORTH_SPHINX, make(RED, SPHINX, NORTH));
-  ASSERT_EQ(RED_EAST_SPHINX, make(RED, SPHINX, EAST));
-  ASSERT_EQ(RED_SOUTH_SPHINX, make(RED, SPHINX, SOUTH));
-  ASSERT_EQ(RED_WEST_SPHINX, make(RED, SPHINX, WEST));
+TEST_P(PieceTestParam, MakeTest) {
+  Piece p = std::get<0>(GetParam());
+  Color c = std::get<1>(GetParam());
+  PieceType pt = std::get<2>(GetParam());
+  Direction d = std::get<3>(GetParam());
+  ASSERT_EQ(p, make(c, pt, d));
 }
 
-TEST_F(PieceTest, TypeOfPieceTest) {
-  ASSERT_EQ(ANUBIS, typeOf(SILVER_NORTH_ANUBIS));
-  ASSERT_EQ(ANUBIS, typeOf(RED_NORTH_ANUBIS));
-  ASSERT_EQ(EYE_OF_HORUS, typeOf(SILVER_EAST_EYE_OF_HORUS));
-  ASSERT_EQ(EYE_OF_HORUS, typeOf(RED_EAST_EYE_OF_HORUS));
-  ASSERT_EQ(PYRAMID, typeOf(SILVER_SOUTH_PYRAMID));
-  ASSERT_EQ(PYRAMID, typeOf(RED_SOUTH_PYRAMID));
-  ASSERT_EQ(SCARAB, typeOf(SILVER_WEST_SCARAB));
-  ASSERT_EQ(SPHINX, typeOf(RED_WEST_SPHINX));
+TEST_P(PieceTestParam, TypeOfTest) {
+  Piece p = std::get<0>(GetParam());
+  PieceType pt = std::get<2>(GetParam());
+  ASSERT_EQ(pt, typeOf(p));
 }
 
-TEST_F(PieceTest, RotatePosTest) {
-  ASSERT_EQ(SILVER_EAST_ANUBIS, rotatePos(SILVER_NORTH_ANUBIS));
-  ASSERT_EQ(SILVER_SOUTH_ANUBIS, rotatePos(SILVER_EAST_ANUBIS));
-  ASSERT_EQ(SILVER_WEST_ANUBIS, rotatePos(SILVER_SOUTH_ANUBIS));
-  ASSERT_EQ(SILVER_NORTH_ANUBIS, rotatePos(SILVER_WEST_ANUBIS));
-  ASSERT_EQ(RED_EAST_ANUBIS, rotatePos(RED_NORTH_ANUBIS));
-  ASSERT_EQ(RED_SOUTH_ANUBIS, rotatePos(RED_EAST_ANUBIS));
-  ASSERT_EQ(RED_WEST_ANUBIS, rotatePos(RED_SOUTH_ANUBIS));
-  ASSERT_EQ(RED_NORTH_ANUBIS, rotatePos(RED_WEST_ANUBIS));
+TEST_P(PieceTestParam, RotatePosTest) {
+  Piece p1 = std::get<0>(GetParam());
+  Color c1 = std::get<1>(GetParam());
+  PieceType pt1 = std::get<2>(GetParam());
+  Direction d1 = std::get<3>(GetParam());
+  Piece p2 = rotatePos(p1);
+  Color c2 = colorOf(p2);
+  PieceType pt2 = typeOf(p2);
+  Direction d2 = directionOf(p2);
+  ASSERT_NE(p1, p2);
+  EXPECT_EQ(c1, c2);
+  ASSERT_NE(d1, d2);
+  EXPECT_EQ(pt1, pt2);
+  if (d1 == NORTH)
+    EXPECT_EQ(d2, EAST);
+  else if (d1 == EAST)
+    EXPECT_EQ(d2, SOUTH);
+  else if (d1 == SOUTH)
+    EXPECT_EQ(d2, WEST);
+  else
+    EXPECT_EQ(d2, NORTH);
 }
 
-TEST_F(PieceTest, RotateNegTest) {
-  ASSERT_EQ(SILVER_WEST_ANUBIS, rotateNeg(SILVER_NORTH_ANUBIS));
-  ASSERT_EQ(SILVER_NORTH_ANUBIS, rotateNeg(SILVER_EAST_ANUBIS));
-  ASSERT_EQ(SILVER_EAST_ANUBIS, rotateNeg(SILVER_SOUTH_ANUBIS));
-  ASSERT_EQ(SILVER_SOUTH_ANUBIS, rotateNeg(SILVER_WEST_ANUBIS));
-  ASSERT_EQ(RED_WEST_ANUBIS, rotateNeg(RED_NORTH_ANUBIS));
-  ASSERT_EQ(RED_NORTH_ANUBIS, rotateNeg(RED_EAST_ANUBIS));
-  ASSERT_EQ(RED_EAST_ANUBIS, rotateNeg(RED_SOUTH_ANUBIS));
-  ASSERT_EQ(RED_SOUTH_ANUBIS, rotateNeg(RED_WEST_ANUBIS));
+TEST_P(PieceTestParam, RotateNegTest) {
+  Piece p1 = std::get<0>(GetParam());
+  Color c1 = std::get<1>(GetParam());
+  PieceType pt1 = std::get<2>(GetParam());
+  Direction d1 = std::get<3>(GetParam());
+  Piece p2 = rotateNeg(p1);
+  Color c2 = colorOf(p2);
+  PieceType pt2 = typeOf(p2);
+  Direction d2 = directionOf(p2);
+  ASSERT_NE(p1, p2);
+  EXPECT_EQ(c1, c2);
+  ASSERT_NE(d1, d2);
+  EXPECT_EQ(pt1, pt2);
+  if (d1 == NORTH)
+    EXPECT_EQ(d2, WEST);
+  else if (d1 == EAST)
+    EXPECT_EQ(d2, NORTH);
+  else if (d1 == SOUTH)
+    EXPECT_EQ(d2, EAST);
+  else
+    EXPECT_EQ(d2, SOUTH);
 }
 
-TEST_F(PieceTest, FlipTest) {
-  ASSERT_EQ(SILVER_WEST_ANUBIS, flip(SILVER_NORTH_ANUBIS));
-  ASSERT_EQ(SILVER_SOUTH_ANUBIS, flip(SILVER_EAST_ANUBIS));
-  ASSERT_EQ(SILVER_EAST_ANUBIS, flip(SILVER_SOUTH_ANUBIS));
-  ASSERT_EQ(SILVER_NORTH_ANUBIS, flip(SILVER_WEST_ANUBIS));
-  ASSERT_EQ(RED_WEST_ANUBIS, flip(RED_NORTH_ANUBIS));
-  ASSERT_EQ(RED_SOUTH_ANUBIS, flip(RED_EAST_ANUBIS));
-  ASSERT_EQ(RED_EAST_ANUBIS, flip(RED_SOUTH_ANUBIS));
-  ASSERT_EQ(RED_NORTH_ANUBIS, flip(RED_WEST_ANUBIS));
+TEST_P(PieceTestParam, FlipTest) {
+  Piece p1 = std::get<0>(GetParam());
+  Color c1 = std::get<1>(GetParam());
+  PieceType pt1 = std::get<2>(GetParam());
+  Direction d1 = std::get<3>(GetParam());
+  Piece p2 = flip(p1);
+  Color c2 = colorOf(p2);
+  PieceType pt2 = typeOf(p2);
+  Direction d2 = directionOf(p2);
+  ASSERT_NE(p1, p2);
+  EXPECT_EQ(c1, c2);
+  ASSERT_NE(d1, d2);
+  EXPECT_EQ(pt1, pt2);
+  if (d1 == NORTH)
+    EXPECT_EQ(d2, WEST);
+  else if (d1 == EAST)
+    EXPECT_EQ(d2, SOUTH);
+  else if (d1 == SOUTH)
+    EXPECT_EQ(d2, EAST);
+  else
+    EXPECT_EQ(d2, NORTH);
 }
 
-TEST_F(PieceDeathTest, ColorOfPieceDeathTest) {
+TEST_F(PieceDeathTest, ColorOfDeathTest) {
   ASSERT_DEATH(colorOf(NO_PIECE), "");
 }
 
-TEST_F(PieceDeathTest, DirectionOfPieceDeathTest) {
+TEST_F(PieceDeathTest, DirectionOfeDeathTest) {
   ASSERT_DEATH(directionOf(NO_PIECE), "");
 }
 
 TEST_F(PieceDeathTest, ReflectDeathTest) {
   ASSERT_DEATH(reflect(NO_PIECE, NORTH), "");
-  ASSERT_DEATH(reflect(SILVER_NORTH_ANUBIS, NORTH), "");
-  ASSERT_DEATH(reflect(SILVER_NORTH_PHARAOH, NORTH), "");
-  ASSERT_DEATH(reflect(SILVER_NORTH_SPHINX, NORTH), "");
-  ASSERT_DEATH(reflect(RED_NORTH_ANUBIS, NORTH), "");
-  ASSERT_DEATH(reflect(RED_NORTH_PHARAOH, NORTH), "");
-  ASSERT_DEATH(reflect(RED_NORTH_SPHINX, NORTH), "");
+  ASSERT_DEATH(reflect(SILVER_ANUBIS_NORTH, NORTH), "");
+  ASSERT_DEATH(reflect(SILVER_PHARAOH_NORTH, NORTH), "");
+  ASSERT_DEATH(reflect(SILVER_SPHINX_NORTH, NORTH), "");
+  ASSERT_DEATH(reflect(RED_ANUBIS_NORTH, NORTH), "");
+  ASSERT_DEATH(reflect(RED_PHARAOH_NORTH, NORTH), "");
+  ASSERT_DEATH(reflect(RED_SPHINX_NORTH, NORTH), "");
 }
+
+
+INSTANTIATE_TEST_SUITE_P(
+  PieceTests,
+  PieceTestParam,
+  ::testing::Values(
+    std::make_tuple(SILVER_ANUBIS_NORTH, SILVER, ANUBIS, NORTH),
+    std::make_tuple(SILVER_ANUBIS_EAST, SILVER, ANUBIS, EAST),
+    std::make_tuple(SILVER_ANUBIS_SOUTH, SILVER, ANUBIS, SOUTH),
+    std::make_tuple(SILVER_ANUBIS_WEST, SILVER, ANUBIS, WEST),
+    std::make_tuple(SILVER_EYE_OF_HORUS_NORTH, SILVER, EYE_OF_HORUS, NORTH),
+    std::make_tuple(SILVER_EYE_OF_HORUS_EAST, SILVER, EYE_OF_HORUS, EAST),
+    std::make_tuple(SILVER_EYE_OF_HORUS_SOUTH, SILVER, EYE_OF_HORUS, SOUTH),
+    std::make_tuple(SILVER_EYE_OF_HORUS_WEST, SILVER, EYE_OF_HORUS, WEST),
+    std::make_tuple(SILVER_PHARAOH_NORTH, SILVER, PHARAOH, NORTH),
+    std::make_tuple(SILVER_PHARAOH_EAST, SILVER, PHARAOH, EAST),
+    std::make_tuple(SILVER_PHARAOH_SOUTH, SILVER, PHARAOH, SOUTH),
+    std::make_tuple(SILVER_PHARAOH_WEST, SILVER, PHARAOH, WEST),
+    std::make_tuple(SILVER_PYRAMID_NORTH, SILVER, PYRAMID, NORTH),
+    std::make_tuple(SILVER_PYRAMID_EAST, SILVER, PYRAMID, EAST),
+    std::make_tuple(SILVER_PYRAMID_SOUTH, SILVER, PYRAMID, SOUTH),
+    std::make_tuple(SILVER_PYRAMID_WEST, SILVER, PYRAMID, WEST),
+    std::make_tuple(SILVER_SCARAB_NORTH, SILVER, SCARAB, NORTH),
+    std::make_tuple(SILVER_SCARAB_EAST, SILVER, SCARAB, EAST),
+    std::make_tuple(SILVER_SCARAB_SOUTH, SILVER, SCARAB, SOUTH),
+    std::make_tuple(SILVER_SCARAB_WEST, SILVER, SCARAB, WEST),
+    std::make_tuple(SILVER_SPHINX_NORTH, SILVER, SPHINX, NORTH),
+    std::make_tuple(SILVER_SPHINX_EAST, SILVER, SPHINX, EAST),
+    std::make_tuple(SILVER_SPHINX_SOUTH, SILVER, SPHINX, SOUTH),
+    std::make_tuple(SILVER_SPHINX_WEST, SILVER, SPHINX, WEST),
+    std::make_tuple(RED_ANUBIS_NORTH, RED, ANUBIS, NORTH),
+    std::make_tuple(RED_ANUBIS_EAST, RED, ANUBIS, EAST),
+    std::make_tuple(RED_ANUBIS_SOUTH, RED, ANUBIS, SOUTH),
+    std::make_tuple(RED_ANUBIS_WEST, RED, ANUBIS, WEST),
+    std::make_tuple(RED_EYE_OF_HORUS_NORTH, RED, EYE_OF_HORUS, NORTH),
+    std::make_tuple(RED_EYE_OF_HORUS_EAST, RED, EYE_OF_HORUS, EAST),
+    std::make_tuple(RED_EYE_OF_HORUS_SOUTH, RED, EYE_OF_HORUS, SOUTH),
+    std::make_tuple(RED_EYE_OF_HORUS_WEST, RED, EYE_OF_HORUS, WEST),
+    std::make_tuple(RED_PHARAOH_NORTH, RED, PHARAOH, NORTH),
+    std::make_tuple(RED_PHARAOH_EAST, RED, PHARAOH, EAST),
+    std::make_tuple(RED_PHARAOH_SOUTH, RED, PHARAOH, SOUTH),
+    std::make_tuple(RED_PHARAOH_WEST, RED, PHARAOH, WEST),
+    std::make_tuple(RED_PYRAMID_NORTH, RED, PYRAMID, NORTH),
+    std::make_tuple(RED_PYRAMID_EAST, RED, PYRAMID, EAST),
+    std::make_tuple(RED_PYRAMID_SOUTH, RED, PYRAMID, SOUTH),
+    std::make_tuple(RED_PYRAMID_WEST, RED, PYRAMID, WEST),
+    std::make_tuple(RED_SCARAB_NORTH, RED, SCARAB, NORTH),
+    std::make_tuple(RED_SCARAB_EAST, RED, SCARAB, EAST),
+    std::make_tuple(RED_SCARAB_SOUTH, RED, SCARAB, SOUTH),
+    std::make_tuple(RED_SCARAB_WEST, RED, SCARAB, WEST),
+    std::make_tuple(RED_SPHINX_NORTH, RED, SPHINX, NORTH),
+    std::make_tuple(RED_SPHINX_EAST, RED, SPHINX, EAST),
+    std::make_tuple(RED_SPHINX_SOUTH, RED, SPHINX, SOUTH),
+    std::make_tuple(RED_SPHINX_WEST, RED, SPHINX, WEST)
+  )
+);
