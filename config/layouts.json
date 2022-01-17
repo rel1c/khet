@@ -1,0 +1,36 @@
+{
+        "layouts": [
+                {
+                        "name": "Classic",
+                        "pkn": "2PARA3X/7P2/6p3/p1P1SS1p1P/p1P1ss1p1P/3P6/2p7/x3arap2 wnnnnneewwsnsnsneewwssssse s 0"
+                },
+                {
+                        "name": "Dynasty",
+                        "pkn": "3PAP3X/4R5/3SAP3P/3p1p1S1P/p1s1P1P3/p3pas3/5r4/x3pap3 wnnnnennswenweswensswsssse s 0"
+                },
+                {
+                        "name": "Imhotep",
+                        "pkn": "2SARA3X/0/3P2p3/pP2Sp2pP/pP2Ps2pP/3P2p3/0/x3aras2 wnnnnseewwwnsnseeewwnsssse s 0"
+                },
+                {
+                        "name": "Osiris",
+                        "pkn": "pP1RP3sX/2PA3A2/3p6/p3SE3P/p3es3P/6P3/2a3ap2/xS3pr1pP nwnnenwnneeswsnenwwssesesses s 0"
+                },
+                {
+                        "name": "Isis",
+                        "pkn": "1PRA5X/2AP3S1P/8s1/1P2ep1P1P/p1p1PE2p1/1S8/p1s3pa2/x5arp1 wnnnnnssnnwessnnwessnnssssse s 0"
+                },
+                {
+                        "name": "Classic2",
+                        "pkn": "2PARA3X/7P2/6p3/p1P1ES1p1P/p1P1Se1p1P/3P6/2p7/x3arap2 wnnnnneewwsnsnsneewwssssse s 0"
+                },
+                {
+                        "name": "Dynasty2",
+                        "pkn": "3PAP3X/4R5/3SAP3P/3p1p1E1P/p1e1P1P3/p3pas3/5r4/x3pap3 wnnnnennswenweswensswsssse s 0"
+                },
+                {
+                        "name": "Imhotep2",
+                        "pkn": "2SARA3X/0/3P2p3/pP2Ep2pP/pP2Pe2pP/3P2p3/0/x3aras2 wnnnnseewwwnsnseeewwnsssse s 0"
+                }
+        ]
+}
