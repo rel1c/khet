@@ -20,9 +20,6 @@ enum Square : unsigned int {
   SQ_NONE
 };
 
-const Square SILVER_SPHINX_SQUARE = SQ_J1;
-const Square RED_SPHINX_SQUARE = SQ_A8;
-
 enum Rank : unsigned int {
   RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8
 };
