@@ -40,8 +40,15 @@ set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
 set(BUILD_GTEST ON CACHE BOOL "" FORCE)
 
 enable_testing()
+include(GoogleTest)
 
-add_executable(tests ${PROJ_TEST_DIR}/tests.cc)
+#add_executable(tests ${PROJ_TEST_DIR}/tests.cc)
+add_executable(
+  tests
+  ${PROJ_TEST_DIR}/tests.cc
+  ${PROJ_TEST_DIR}/piece_tests.cc
+  ${PROJ_TEST_DIR}/board_tests.cc
+)
 
 target_link_libraries(
   tests
@@ -51,6 +58,5 @@ target_link_libraries(
   khet_lib
 )
 
-include(GoogleTest)
 gtest_discover_tests(tests)
 
