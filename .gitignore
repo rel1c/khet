@@ -24,7 +24,6 @@ lib/*
 *.a
 *.cmake
 old/
-ide
 
 # vim specific
 *.swp
