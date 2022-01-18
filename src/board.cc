@@ -3,7 +3,7 @@
 
 #include "board.h"
 
-void Board::fromPkn(const std::string& pkn) {
+void Board::setPkn(const std::string& pkn) {
 
   // extract fields
   std::istringstream iss(pkn);
@@ -44,7 +44,35 @@ void Board::fromPkn(const std::string& pkn) {
 }
 
 const std::string Board::toPkn() const {
-  return ""; //TODO
+  std::string piece_str, direction_str, player_str, turn_str;
+  // construct piece and direction sub-strings
+  int gap = 0;
+  for (int i = 0; i < NUM_SQUARES; i++) {
+    Square s = static_cast<Square>(i);
+    Piece p = _pieces[s];
+    if(!p)
+      gap++;
+    if (p || fileOf(s) == FILE_J) {
+      if (gap) {
+        // account for ten represented as '0' in PKN
+        gap %= 10;
+        piece_str += std::to_string(gap);
+        gap = 0;
+      }
+      if (p) {
+        char ch = toChar(typeOf(p));
+        piece_str += (colorOf(p) == SILVER) ? std::toupper(ch) : ch;
+        direction_str += toChar(directionOf(p));
+      }
+      if (s != SQ_J8 && fileOf(s) == FILE_J) {
+        piece_str += '/';
+      }
+    }
+  }
+  // combine it all together
+  player_str = (_player == RED) ? 'r' : 's';
+  turn_str = std::to_string(_turn);
+  return piece_str + ' ' + direction_str + ' ' + player_str + ' ' + turn_str;
 }
 
 //void Board::doMove(const Move&) {

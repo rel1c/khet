@@ -86,6 +86,12 @@ TEST_F(PieceTest, PieceTypeFromCharTest) {
   ASSERT_EQ(PYRAMID, pieceTypeFromChar('p'));
   ASSERT_EQ(SCARAB, pieceTypeFromChar('s'));
   ASSERT_EQ(EYE_OF_HORUS, pieceTypeFromChar('e'));
+  ASSERT_EQ(ANUBIS, pieceTypeFromChar('A'));
+  ASSERT_EQ(SPHINX, pieceTypeFromChar('X'));
+  ASSERT_EQ(PHARAOH, pieceTypeFromChar('R'));
+  ASSERT_EQ(PYRAMID, pieceTypeFromChar('P'));
+  ASSERT_EQ(SCARAB, pieceTypeFromChar('S'));
+  ASSERT_EQ(EYE_OF_HORUS, pieceTypeFromChar('E'));
 }
 
 TEST_P(PieceTestParam, MakeTest) {
@@ -186,13 +192,15 @@ TEST_F(PieceDeathTest, ReflectDeathTest) {
 }
 
 TEST_F(PieceTest, DirectionFromCharDeathTest) {
-  ASSERT_DEATH(directionFromChar('A'), "");
+  ASSERT_DEATH(directionFromChar('g'), "");
+  ASSERT_DEATH(directionFromChar('Q'), "");
   ASSERT_DEATH(directionFromChar(' '), "");
   ASSERT_DEATH(directionFromChar('?'), "");
 }
 
 TEST_F(PieceTest, PieceTypeFromCharDeathTest) {
-  ASSERT_DEATH(pieceTypeFromChar('A'), "");
+  ASSERT_DEATH(pieceTypeFromChar('g'), "");
+  ASSERT_DEATH(directionFromChar('Q'), "");
   ASSERT_DEATH(pieceTypeFromChar(' '), "");
   ASSERT_DEATH(pieceTypeFromChar('?'), "");
 }

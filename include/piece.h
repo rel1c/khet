@@ -138,7 +138,7 @@ inline char toChar(PieceType pt) {
 }
 
 inline PieceType pieceTypeFromChar(char ch) {
-  std::tolower(ch);
+  ch = std::tolower(ch);
   switch(ch) {
     case 'a' : return ANUBIS;
     case 'x' : return SPHINX;
