@@ -182,6 +182,12 @@ inline void Board::swapPiece(Square from, Square to) {
   }
 }
 
-inline void Board::rotatePiece(Square s, Rotation r) {} //TODO
+inline void Board::rotatePiece(Square s, Rotation r) {
+  Piece p = _pieces[s];
+  _direction_bb[directionOf(p)].reset(s);
+  p = (r == POSITIVE) ? rotatePos(p) : rotateNeg(p);
+  _pieces[s] = p;
+  _direction_bb[directionOf(p)].set(s);
+}
 
 #endif

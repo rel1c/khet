@@ -161,6 +161,29 @@ TEST_F(BoardTest, SwapPieceTest) {
   EXPECT_FALSE(b.pieces(d2)[to]);
 }
 
+TEST_F(BoardTest, RotatePieceTest) {
+  Board b;
+  Piece p = make(SILVER, ANUBIS, NORTH);
+  Square s = SQ_A1;
+  b.addPiece(p, s);
+  b.rotatePiece(s, POSITIVE);
+  EXPECT_EQ(rotatePos(p), b.pieceOn(s));
+  b.rotatePiece(s, POSITIVE);
+  EXPECT_EQ(rotatePos(rotatePos(p)), b.pieceOn(s));
+  b.rotatePiece(s, POSITIVE);
+  EXPECT_EQ(rotatePos(rotatePos(rotatePos(p))), b.pieceOn(s));
+  b.rotatePiece(s, POSITIVE);
+  EXPECT_EQ(p, b.pieceOn(s));
+  b.rotatePiece(s, NEGATIVE);
+  EXPECT_EQ(rotateNeg(p), b.pieceOn(s));
+  b.rotatePiece(s, NEGATIVE);
+  EXPECT_EQ(rotateNeg(rotateNeg(p)), b.pieceOn(s));
+  b.rotatePiece(s, NEGATIVE);
+  EXPECT_EQ(rotateNeg(rotateNeg(rotateNeg(p))), b.pieceOn(s));
+  b.rotatePiece(s, NEGATIVE);
+  EXPECT_EQ(p, b.pieceOn(s));
+}
+
 INSTANTIATE_TEST_SUITE_P(
   BoardTests,
   BoardTestParam,
