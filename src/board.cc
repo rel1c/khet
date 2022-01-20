@@ -129,6 +129,24 @@ Bitboard bbFromVec(const std::vector<Square>& v) {
   return bb;
 };
 
+/**
+ * @brief Display a bitboard as a Khet board, boardered by rank and file
+ * notation, with starting square in the lower left, as seen by the silver
+ * player.
+ * @param bb The bitboard
+ */
+void display(const Bitboard& bb) {
+  std::string bb_str = bb.to_string();
+  for (int i = NUM_RANKS; i > 0; i--) {
+    std::cout << i << " ";
+    for (int j = 0; j < NUM_FILES; j++) {
+      std::cout << bb[(i-1) * NUM_FILES + j];
+    }
+    std::cout << "\n";
+  }
+  std::cout << "  abcdefghij" << std::endl;
+}
+
 void Board::setPkn(const std::string& pkn) {
 
   // extract fields

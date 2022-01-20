@@ -73,7 +73,7 @@ TEST_P(BoardTestParam, RemovePieceTest) {
       Color c = colorOf(p);
       PieceType pt = typeOf(p);
       Direction d = directionOf(p);
-      EXPECT_EQ(NO_PIECE, b.pieceOn(s));
+      EXPECT_FALSE(b.pieceOn(s));
       EXPECT_FALSE(b.pieces(c)[s]);
       EXPECT_FALSE(b.pieces(pt)[s]);
       EXPECT_FALSE(b.pieces(d)[s]);
@@ -91,16 +91,74 @@ TEST_F(BoardTest, MovePieceTest) {
     Color c = colorOf(p);
     PieceType pt = typeOf(p);
     Direction d = directionOf(p);
+    EXPECT_TRUE(b.pieceOn(here));
     EXPECT_TRUE(b.pieces(c)[here]);
     EXPECT_TRUE(b.pieces(pt)[here]);
     EXPECT_TRUE(b.pieces(d)[here]);
-    EXPECT_TRUE(b.pieceOn(here));
     EXPECT_FALSE(b.pieceOn(there));
     EXPECT_FALSE(b.pieces(c)[there]);
     EXPECT_FALSE(b.pieces(pt)[there]);
     EXPECT_FALSE(b.pieces(d)[there]);
     b.movePiece(here, there);
   }
+}
+
+TEST_F(BoardTest, SwapPieceTest) {
+  Board b;
+  Piece p = make(SILVER, PYRAMID, NORTH);
+  Piece q = make(RED, SCARAB, SOUTH);
+  Square from = SQ_A1;
+  Square to = SQ_B1;
+  b.addPiece(p, from);
+  b.addPiece(q, to);
+
+  Color c1 = colorOf(p);
+  PieceType pt1 = typeOf(p);
+  Direction d1 = directionOf(p);
+  Color c2 = colorOf(q);
+  PieceType pt2 = typeOf(q);
+  Direction d2 = directionOf(q);
+
+  ASSERT_TRUE(b.pieceOn(from));
+  ASSERT_TRUE(b.pieceOn(to));
+  ASSERT_NE(b.pieceOn(from), b.pieceOn(to));
+  ASSERT_NE(c1, c2);
+  ASSERT_NE(pt1, pt2);
+  ASSERT_NE(d1, d2);
+  EXPECT_TRUE(b.pieces(c1)[from]);
+  EXPECT_TRUE(b.pieces(pt1)[from]);
+  EXPECT_TRUE(b.pieces(d1)[from]);
+  EXPECT_TRUE(b.pieces(c2)[to]);
+  EXPECT_TRUE(b.pieces(pt2)[to]);
+  EXPECT_TRUE(b.pieces(d2)[to]);
+  EXPECT_FALSE(b.pieces(c1)[to]);
+  EXPECT_FALSE(b.pieces(pt1)[to]);
+  EXPECT_FALSE(b.pieces(d1)[to]);
+  EXPECT_FALSE(b.pieces(c2)[from]);
+  EXPECT_FALSE(b.pieces(pt2)[from]);
+  EXPECT_FALSE(b.pieces(d2)[from]);
+  
+  b.swapPiece(from, to);
+
+  ASSERT_TRUE(b.pieceOn(from));
+  ASSERT_TRUE(b.pieceOn(to));
+  ASSERT_EQ(b.pieceOn(from), q);
+  ASSERT_EQ(b.pieceOn(to), p);
+  ASSERT_NE(c1, c2);
+  ASSERT_NE(pt1, pt2);
+  ASSERT_NE(d1, d2);
+  EXPECT_TRUE(b.pieces(c1)[to]);
+  EXPECT_TRUE(b.pieces(pt1)[to]);
+  EXPECT_TRUE(b.pieces(d1)[to]);
+  EXPECT_TRUE(b.pieces(c2)[from]);
+  EXPECT_TRUE(b.pieces(pt2)[from]);
+  EXPECT_TRUE(b.pieces(d2)[from]);
+  EXPECT_FALSE(b.pieces(c1)[from]);
+  EXPECT_FALSE(b.pieces(pt1)[from]);
+  EXPECT_FALSE(b.pieces(d1)[from]);
+  EXPECT_FALSE(b.pieces(c2)[to]);
+  EXPECT_FALSE(b.pieces(pt2)[to]);
+  EXPECT_FALSE(b.pieces(d2)[to]);
 }
 
 INSTANTIATE_TEST_SUITE_P(

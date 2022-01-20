@@ -43,6 +43,8 @@ using Bitboard = std::bitset <NUM_SQUARES>;
 
 Bitboard bbFromVec(const std::vector<Square>&);
 
+void display(const Bitboard&);
+
 extern const Bitboard FILE_BB_A;
 extern const Bitboard FILE_BB_B;
 extern const Bitboard FILE_BB_C;
@@ -92,9 +94,10 @@ public:
 
 private:
   std::array<Piece, NUM_SQUARES> _pieces = {};
-  std::array<Bitboard, NUM_COLORS> _color_bb = {};
-  std::array<Bitboard, NUM_DIRECTIONS> _direction_bb = {};
-  std::array<Bitboard, NUM_PIECE_TYPES> _type_bb = {};
+  // TODO sort out these magic numbers for enum lengths
+  std::array<Bitboard, 3> _color_bb = {};
+  std::array<Bitboard, 4> _direction_bb = {};
+  std::array<Bitboard, 8> _type_bb = {};
   Color _player = SILVER;
   std::string _pkn = "";
   unsigned int _turn = 0;
@@ -129,6 +132,7 @@ inline void Board::addPiece(Piece p, Square s) {
   _color_bb[colorOf(p)].set(s);
   _direction_bb[directionOf(p)].set(s);
   _type_bb[typeOf(p)].set(s);
+  _type_bb[ALL_PIECES].set(s);
 }
 
 inline void Board::removePiece(Piece p, Square s) {
@@ -136,6 +140,7 @@ inline void Board::removePiece(Piece p, Square s) {
   _color_bb[colorOf(p)].reset(s);
   _direction_bb[directionOf(p)].reset(s);
   _type_bb[typeOf(p)].reset(s);
+  _type_bb[ALL_PIECES].reset(s);
 }
 
 inline void Board::movePiece(Square from, Square to) {
@@ -146,9 +151,37 @@ inline void Board::movePiece(Square from, Square to) {
   _color_bb[colorOf(p)] ^= both;
   _direction_bb[directionOf(p)] ^= both;
   _type_bb[typeOf(p)] ^= both;
+  _type_bb[ALL_PIECES] ^= both;
 }
 
-inline void Board::swapPiece(Square from, Square to) {} //TODO
+inline void Board::swapPiece(Square from, Square to) {
+  Piece a = _pieces[from];
+  Piece b = _pieces[to];
+  Piece tmp = a;
+  _pieces[from] = b;
+  _pieces[to] = tmp;
+
+  Bitboard both = SQ_BB[from] | SQ_BB[to];
+  Color ca = colorOf(a);
+  Color cb = colorOf(b);
+  if (ca != cb) {
+    _color_bb[ca] ^= both;
+    _color_bb[cb] ^= both;
+  }
+  Direction da = directionOf(a);
+  Direction db = directionOf(b);
+  if (da != db) {
+    _direction_bb[da] ^= both;
+    _direction_bb[db] ^= both;
+  }
+  PieceType pta = typeOf(a);
+  PieceType ptb = typeOf(b);
+  if (pta != ptb) {
+    _type_bb[pta] ^= both;
+    _type_bb[ptb] ^= both;
+  }
+}
+
 inline void Board::rotatePiece(Square s, Rotation r) {} //TODO
 
 #endif
