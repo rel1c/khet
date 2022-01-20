@@ -33,30 +33,74 @@ TEST_F(BoardTest, RankOfTest) {
   ASSERT_EQ(RANK_2, rankOf(SQ_I2));
 }
 
-TEST_P(BoardTestParam, SetPknTest) {
+TEST_P(BoardTestParam, PknTest) {
   Board b;
   std::string pkn = std::get<0>(GetParam());
   std::array<Piece, NUM_SQUARES> pieces = std::get<1>(GetParam());
   b.setPkn(pkn);
-  EXPECT_EQ(pkn, b.toPkn());
+  ASSERT_EQ(pkn, b.toPkn());
 }
 
-TEST_P(BoardTestParam, ToPknTest) {
+TEST_P(BoardTestParam, AddPieceTest) {
   Board b;
   std::string pkn = std::get<0>(GetParam());
   std::array<Piece, NUM_SQUARES> pieces = std::get<1>(GetParam());
-  //b.setPkn(pkn);
   for (int i = 0; i < NUM_SQUARES; i++) {
     Piece p = pieces[i];
     if (p) {
+      Square s = static_cast<Square>(i);
+      b.addPiece(p, s);
       Color c = colorOf(p);
       PieceType pt = typeOf(p);
       Direction d = directionOf(p);
-      Square s = static_cast<Square>(i);
-      b.addPiece(s, c, pt, d);
+      EXPECT_TRUE(b.pieces(c)[s]);
+      EXPECT_TRUE(b.pieces(pt)[s]);
+      EXPECT_TRUE(b.pieces(d)[s]);
     }
   }
   EXPECT_EQ(pkn, b.toPkn());
+}
+
+TEST_P(BoardTestParam, RemovePieceTest) {
+  Board b;
+  std::string pkn = std::get<0>(GetParam());
+  std::array<Piece, NUM_SQUARES> pieces = std::get<1>(GetParam());
+  for (int i = 0; i < NUM_SQUARES; i++) {
+    Piece p = pieces[i];
+    if (p) {
+      Square s = static_cast<Square>(i);
+      b.removePiece(p, s);
+      Color c = colorOf(p);
+      PieceType pt = typeOf(p);
+      Direction d = directionOf(p);
+      EXPECT_EQ(NO_PIECE, b.pieceOn(s));
+      EXPECT_FALSE(b.pieces(c)[s]);
+      EXPECT_FALSE(b.pieces(pt)[s]);
+      EXPECT_FALSE(b.pieces(d)[s]);
+    }
+  }
+}
+
+TEST_F(BoardTest, MovePieceTest) {
+  Board b;
+  Piece p = make(SILVER, ANUBIS, NORTH);
+  b.addPiece(p, SQ_A1);
+  for (int i = 0; i < NUM_SQUARES - 1; i++) {
+    Square here = static_cast<Square>(i);
+    Square there = static_cast<Square>(i + 1);
+    Color c = colorOf(p);
+    PieceType pt = typeOf(p);
+    Direction d = directionOf(p);
+    EXPECT_TRUE(b.pieces(c)[here]);
+    EXPECT_TRUE(b.pieces(pt)[here]);
+    EXPECT_TRUE(b.pieces(d)[here]);
+    EXPECT_TRUE(b.pieceOn(here));
+    EXPECT_FALSE(b.pieceOn(there));
+    EXPECT_FALSE(b.pieces(c)[there]);
+    EXPECT_FALSE(b.pieces(pt)[there]);
+    EXPECT_FALSE(b.pieces(d)[there]);
+    b.movePiece(here, there);
+  }
 }
 
 INSTANTIATE_TEST_SUITE_P(

@@ -1,5 +1,6 @@
 #include <array>
 #include <bitset>
+#include <vector>
 
 #include "piece.h"
 
@@ -40,6 +41,30 @@ constexpr Rank rankOf(Square s) {
 
 using Bitboard = std::bitset <NUM_SQUARES>;
 
+Bitboard bbFromVec(const std::vector<Square>&);
+
+extern const Bitboard FILE_BB_A;
+extern const Bitboard FILE_BB_B;
+extern const Bitboard FILE_BB_C;
+extern const Bitboard FILE_BB_D;
+extern const Bitboard FILE_BB_E;
+extern const Bitboard FILE_BB_F;
+extern const Bitboard FILE_BB_G;
+extern const Bitboard FILE_BB_H;
+extern const Bitboard FILE_BB_I;
+extern const Bitboard FILE_BB_J;
+
+extern const Bitboard RANK_BB_1;
+extern const Bitboard RANK_BB_2;
+extern const Bitboard RANK_BB_3;
+extern const Bitboard RANK_BB_4;
+extern const Bitboard RANK_BB_5;
+extern const Bitboard RANK_BB_6;
+extern const Bitboard RANK_BB_7;
+extern const Bitboard RANK_BB_8;
+
+extern const std::array<Bitboard, NUM_SQUARES> SQ_BB;
+
 class Board {
 public:
   Board() = default;
@@ -54,8 +79,8 @@ public:
   Piece pieceOn(Square s) const;
   Color player() const;
 
-  void addPiece(Square, Color, PieceType, Direction);
-  void removePiece(Square);
+  void addPiece(Piece, Square);
+  void removePiece(Piece, Square);
   void movePiece(Square, Square);
   void swapPiece(Square, Square);
   void rotatePiece(Square, Rotation);
@@ -99,15 +124,30 @@ inline Color Board::player() const {
   return _player;
 }
 
-inline void Board::addPiece(Square s, Color c, PieceType pt, Direction d) {
-  _pieces[s] = make(c, pt, d);
-  _color_bb[c].set(s);
-  _direction_bb[d].set(s);
-  _type_bb[pt].set(s);
+inline void Board::addPiece(Piece p, Square s) {
+  _pieces[s] = p;
+  _color_bb[colorOf(p)].set(s);
+  _direction_bb[directionOf(p)].set(s);
+  _type_bb[typeOf(p)].set(s);
 }
 
-inline void Board::removePiece(Square s) {} //TODO
-inline void Board::movePiece(Square from, Square to) {} //TODO
+inline void Board::removePiece(Piece p, Square s) {
+  _pieces[s] = NO_PIECE;
+  _color_bb[colorOf(p)].reset(s);
+  _direction_bb[directionOf(p)].reset(s);
+  _type_bb[typeOf(p)].reset(s);
+}
+
+inline void Board::movePiece(Square from, Square to) {
+  Bitboard both = SQ_BB[from] | SQ_BB[to];
+  Piece p = _pieces[from];
+  _pieces[to] = p;
+  _pieces[from] = NO_PIECE;
+  _color_bb[colorOf(p)] ^= both;
+  _direction_bb[directionOf(p)] ^= both;
+  _type_bb[typeOf(p)] ^= both;
+}
+
 inline void Board::swapPiece(Square from, Square to) {} //TODO
 inline void Board::rotatePiece(Square s, Rotation r) {} //TODO
 

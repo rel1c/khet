@@ -3,6 +3,132 @@
 
 #include "board.h"
 
+const Bitboard FILE_BB_A = bbFromVec(std::vector<Square> {
+  SQ_A1, SQ_A2, SQ_A3, SQ_A4, SQ_A5, SQ_A6, SQ_A7, SQ_A8
+});
+const Bitboard FILE_BB_B = FILE_BB_A << 1;
+const Bitboard FILE_BB_C = FILE_BB_A << 2;
+const Bitboard FILE_BB_D = FILE_BB_A << 3;
+const Bitboard FILE_BB_E = FILE_BB_A << 4;
+const Bitboard FILE_BB_F = FILE_BB_A << 5;
+const Bitboard FILE_BB_G = FILE_BB_A << 6;
+const Bitboard FILE_BB_H = FILE_BB_A << 7;
+const Bitboard FILE_BB_I = FILE_BB_A << 8;
+const Bitboard FILE_BB_J = FILE_BB_A << 9;
+
+const Bitboard RANK_BB_1 = bbFromVec(std::vector<Square> {
+  SQ_A1, SQ_B1, SQ_C1, SQ_D1, SQ_E1, SQ_F1, SQ_G1, SQ_H1, SQ_I1, SQ_J1
+});
+const Bitboard RANK_BB_2 = RANK_BB_1 << (NUM_FILES * 1);
+const Bitboard RANK_BB_3 = RANK_BB_1 << (NUM_FILES * 2);
+const Bitboard RANK_BB_4 = RANK_BB_1 << (NUM_FILES * 3);
+const Bitboard RANK_BB_5 = RANK_BB_1 << (NUM_FILES * 4);
+const Bitboard RANK_BB_6 = RANK_BB_1 << (NUM_FILES * 5);
+const Bitboard RANK_BB_7 = RANK_BB_1 << (NUM_FILES * 6);
+const Bitboard RANK_BB_8 = RANK_BB_1 << (NUM_FILES * 7);
+
+const std::array<Bitboard, NUM_SQUARES> SQ_BB {
+  FILE_BB_A & RANK_BB_1,
+  FILE_BB_B & RANK_BB_1,
+  FILE_BB_C & RANK_BB_1,
+  FILE_BB_D & RANK_BB_1,
+  FILE_BB_E & RANK_BB_1,
+  FILE_BB_F & RANK_BB_1,
+  FILE_BB_G & RANK_BB_1,
+  FILE_BB_H & RANK_BB_1,
+  FILE_BB_I & RANK_BB_1,
+  FILE_BB_J & RANK_BB_1,
+
+  FILE_BB_A & RANK_BB_2,
+  FILE_BB_B & RANK_BB_2,
+  FILE_BB_C & RANK_BB_2,
+  FILE_BB_D & RANK_BB_2,
+  FILE_BB_E & RANK_BB_2,
+  FILE_BB_F & RANK_BB_2,
+  FILE_BB_G & RANK_BB_2,
+  FILE_BB_H & RANK_BB_2,
+  FILE_BB_I & RANK_BB_2,
+  FILE_BB_J & RANK_BB_2,
+
+  FILE_BB_A & RANK_BB_3,
+  FILE_BB_B & RANK_BB_3,
+  FILE_BB_C & RANK_BB_3,
+  FILE_BB_D & RANK_BB_3,
+  FILE_BB_E & RANK_BB_3,
+  FILE_BB_F & RANK_BB_3,
+  FILE_BB_G & RANK_BB_3,
+  FILE_BB_H & RANK_BB_3,
+  FILE_BB_I & RANK_BB_3,
+  FILE_BB_J & RANK_BB_3,
+
+  FILE_BB_A & RANK_BB_4,
+  FILE_BB_B & RANK_BB_4,
+  FILE_BB_C & RANK_BB_4,
+  FILE_BB_D & RANK_BB_4,
+  FILE_BB_E & RANK_BB_4,
+  FILE_BB_F & RANK_BB_4,
+  FILE_BB_G & RANK_BB_4,
+  FILE_BB_H & RANK_BB_4,
+  FILE_BB_I & RANK_BB_4,
+  FILE_BB_J & RANK_BB_4,
+
+  FILE_BB_A & RANK_BB_5,
+  FILE_BB_B & RANK_BB_5,
+  FILE_BB_C & RANK_BB_5,
+  FILE_BB_D & RANK_BB_5,
+  FILE_BB_E & RANK_BB_5,
+  FILE_BB_F & RANK_BB_5,
+  FILE_BB_G & RANK_BB_5,
+  FILE_BB_H & RANK_BB_5,
+  FILE_BB_I & RANK_BB_5,
+  FILE_BB_J & RANK_BB_5,
+
+  FILE_BB_A & RANK_BB_6,
+  FILE_BB_B & RANK_BB_6,
+  FILE_BB_C & RANK_BB_6,
+  FILE_BB_D & RANK_BB_6,
+  FILE_BB_E & RANK_BB_6,
+  FILE_BB_F & RANK_BB_6,
+  FILE_BB_G & RANK_BB_6,
+  FILE_BB_H & RANK_BB_6,
+  FILE_BB_I & RANK_BB_6,
+  FILE_BB_J & RANK_BB_6,
+
+  FILE_BB_A & RANK_BB_7,
+  FILE_BB_B & RANK_BB_7,
+  FILE_BB_C & RANK_BB_7,
+  FILE_BB_D & RANK_BB_7,
+  FILE_BB_E & RANK_BB_7,
+  FILE_BB_F & RANK_BB_7,
+  FILE_BB_G & RANK_BB_7,
+  FILE_BB_H & RANK_BB_7,
+  FILE_BB_I & RANK_BB_7,
+  FILE_BB_J & RANK_BB_7,
+
+  FILE_BB_A & RANK_BB_8,
+  FILE_BB_B & RANK_BB_8,
+  FILE_BB_C & RANK_BB_8,
+  FILE_BB_D & RANK_BB_8,
+  FILE_BB_E & RANK_BB_8,
+  FILE_BB_F & RANK_BB_8,
+  FILE_BB_G & RANK_BB_8,
+  FILE_BB_H & RANK_BB_8,
+  FILE_BB_I & RANK_BB_8,
+  FILE_BB_J & RANK_BB_8,
+};
+
+/**
+ * @brief Initialize a bitboard with a vector of board squares.
+ * @param v The vector
+ */
+Bitboard bbFromVec(const std::vector<Square>& v) {
+  Bitboard bb;
+  for (auto& s : v) {
+    bb.set(s);
+  }
+  return bb;
+};
+
 void Board::setPkn(const std::string& pkn) {
 
   // extract fields
@@ -33,8 +159,8 @@ void Board::setPkn(const std::string& pkn) {
       c = (isupper(*p_ptr)) ? SILVER : RED;
       pt = pieceTypeFromChar(*p_ptr);
       d = directionFromChar(*d_ptr);
-      Square square = static_cast<Square>(i++);
-      addPiece(square, c, pt, d);
+      Square s = static_cast<Square>(i++);
+      addPiece(make(c, pt, d), s);
       d_ptr++;
     }
     p_ptr++;
