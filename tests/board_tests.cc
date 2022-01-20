@@ -184,6 +184,30 @@ TEST_F(BoardTest, RotatePieceTest) {
   EXPECT_EQ(p, b.pieceOn(s));
 }
 
+TEST_F(BoardTest, FlipPieceTest) {
+  Board b;
+  Piece p = make(SILVER, SPHINX, NORTH);
+  Piece q = flip(p);
+  Square s = SQ_J1;
+  Direction d = directionOf(p);
+  Direction f = WEST;
+  b.addPiece(p, s);
+  ASSERT_TRUE(b.pieces(d)[s]);
+  ASSERT_NE(f, b.pieces(f)[s]);
+  ASSERT_NE(q, b.pieceOn(s));
+  b.flipPiece(s);
+  EXPECT_TRUE(b.pieces(f)[s]);
+  EXPECT_FALSE(b.pieces(d)[s]);
+  EXPECT_NE(p, b.pieceOn(s));
+  b.flipPiece(s);
+  EXPECT_TRUE(b.pieces(d)[s]);
+  EXPECT_FALSE(b.pieces(f)[s]);
+  EXPECT_NE(q, b.pieceOn(s));
+  EXPECT_NE(f, b.pieces(f)[s]);
+  EXPECT_TRUE(b.pieces(d)[s]);
+  EXPECT_EQ(p, b.pieceOn(s));
+} 
+
 INSTANTIATE_TEST_SUITE_P(
   BoardTests,
   BoardTestParam,

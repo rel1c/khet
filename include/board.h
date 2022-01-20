@@ -86,6 +86,7 @@ public:
   void movePiece(Square, Square);
   void swapPiece(Square, Square);
   void rotatePiece(Square, Rotation);
+  void flipPiece(Square);
 
   //void doMove(const Move&);
   //void undoMove(const Move&);
@@ -186,6 +187,14 @@ inline void Board::rotatePiece(Square s, Rotation r) {
   Piece p = _pieces[s];
   _direction_bb[directionOf(p)].reset(s);
   p = (r == POSITIVE) ? rotatePos(p) : rotateNeg(p);
+  _pieces[s] = p;
+  _direction_bb[directionOf(p)].set(s);
+}
+
+inline void Board::flipPiece(Square s) {
+  Piece p = _pieces[s];
+  _direction_bb[directionOf(p)].reset(s);
+  p = flip(_pieces[s]);
   _pieces[s] = p;
   _direction_bb[directionOf(p)].set(s);
 }
