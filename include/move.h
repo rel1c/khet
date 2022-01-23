@@ -4,6 +4,7 @@
 #define MOVE_H_
 
 const unsigned int NUM_SQUARES = 80;
+const unsigned int SQ_MASK = 0b1111111;
 
 enum Square : unsigned int {
   SQ_A1, SQ_B1, SQ_C1, SQ_D1, SQ_E1, SQ_F1, SQ_G1, SQ_H1, SQ_I1, SQ_J1,
@@ -16,9 +17,22 @@ enum Square : unsigned int {
   SQ_A8, SQ_B8, SQ_C8, SQ_D8, SQ_E8, SQ_F8, SQ_G8, SQ_H8, SQ_I8, SQ_J8,
   SQ_NONE
 };
-using Move = unsigned int;
 
-const unsigned int SQ_MASK = 0b1111111;
+// Captures are a bit field composed of two fields
+// [spare : 2][piece : 7][square : 7]
+using Capture = unsigned int;
+
+constexpr Capture makeCapture(Piece p, Square s) {
+  return p << 7 | s;
+}
+
+inline Piece getCapPiece(Capture cptr) {
+  return Piece(cptr >> 7);
+}
+
+inline Square getCapSquare(Capture cptr) {
+  return Square(cptr & SQ_MASK);
+}
 
 // Moves are 16 bits wide, composed of four fields
 // [from : 7][rotate : 1][swap : 1][to/rotation : 7]
@@ -26,6 +40,7 @@ const unsigned int SQ_MASK = 0b1111111;
 // to have its lowest bit treated as a value for
 // positive or negative rotation, else the first 7 bits
 // are to be treated as a board square.
+using Move = unsigned int;
 
 constexpr Move makeMove(Square from, Square to, bool swap=false) {
   return from << 9 | swap << 7 | to;

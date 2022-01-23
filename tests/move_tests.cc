@@ -3,12 +3,38 @@
 #include "test_util.h"
 #include "move.h"
 
+class CaptureTest : public::testing::Test {
+protected:
+  Capture cptr;
+};
+
+TEST_F(CaptureTest, MakeCaptureTest) {
+  cptr = makeCapture(SILVER_ANUBIS_NORTH, SQ_A1);
+  EXPECT_EQ(cptr, 0b01001000000000);
+  cptr = makeCapture(RED_EYE_OF_HORUS_WEST, SQ_J8);
+  EXPECT_EQ(cptr, 0b10110111001111);
+}
+
+TEST_F(CaptureTest, GetPieceCaptureTest) {
+  cptr = makeCapture(SILVER_ANUBIS_NORTH, SQ_A1);
+  EXPECT_EQ(SILVER_ANUBIS_NORTH, getCapPiece(cptr));
+  cptr = makeCapture(RED_EYE_OF_HORUS_WEST, SQ_J8);
+  EXPECT_EQ(RED_EYE_OF_HORUS_WEST, getCapPiece(cptr));
+}
+
+TEST_F(CaptureTest, GetSquareCaptureTest) {
+  cptr = makeCapture(SILVER_ANUBIS_NORTH, SQ_A1);
+  EXPECT_EQ(SQ_A1, getCapSquare(cptr));
+  cptr = makeCapture(RED_EYE_OF_HORUS_WEST, SQ_J8);
+  EXPECT_EQ(SQ_J8, getCapSquare(cptr));
+}
+
 class MoveTest : public::testing::Test {
 protected:
   Move m;
 };
 
-TEST_F(MoveTest, BasicMakeMoveTest) {
+TEST_F(MoveTest, MakeMoveTest) {
   m = makeMove(SQ_C1, SQ_B2);
   EXPECT_EQ(m, 0b0000010000001011);
   m = makeMove(SQ_A1, SQ_A2, true);

@@ -54,13 +54,11 @@ extern const Bitboard RANK_BB_8;
 
 extern const std::array<Bitboard, NUM_SQUARES> SQ_BB;
 
-using Eliminated = unsigned int;
-
 struct BoardState {
   BoardState* prev;
   Bitboard silver_path;
   Bitboard red_path;
-  std::vector<Eliminated> eliminated;
+  std::vector<Capture> captured;
 };
 
 class Board {
