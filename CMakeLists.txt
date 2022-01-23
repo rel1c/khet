@@ -48,6 +48,7 @@ add_executable(
   ${PROJ_TEST_DIR}/tests.cc
   ${PROJ_TEST_DIR}/piece_tests.cc
   ${PROJ_TEST_DIR}/board_tests.cc
+  ${PROJ_TEST_DIR}/move_tests.cc
 )
 
 target_link_libraries(
