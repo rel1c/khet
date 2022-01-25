@@ -58,7 +58,7 @@ struct BoardState {
   BoardState* prev;
   Bitboard silver_path;
   Bitboard red_path;
-  std::vector<Capture> captured;
+  std::array<Capture, 3> captured;
 };
 
 class Board {
@@ -172,10 +172,8 @@ inline void Board::swapPiece(Square from, Square to) {
   }
   PieceType pta = typeOf(a);
   PieceType ptb = typeOf(b);
-  if (pta != ptb) {
-    _type_bb[pta] ^= both;
-    _type_bb[ptb] ^= both;
-  }
+  _type_bb[pta] ^= both;
+  _type_bb[ptb] ^= both;
 }
 
 inline void Board::rotatePiece(Square s, Rotation r) {

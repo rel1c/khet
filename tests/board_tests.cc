@@ -208,6 +208,57 @@ TEST_F(BoardTest, FlipPieceTest) {
   EXPECT_EQ(p, b.pieceOn(s));
 } 
 
+TEST_F(BoardTest, FileBitboardsTest) {
+  std::vector<Bitboard> files = {
+    FILE_BB_A,
+    FILE_BB_B,
+    FILE_BB_C,
+    FILE_BB_D,
+    FILE_BB_E,
+    FILE_BB_F,
+    FILE_BB_G,
+    FILE_BB_H,
+    FILE_BB_I,
+    FILE_BB_J
+  };
+  ASSERT_EQ(NUM_FILES, files.size());
+  for (int i = 0; i < NUM_FILES; i++) {
+    Bitboard file = files[i];
+    for (int j = 0; j < NUM_RANKS; j++) {
+      EXPECT_EQ(file[i + j * NUM_FILES], 1);
+    }
+  }
+}
+
+TEST_F(BoardTest, RankBitboardsTest) {
+  std::vector<Bitboard> ranks = {
+    RANK_BB_1,
+    RANK_BB_2,
+    RANK_BB_3,
+    RANK_BB_4,
+    RANK_BB_5,
+    RANK_BB_6,
+    RANK_BB_7,
+    RANK_BB_8
+  };
+  ASSERT_EQ(NUM_RANKS, ranks.size());
+  for (int i = 0; i < NUM_RANKS; i++) {
+    Bitboard rank = ranks[i];
+    for (int j = 0; j < NUM_FILES; j++) {
+      EXPECT_EQ(rank[i * NUM_FILES + j], 1);
+    }
+  }
+}
+
+TEST_F(BoardTest, SquareBitboardsTest) {
+  ASSERT_EQ(NUM_SQUARES, SQ_BB.size());
+  for (int i = 0; i < NUM_SQUARES; i++) {
+    Bitboard bb = SQ_BB[i];
+    ASSERT_EQ(bb.count(), 1);
+    EXPECT_EQ(bb[i], 1);
+  }
+}
+
 INSTANTIATE_TEST_SUITE_P(
   BoardTests,
   BoardTestParam,
