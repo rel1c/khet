@@ -15,13 +15,6 @@ TEST_P(PieceTestParam, ColorOfTest) {
   ASSERT_EQ(c, colorOf(p));
 }
 
-TEST_F(PieceTest, DirectionNegationTest) {
-  ASSERT_EQ(NORTH, ~SOUTH);
-  ASSERT_EQ(EAST, ~WEST);
-  ASSERT_EQ(SOUTH, ~NORTH);
-  ASSERT_EQ(WEST, ~EAST);
-}
-
 TEST_P(PieceTestParam, DirectionOfTest) {
   Piece p = std::get<0>(GetParam());
   Direction d = std::get<3>(GetParam());
@@ -148,27 +141,16 @@ TEST_P(PieceTestParam, RotateNegTest) {
     EXPECT_EQ(d2, SOUTH);
 }
 
-TEST_P(PieceTestParam, FlipTest) {
-  Piece p1 = std::get<0>(GetParam());
-  Color c1 = std::get<1>(GetParam());
-  PieceType pt1 = std::get<2>(GetParam());
-  Direction d1 = std::get<3>(GetParam());
-  Piece p2 = flip(p1);
-  Color c2 = colorOf(p2);
-  PieceType pt2 = typeOf(p2);
-  Direction d2 = directionOf(p2);
-  ASSERT_NE(p1, p2);
-  EXPECT_EQ(c1, c2);
-  ASSERT_NE(d1, d2);
-  EXPECT_EQ(pt1, pt2);
-  if (d1 == NORTH)
-    EXPECT_EQ(d2, WEST);
-  else if (d1 == EAST)
-    EXPECT_EQ(d2, SOUTH);
-  else if (d1 == SOUTH)
-    EXPECT_EQ(d2, EAST);
-  else
-    EXPECT_EQ(d2, NORTH);
+TEST_F(PieceTest, FlipTest) {
+  Direction d;
+  d = NORTH;
+  EXPECT_EQ(NEGATIVE, flip(d));
+  d = EAST;
+  EXPECT_EQ(POSITIVE, flip(d));
+  d = SOUTH;
+  EXPECT_EQ(NEGATIVE, flip(d));
+  d = WEST;
+  EXPECT_EQ(POSITIVE, flip(d));
 }
 
 // DEATH TESTS //
@@ -177,7 +159,7 @@ TEST_F(PieceDeathTest, ColorOfDeathTest) {
   ASSERT_DEATH(colorOf(NO_PIECE), "");
 }
 
-TEST_F(PieceDeathTest, DirectionOfeDeathTest) {
+TEST_F(PieceDeathTest, DirectionOfDeathTest) {
   ASSERT_DEATH(directionOf(NO_PIECE), "");
 }
 

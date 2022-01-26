@@ -27,6 +27,14 @@ const Bitboard RANK_BB_6 = RANK_BB_1 << (NUM_FILES * 5);
 const Bitboard RANK_BB_7 = RANK_BB_1 << (NUM_FILES * 6);
 const Bitboard RANK_BB_8 = RANK_BB_1 << (NUM_FILES * 7);
 
+const Bitboard SILVER_SQR_BB = bbFromVec(std::vector<Square> {
+  SQ_B1, SQ_B8, SQ_J1, SQ_J2, SQ_J3, SQ_J4, SQ_J5, SQ_J6, SQ_J7, SQ_J8
+});
+
+const Bitboard RED_SQR_BB = bbFromVec(std::vector<Square> {
+  SQ_A1, SQ_A2, SQ_A3, SQ_A4, SQ_A5, SQ_A6, SQ_A7, SQ_A8, SQ_I1, SQ_I8
+});
+
 const std::array<Bitboard, NUM_SQUARES> SQ_BB {
   FILE_BB_A & RANK_BB_1,
   FILE_BB_B & RANK_BB_1,

@@ -1,5 +1,6 @@
 #include <cassert>
 #include <ostream>
+#include <bitset>
 
 #ifndef PIECE_H_
 #define PIECE_H_
@@ -7,7 +8,6 @@
 const unsigned int NUM_COLORS = 2;
 const unsigned int NUM_DIRECTIONS = 4;
 const unsigned int NUM_PIECE_TYPES = 6;
-const unsigned int MAX_MOVES = 121;
 const unsigned int COLOR_MASK = 0b1100000;
 const unsigned int PIECE_MASK = 0b11100;
 const unsigned int REFLECTOR_MASK = 0b10000;
@@ -101,9 +101,9 @@ inline Color colorOf(Piece p) {
   return Color((p & COLOR_MASK) >> 5);
 }
 
-constexpr Direction operator~(Direction d) {
-  return Direction(d ^ SOUTH);
-}
+//constexpr Direction operator~(Direction d) {
+//  return Direction(d ^ SOUTH);
+//}
 
 inline Direction directionOf(Piece p) {
   assert(p != NO_PIECE);
@@ -162,8 +162,8 @@ constexpr Piece rotateNeg(Piece p) {
   return Piece((p & WEST) == NORTH ? p + 3 : p - 1);
 }
 
-constexpr Piece flip(Piece p) {
-  return Piece(p ^ WEST);
+inline Rotation flip(Direction d) {
+  return Rotation(~d & 1);
 }
 
 #endif

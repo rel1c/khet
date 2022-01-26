@@ -52,6 +52,9 @@ extern const Bitboard RANK_BB_6;
 extern const Bitboard RANK_BB_7;
 extern const Bitboard RANK_BB_8;
 
+extern const Bitboard SILVER_SQR_BB;
+extern const Bitboard RED_SQR_BB;
+
 extern const std::array<Bitboard, NUM_SQUARES> SQ_BB;
 
 struct BoardState {
@@ -75,12 +78,13 @@ public:
   Piece pieceOn(Square s) const;
   Color player() const;
 
+  Bitboard blocked() const;
+
   void addPiece(Piece, Square);
   void removePiece(Piece, Square);
   void movePiece(Square, Square);
   void swapPiece(Square, Square);
   void rotatePiece(Square, Rotation);
-  void flipPiece(Square);
 
   //void doMove(const Move);
   //void undoMove(const Move);
@@ -88,7 +92,7 @@ public:
   void display() const;
 
 private:
-  BoardState* state;
+  BoardState* _state;
   std::array<Piece, NUM_SQUARES> _pieces = {};
   // TODO sort out these magic numbers for enum lengths
   std::array<Bitboard, 3> _color_bb = {};
@@ -121,6 +125,10 @@ inline Piece Board::pieceOn(Square s) const {
 
 inline Color Board::player() const {
   return _player;
+}
+
+inline Bitboard Board::blocked() const {
+  return (_player == RED) ? SILVER_SQR_BB : RED_SQR_BB;
 }
 
 inline void Board::addPiece(Piece p, Square s) {
@@ -180,14 +188,6 @@ inline void Board::rotatePiece(Square s, Rotation r) {
   Piece p = _pieces[s];
   _direction_bb[directionOf(p)].reset(s);
   p = (r == POSITIVE) ? rotatePos(p) : rotateNeg(p);
-  _pieces[s] = p;
-  _direction_bb[directionOf(p)].set(s);
-}
-
-inline void Board::flipPiece(Square s) {
-  Piece p = _pieces[s];
-  _direction_bb[directionOf(p)].reset(s);
-  p = flip(_pieces[s]);
   _pieces[s] = p;
   _direction_bb[directionOf(p)].set(s);
 }
