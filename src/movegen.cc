@@ -196,14 +196,14 @@ void gen(const Board& b, Moves& m) {
     switch (pt) {
     case SPHINX:
       m.push_back(makeMove(s, flip(d)));
-      std::cout << s << toChar(pt) << toChar(d) << std::endl;
+      //std::cout << s << toChar(pt) << toChar(d) << std::endl;
       break;
     case SCARAB:
     case EYE_OF_HORUS:
       swaps = possible & (b.pieces(ANUBIS) | b.pieces(PYRAMID));
       for (Square t : MOVE_LIST[s]) {
         if (swaps[t]) {
-          std::cout << s << toChar(pt) << toChar(d) << std::endl;
+          //std::cout << s << toChar(pt) << toChar(d) << std::endl;
           m.push_back(makeMove(s, t, true));
         }
       }
@@ -214,7 +214,7 @@ void gen(const Board& b, Moves& m) {
       able = possible & ~b.pieces(ALL_PIECES);
       for (Square t : MOVE_LIST[s]) {
         if (able[t]) {
-          std::cout << s << toChar(pt) << toChar(d) << std::endl;
+          //std::cout << s << toChar(pt) << toChar(d) << std::endl;
           m.push_back(makeMove(s, t));
         }
       }
