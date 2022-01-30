@@ -245,12 +245,10 @@ void Board::doMove(const Move m) {
   _player = ~_player;
 }
 
-#include <bitset>
 void Board::undoMove(const Move m) {
   Square from = getFrom(m);
   if (isRotate(m)) {
     Rotation r = Rotation(~getRotation(m));
-    std::cout << "r:" << std::bitset<8>(r) << std::endl;
     rotatePiece(from, r);
   }
   else if (isSwap(m)) {

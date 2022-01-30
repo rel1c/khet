@@ -288,6 +288,58 @@ TEST_F(BoardTest, UndoMoveRotationTest) {
   EXPECT_EQ(1, b.turn());
 }
 
+TEST_F(BoardTest, UndoMoveSwapTest) {
+  Board b;
+  b.setPkn("S9/1a8/0/0/0/0/0/0 ns s 3");
+  Move m;
+  Piece scarab = SILVER_SCARAB_NORTH;
+  Piece anubis = RED_ANUBIS_SOUTH;
+  Square from = SQ_A1;
+  Square to = SQ_B2;
+  ASSERT_EQ(SILVER, b.player());
+  ASSERT_EQ(3, b.turn());
+  ASSERT_EQ(scarab, b.pieceOn(from));
+  ASSERT_EQ(anubis, b.pieceOn(to));
+  // Swap
+  m = makeMove(from, to, true);
+  b.undoMove(m);
+  EXPECT_EQ(scarab, b.pieceOn(to));
+  EXPECT_EQ(anubis, b.pieceOn(from));
+  EXPECT_EQ(RED, b.player());
+  EXPECT_EQ(2, b.turn());
+  m = makeMove(to, from, true);
+  b.undoMove(m);
+  EXPECT_EQ(scarab, b.pieceOn(from));
+  EXPECT_EQ(anubis, b.pieceOn(to));
+  EXPECT_EQ(SILVER, b.player());
+  EXPECT_EQ(1, b.turn());
+}
+
+TEST_F(BoardTest, UndoMoveNoSwapTest) {
+  Board b;
+  b.setPkn("P9/0/0/0/0/0/0/0 w s 3");
+  Move m;
+  Square from = SQ_A1;
+  Square to = SQ_B2;
+  ASSERT_EQ(SILVER, b.player());
+  ASSERT_EQ(3, b.turn());
+  Piece pyramid = SILVER_PYRAMID_WEST;
+  ASSERT_EQ(pyramid, b.pieceOn(from));
+  ASSERT_EQ(NO_PIECE, b.pieceOn(to));
+  m = makeMove(to, from);
+  b.undoMove(m);
+  EXPECT_EQ(pyramid, b.pieceOn(to));
+  EXPECT_EQ(NO_PIECE, b.pieceOn(from));
+  EXPECT_EQ(RED, b.player());
+  EXPECT_EQ(2, b.turn());
+  m = makeMove(from, to);
+  b.undoMove(m);
+  EXPECT_EQ(pyramid, b.pieceOn(from));
+  EXPECT_EQ(NO_PIECE, b.pieceOn(to));
+  EXPECT_EQ(SILVER, b.player());
+  EXPECT_EQ(1, b.turn());
+}
+
 TEST_F(BoardTest, FileBitboardsTest) {
   std::vector<Bitboard> files = {
     FILE_BB_A,
