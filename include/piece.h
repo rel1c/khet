@@ -96,6 +96,14 @@ enum Rotation : unsigned int {
   NEGATIVE
 };
 
+constexpr Rotation operator~(Rotation r) {
+  return Rotation(r ^ 1);
+}
+
+constexpr Color operator~(Color c) {
+  return Color(c ^ 3);
+}
+
 inline Color colorOf(Piece p) {
   assert(p != NO_PIECE);
   return Color((p & COLOR_MASK) >> 5);

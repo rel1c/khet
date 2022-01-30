@@ -210,7 +210,6 @@ TEST_F(BoardTest, DoMoveRotationTest) {
   EXPECT_EQ(2, b.turn());
 }
 
-
 TEST_F(BoardTest, DoMoveSwapTest) {
   Board b;
   Move m;
@@ -262,6 +261,31 @@ TEST_F(BoardTest, DoMoveNoSwapTest) {
   EXPECT_EQ(NO_PIECE, b.pieceOn(to));
   EXPECT_EQ(SILVER, b.player());
   EXPECT_EQ(2, b.turn());
+}
+
+TEST_F(BoardTest, UndoMoveRotationTest) {
+  Board b;
+  b.setPkn("S9/1a8/0/0/0/0/0/0 ns s 3");
+  Move m;
+  Piece scarab = SILVER_SCARAB_NORTH;
+  Piece anubis = RED_ANUBIS_SOUTH;
+  Square from = SQ_A1;
+  Square to = SQ_B2;
+  ASSERT_EQ(SILVER, b.player());
+  ASSERT_EQ(3, b.turn());
+  ASSERT_EQ(scarab, b.pieceOn(from));
+  ASSERT_EQ(anubis, b.pieceOn(to));
+  // Rotation
+  m = makeMove(from, POSITIVE);
+  b.undoMove(m);
+  EXPECT_EQ(rotateNeg(scarab), b.pieceOn(from));
+  EXPECT_EQ(RED, b.player());
+  EXPECT_EQ(2, b.turn());
+  m = makeMove(to, NEGATIVE);
+  b.undoMove(m);
+  EXPECT_EQ(rotatePos(anubis), b.pieceOn(to));
+  EXPECT_EQ(SILVER, b.player());
+  EXPECT_EQ(1, b.turn());
 }
 
 TEST_F(BoardTest, FileBitboardsTest) {
