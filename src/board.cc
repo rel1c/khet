@@ -227,11 +227,41 @@ const std::string Board::toPkn() const {
   return piece_str + ' ' + direction_str + ' ' + player_str + ' ' + turn_str;
 }
 
-//void Board::doMove(const Move&) {
-//}
+void Board::doMove(const Move m) {
+  Square from = getFrom(m);
+  if (isRotate(m)) {
+    Rotation r = getRotation(m);
+    rotatePiece(from, r);
+  }
+  else if (isSwap(m)) {
+    Square to = getTo(m);
+    swapPiece(from, to);
+  }
+  else {
+    Square to = getTo(m);
+    movePiece(from, to);
+  }
+  _turn++;
+  _player = Color(_player ^ 3);
+}
 
-//void Board::undoMove(const Move&) {
-//}
+void Board::undoMove(const Move m) {
+  Square from = getFrom(m);
+  if (isRotate(m)) {
+    Rotation r = Rotation(~getRotation(m));
+    rotatePiece(from, r);
+  }
+  else if (isSwap(m)) {
+    Square to = getTo(m);
+    swapPiece(to, from);
+  }
+  else {
+    Square to = getTo(m);
+    movePiece(to, from);
+  }
+  _turn--;
+  _player = Color(_player ^ 3);
+}
 
 void Board::display() const {
 } //TODO

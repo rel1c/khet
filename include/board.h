@@ -61,7 +61,7 @@ struct BoardState {
   BoardState* prev;
   Bitboard silver_path;
   Bitboard red_path;
-  std::array<Capture, 3> captured;
+  std::array<Capture, 3> captured; // 3 max for 2 beam splitters
 };
 
 class Board {
@@ -77,6 +77,7 @@ public:
   Bitboard pieces(Direction d) const;
   Piece pieceOn(Square s) const;
   Color player() const;
+  unsigned int turn() const;
 
   Bitboard blocked() const;
 
@@ -86,8 +87,8 @@ public:
   void swapPiece(Square, Square);
   void rotatePiece(Square, Rotation);
 
-  //void doMove(const Move);
-  //void undoMove(const Move);
+  void doMove(const Move);
+  void undoMove(const Move);
 
   void display() const;
 
@@ -125,6 +126,10 @@ inline Piece Board::pieceOn(Square s) const {
 
 inline Color Board::player() const {
   return _player;
+}
+
+inline unsigned int Board::turn() const {
+  return _turn;
 }
 
 inline Bitboard Board::blocked() const {

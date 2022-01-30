@@ -101,10 +101,6 @@ inline Color colorOf(Piece p) {
   return Color((p & COLOR_MASK) >> 5);
 }
 
-//constexpr Direction operator~(Direction d) {
-//  return Direction(d ^ SOUTH);
-//}
-
 inline Direction directionOf(Piece p) {
   assert(p != NO_PIECE);
   return Direction(p & WEST);
