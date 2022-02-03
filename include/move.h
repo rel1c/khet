@@ -1,4 +1,5 @@
 #include "piece.h"
+#include <array>
 
 #ifndef MOVE_H_
 #define MOVE_H_
@@ -16,6 +17,17 @@ enum Square : unsigned int {
   SQ_A7, SQ_B7, SQ_C7, SQ_D7, SQ_E7, SQ_F7, SQ_G7, SQ_H7, SQ_I7, SQ_J7,
   SQ_A8, SQ_B8, SQ_C8, SQ_D8, SQ_E8, SQ_F8, SQ_G8, SQ_H8, SQ_I8, SQ_J8,
   SQ_NONE
+};
+
+const std::array<std::string, NUM_SQUARES> SquareStr {
+  "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1",
+  "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", "I2", "J2",
+  "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3", "I3", "J3",
+  "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4", "I4", "J4",
+  "A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5", "I5", "J5",
+  "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6", "I6", "J6",
+  "A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7", "I7", "J7",
+  "A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8", "I8", "J8"
 };
 
 // Captures are a bit field composed of two fields
@@ -71,5 +83,7 @@ inline Rotation getRotation(Move m) {
   assert(m & 1 << 8); // is a rotation
   return Rotation(m & 1);
 }
+
+void displayMove(Move);
 
 #endif
