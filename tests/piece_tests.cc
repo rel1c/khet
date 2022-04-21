@@ -153,6 +153,21 @@ TEST_F(PieceTest, FlipTest) {
   EXPECT_EQ(POSITIVE, flip(d));
 }
 
+TEST_F(PieceTest, PieceToStrTest) {
+  Piece p = NO_PIECE;
+  std::string str = pieceToStr(p);
+  EXPECT_EQ("NO_PIECE", str);
+  p = SILVER_ANUBIS_NORTH;
+  str = pieceToStr(p);
+  EXPECT_EQ("SILVER_ANUBIS_NORTH", str);
+  p = RED_EYE_OF_HORUS_NORTH;
+  str = pieceToStr(p);
+  EXPECT_EQ("RED_EYE_OF_HORUS_NORTH", str);
+  p = RED_SPHINX_WEST;
+  str = pieceToStr(p);
+  EXPECT_EQ("RED_SPHINX_WEST", str);
+}
+
 // DEATH TESTS //
 
 TEST_F(PieceDeathTest, ColorOfDeathTest) {
