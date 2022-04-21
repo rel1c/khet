@@ -185,8 +185,8 @@ void gen(const Board& b, Moves& m) {
   Color player = b.player();
   for (int i = 0; i < NUM_SQUARES; i++) {
     Square s = static_cast<Square>(i);
-    Piece p = b.pieceOn(s);
-    if (!p || colorOf(p) != player)
+    Piece p = b.pieceOn(s); //TODO optimize this check out, only read filled/cached squares
+    if (!p || colorOf(p) != player) //TODO same here, each player can have a cache
       continue;
     Bitboard possible = MOVE_BB[s] & ~b.blocked();
     Bitboard swaps, able;
