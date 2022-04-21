@@ -170,4 +170,6 @@ inline Rotation flip(Direction d) {
   return Rotation(~d & 1);
 }
 
+const std::string pieceToStr(Piece p);
+
 #endif
