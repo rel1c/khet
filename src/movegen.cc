@@ -221,8 +221,6 @@ void gen(const Board& b, Moves& m) {
       m.push_back(makeMove(s, POSITIVE));
       m.push_back(makeMove(s, NEGATIVE));
       break;
-    default: // should never reach here
-      abort();
     }
   }
 }

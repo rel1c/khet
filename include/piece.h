@@ -1,6 +1,7 @@
 #include <cassert>
 #include <ostream>
 #include <bitset>
+#include <iostream>
 
 #ifndef PIECE_H_
 #define PIECE_H_
@@ -126,6 +127,7 @@ inline Direction directionFromChar(char ch) {
     case 's' : return SOUTH;
     case 'w' : return WEST;
     default  : abort();
+    std::cerr << "directionFromChar: invalid character " << ch << std::endl;
   }
 }
 
@@ -151,6 +153,7 @@ inline PieceType pieceTypeFromChar(char ch) {
     case 's' : return SCARAB;
     case 'e' : return EYE_OF_HORUS;
     default  : abort();
+    std::cerr << "pieceTypeFromChar: invalid character " << ch << std::endl;
   }
 }
 
