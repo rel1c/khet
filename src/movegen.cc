@@ -1,6 +1,7 @@
 #include "movegen.h"
 #include <iostream>
 
+//TODO calculate this at compile time with a loop
 const std::array<std::vector<Square>, NUM_SQUARES> MOVE_LIST = {
   std::vector<Square> {SQ_B1, SQ_A2, SQ_B2},
   std::vector<Square> {SQ_A1, SQ_C1, SQ_A2, SQ_B2, SQ_C2},
@@ -91,6 +92,7 @@ const std::array<std::vector<Square>, NUM_SQUARES> MOVE_LIST = {
   std::vector<Square> {SQ_I7, SQ_J7, SQ_I8} 
 };
 
+//TODO calculate this at compile time with a loop
 const std::array<Bitboard, NUM_SQUARES> MOVE_BB = {
   bbFromVec(MOVE_LIST[SQ_A1]),
   bbFromVec(MOVE_LIST[SQ_B1]),
