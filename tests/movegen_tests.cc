@@ -6,6 +6,38 @@
 class MoveGenTest : public::testing::Test {};
 class MoveGenTestParam : public ::testing::TestWithParam<std::tuple<std::string, Moves>> {};
 
+TEST_F(MoveGenTest, InitMoveBBTest) {
+  for (int i = 0; i < NUM_SQUARES; i++) {
+    // flags for i-11, i-10, i-9, i-1, i+1, i+9, i+10, i+11
+    //             0     1     2    3    4    5     6     7
+    int flags[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+    if (i % 10 == 0) // left
+      flags[0] = flags[3] = flags[5] = 0;
+    if (i % 10 == 9) // right
+      flags[2] = flags[4] = flags[7] = 0;
+    if (i < 10) // bottom
+      flags[0] = flags[1] = flags[2] = 0;
+    if (i >= 70) // top
+      flags[5] = flags[6] = flags[7] = 0;
+    Bitboard bb;
+    if (flags[0]) bb[i-11] = true;
+    if (flags[1]) bb[i-10] = true;
+    if (flags[2]) bb[i-9] = true;
+    if (flags[3]) bb[i-1] = true;
+    if (flags[4]) bb[i+1] = true;
+    if (flags[5]) bb[i+9] = true;
+    if (flags[6]) bb[i+10] = true;
+    if (flags[7]) bb[i+11] = true;
+    ASSERT_EQ(bb.count(), MOVE_BB[i].count());
+    EXPECT_EQ(bb, MOVE_BB[i]);
+  }
+}
+
+TEST_F(MoveGenTest, InitMoveListTest) {
+  //This is implicitly verified by InitMoveBBTest and BBToVecTest
+  return;
+}
+
 TEST_P(MoveGenTestParam, GenTest) {
   Board b;
   std::string pkn = std::get<0>(GetParam());

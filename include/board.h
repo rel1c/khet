@@ -7,6 +7,8 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
+using Bitboard = std::bitset <NUM_SQUARES>;
+
 const unsigned int NUM_FILES = 10;
 const unsigned int NUM_RANKS = 8;
 
@@ -25,12 +27,6 @@ constexpr File fileOf(Square s) {
 constexpr Rank rankOf(Square s) {
   return Rank(s / NUM_FILES);
 }
-
-using Bitboard = std::bitset <NUM_SQUARES>;
-
-Bitboard bbFromVec(const std::vector<Square>&);
-
-void display(const Bitboard&);
 
 extern const Bitboard FILE_BB_A;
 extern const Bitboard FILE_BB_B;
@@ -56,6 +52,10 @@ extern const Bitboard SILVER_SQR_BB;
 extern const Bitboard RED_SQR_BB;
 
 extern const std::array<Bitboard, NUM_SQUARES> SQ_BB;
+
+Bitboard bbFromVec(const std::vector<Square>&);
+std::vector<Square> vecFromBB(const Bitboard&);
+void display(const Bitboard&);
 
 struct BoardState {
   BoardState* prev;

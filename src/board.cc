@@ -138,6 +138,23 @@ Bitboard bbFromVec(const std::vector<Square>& v) {
 };
 
 /**
+ * @brief Initialize a vector of board squares with a bitboard.
+ * @param bb The bitboard
+ */
+std::vector<Square> vecFromBB(const Bitboard& bb) {
+  std::vector<Square> v;
+  std::size_t count = bb.count();
+  for (int i = 0; count && i < bb.size(); i++) {
+    if (bb[i]) {
+      Square s = static_cast<Square>(i);
+      v.push_back(s);
+      count--;
+    }
+  }
+  return v;
+}
+
+/**
  * @brief Display a bitboard as a Khet board, boardered by rank and file
  * notation, with starting square in the lower left, as seen by the silver
  * player.

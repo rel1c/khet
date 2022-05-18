@@ -33,6 +33,24 @@ TEST_F(BoardTest, RankOfTest) {
   ASSERT_EQ(RANK_2, rankOf(SQ_I2));
 }
 
+TEST_F(BoardTest, BBFromVecTest) {
+  Bitboard bb;
+  std::vector<Square> v;
+  ASSERT_EQ(bb, bbFromVec(v));
+  bb = 0b101010101;
+  v = {SQ_A1, SQ_C1, SQ_E1, SQ_G1, SQ_I1};
+  EXPECT_EQ(bb, bbFromVec(v));
+}
+
+TEST_F(BoardTest, VecFromBBTest) {
+  Bitboard bb;
+  std::vector<Square> v;
+  ASSERT_EQ(v, vecFromBB(bb));
+  bb = 0b101010101;
+  v = {SQ_A1, SQ_C1, SQ_E1, SQ_G1, SQ_I1};
+  EXPECT_EQ(v, vecFromBB(bb));
+}
+
 TEST_P(BoardTestParam, PknTest) {
   Board b;
   std::string pkn = std::get<0>(GetParam());
