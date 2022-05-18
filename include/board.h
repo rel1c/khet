@@ -28,6 +28,11 @@ constexpr Rank rankOf(Square s) {
   return Rank(s / NUM_FILES);
 }
 
+//TODO wrap files and ranks into an array
+// (also, they are not being used anywhere, are they needed?
+// extern const std::array<Bitboard, NUM_FILES> FILE_BB;
+// extern const std::array<Bitboard, NUM_RANKS> RANK_BB;
+
 extern const Bitboard FILE_BB_A;
 extern const Bitboard FILE_BB_B;
 extern const Bitboard FILE_BB_C;
