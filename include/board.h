@@ -95,10 +95,9 @@ public:
 private:
   BoardState* _state;
   std::array<Piece, NUM_SQUARES> _pieces = {};
-  // TODO sort out these magic numbers for enum lengths
-  std::array<Bitboard, 3> _color_bb = {};
-  std::array<Bitboard, 4> _direction_bb = {};
-  std::array<Bitboard, 8> _type_bb = {};
+  std::array<Bitboard, NUM_COLORS> _color_bb = {};
+  std::array<Bitboard, NUM_DIRECTIONS> _direction_bb = {};
+  std::array<Bitboard, NUM_PIECE_TYPES> _type_bb = {};
   Color _player = SILVER;
   std::string _pkn = "";
   unsigned int _turn = 0;
