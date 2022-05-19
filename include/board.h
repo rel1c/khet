@@ -104,7 +104,6 @@ private:
   std::array<Bitboard, NUM_DIRECTIONS> _direction_bb = {};
   std::array<Bitboard, NUM_PIECE_TYPES> _type_bb = {};
   Color _player = SILVER;
-  std::string _pkn = "";
   unsigned int _turn = 0;
 };
 

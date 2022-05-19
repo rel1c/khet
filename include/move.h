@@ -32,6 +32,7 @@ const std::array<std::string, NUM_SQUARES> SquareStr {
 
 // Captures are a bit field composed of two fields
 // [spare : 2][piece : 7][square : 7]
+// TODO maybe wrap this in a class/struct?
 using Capture = uint16_t;
 
 constexpr Capture makeCapture(Piece p, Square s) {
@@ -52,6 +53,7 @@ inline Square getCapSquare(Capture cptr) {
 // to have its lowest bit treated as a value for
 // positive or negative rotation, else the first 7 bits
 // are to be treated as a board square.
+// TODO maybe wrap this in a class/struct?
 using Move = uint16_t;
 
 constexpr Move makeMove(Square from, Square to, bool swap=false) {
