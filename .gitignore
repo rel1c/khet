@@ -34,3 +34,7 @@ old/
 
 # Notes
 notes.*
+
+# Profiling
+callgrind.out.*
+gmon.out

@@ -39,28 +39,26 @@ const std::array<Bitboard, NUM_SQUARES> MOVE_BB = init_move_bb();
 const std::array<std::vector<Square>, NUM_SQUARES> MOVE_LIST = init_move_list();
 
 void gen(const Board& b, Moves& m) {
-  Color player = b.player();
-  for (int i = 0; i < NUM_SQUARES; i++) {
-    Square s = static_cast<Square>(i);
-    Piece p = b.pieceOn(s); //TODO optimize this check out, only read filled/cached squares
-    if (!p || colorOf(p) != player) //TODO same here, each player can have a cache
-      continue;
-    Bitboard possible = MOVE_BB[s] & ~b.blocked();
-    Bitboard swaps, able;
-    Color c = colorOf(p);
-    Direction d = directionOf(p);
-    PieceType pt = typeOf(p);
+  const Color player = b.player();
+  const Bitboard pieces = b.pieces(player);
+  const Bitboard blocked = b.blocked();
+  const Bitboard open = ~blocked & ~b.pieces(ALL_PIECES);
+  const Bitboard swappable = ~blocked & (b.pieces(ANUBIS) | b.pieces(PYRAMID));
+  const std::vector<Square> piece_list = vecFromBB(pieces);
+  for (auto& s : piece_list) {
+    const Piece p = b.pieceOn(s);
+    const Direction d = directionOf(p);
+    const PieceType pt = typeOf(p);
+    const Bitboard able = MOVE_BB[s] & open;
+    const Bitboard swaps = MOVE_BB[s] & swappable;
     switch (pt) {
     case SPHINX:
       m.push_back(makeMove(s, flip(d)));
-      //std::cout << s << toChar(pt) << toChar(d) << std::endl;
       break;
     case SCARAB:
     case EYE_OF_HORUS:
-      swaps = possible & (b.pieces(ANUBIS) | b.pieces(PYRAMID));
       for (Square t : MOVE_LIST[s]) {
         if (swaps[t]) {
-          //std::cout << s << toChar(pt) << toChar(d) << std::endl;
           m.push_back(makeMove(s, t, true));
         }
       }
@@ -68,10 +66,8 @@ void gen(const Board& b, Moves& m) {
     case PYRAMID:
     case ANUBIS:
     case PHARAOH:
-      able = possible & ~b.pieces(ALL_PIECES);
       for (Square t : MOVE_LIST[s]) {
         if (able[t]) {
-          //std::cout << s << toChar(pt) << toChar(d) << std::endl;
           m.push_back(makeMove(s, t));
         }
       }
