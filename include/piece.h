@@ -105,6 +105,10 @@ constexpr Color operator~(Color c) {
   return Color(c ^ 3);
 }
 
+//constexpr Direction operator~(Direction d) {
+//  return Direction(d ^ 2);
+//}
+
 inline Color colorOf(Piece p) {
   assert(p != NO_PIECE);
   return Color((p & COLOR_MASK) >> 5);
@@ -113,11 +117,6 @@ inline Color colorOf(Piece p) {
 inline Direction directionOf(Piece p) {
   assert(p != NO_PIECE);
   return Direction(p & WEST);
-}
-
-inline Direction reflect(Piece p, Direction d) {
-  assert(p & REFLECTOR_MASK);
-  return Direction(p & 1 ? d ^ EAST : d ^ WEST);
 }
 
 inline Direction directionFromChar(char ch) {

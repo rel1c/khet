@@ -173,7 +173,7 @@ void display(const Bitboard& bb) {
 }
 
 void Board::setPkn(const std::string& pkn) {
-
+  // TODO setPkn should clear the board!
   // extract fields
   std::istringstream iss(pkn);
   std::string piece_str, direction_str, player_str, turn_str;

@@ -20,7 +20,7 @@ TEST_P(PieceTestParam, DirectionOfTest) {
   Direction d = std::get<3>(GetParam());
   ASSERT_EQ(d, directionOf(p));
 }
-
+/*
 TEST_P(PieceTestParam, ReflectTest) {
   Piece p = std::get<0>(GetParam());
   Direction d = std::get<3>(GetParam());
@@ -40,7 +40,7 @@ TEST_P(PieceTestParam, ReflectTest) {
     ASSERT_EQ(NORTH, reflect(p, EAST));
   }
 }
-
+*/
 TEST_F(PieceTest, DirectionFromCharTest) {
   ASSERT_EQ(NORTH, directionFromChar('n'));
   ASSERT_EQ(EAST, directionFromChar('e'));
@@ -177,7 +177,7 @@ TEST_F(PieceDeathTest, ColorOfDeathTest) {
 TEST_F(PieceDeathTest, DirectionOfDeathTest) {
   ASSERT_DEATH(directionOf(NO_PIECE), "");
 }
-
+/*
 TEST_F(PieceDeathTest, ReflectDeathTest) {
   ASSERT_DEATH(reflect(NO_PIECE, NORTH), "");
   ASSERT_DEATH(reflect(SILVER_ANUBIS_NORTH, NORTH), "");
@@ -187,7 +187,7 @@ TEST_F(PieceDeathTest, ReflectDeathTest) {
   ASSERT_DEATH(reflect(RED_PHARAOH_NORTH, NORTH), "");
   ASSERT_DEATH(reflect(RED_SPHINX_NORTH, NORTH), "");
 }
-
+*/
 TEST_F(PieceTest, DirectionFromCharDeathTest) {
   ASSERT_DEATH(directionFromChar('g'), "");
   ASSERT_DEATH(directionFromChar('Q'), "");

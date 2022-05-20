@@ -9,18 +9,34 @@
  * TODO This is the most naive and quick implementation I could put together!
  *      There exist a myriad of optimizations, but I need a model to test.
  */
-const Capture Laser::fire(const Board& b, Square s, Direction d) {
-  Color player = b.player(); 
-  while (true) {
+const Capture Laser::fire(const Board& b, Square s, Direction ld) {
+  Color player = b.player();
+  while(s != SQ_NONE) {
     Piece p = b.pieceOn(s);
-    if (b.pieceOn(s)) {
-      if ((~p | ~REFLECTOR_MASK) || 
-          ()) {
-        return (p << 7) | s;
+    if (p) {
+      Direction d = directionOf(p);
+      PieceType pt = typeOf(p);
+      // if blocking anubis, then stop
+      if (pt == ANUBIS && d == (ld ^ 2)) {
+        break;
+      }
+      // if piece is not reflector or pyramid and vulnerable
+      else if (!(p & REFLECTOR_MASK) ||
+              (pt == PYRAMID && _elimPyramid(ld, d))) {
+        // return captured piece
+        return makeCapture(p, s);
+      }
+      // must be reflecting
+      // TODO nevermind beam splitting for now...
+      else {
+        std::cout << std::bitset<8>(p & REFLECTOR_MASK) << std::endl;
+        assert(p & REFLECTOR_MASK);
+        assert(pt == PYRAMID || pt == SCARAB || pt == EYE_OF_HORUS);
+        ld = _reflect(ld, p);
       }
     }
-    if (escaping()) {
-      // break
-    }
+    // TODO store path in member BBs and lists
+    s = _advance(s, ld);
   }
+  return NO_CAPTURE;
 }

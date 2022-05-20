@@ -47,10 +47,11 @@ include(GoogleTest)
 add_executable(
   tests
   ${PROJ_TEST_DIR}/tests.cc
-  ${PROJ_TEST_DIR}/piece_tests.cc
   ${PROJ_TEST_DIR}/board_tests.cc
+  ${PROJ_TEST_DIR}/laser_tests.cc
   ${PROJ_TEST_DIR}/move_tests.cc
   ${PROJ_TEST_DIR}/movegen_tests.cc
+  ${PROJ_TEST_DIR}/piece_tests.cc
 )
 
 target_link_libraries(
