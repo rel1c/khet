@@ -6,6 +6,8 @@
  * @param s The board where to start the laser beam
  * @param d The initial direction of the laser beam
  * @return A captured piece
+ * TODO This is the most naive and quick implementation I could put together!
+ *      There exist a myriad of optimizations, but I need a model to test.
  */
 const Capture Laser::fire(const Board& b, Square s, Direction d) {
   Color player = b.player(); 

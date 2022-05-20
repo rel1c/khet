@@ -35,6 +35,10 @@ const std::array<std::string, NUM_SQUARES> SquareStr {
 // TODO maybe wrap this in a class/struct?
 using Capture = uint16_t;
 
+enum : Capture {
+  NO_CAPTURE = (NO_PIECE << 7) | SQ_NONE
+};
+
 constexpr Capture makeCapture(Piece p, Square s) {
   return p << 7 | s;
 }

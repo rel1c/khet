@@ -16,7 +16,7 @@ private:
   std::array<std::vector<Square>, NUM_COLORS> _path = {};
   
   Direction _reflect(Direction, Piece) const {
-    
+    return NORTH; //TODO stub
   }
 };
 
