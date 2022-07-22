@@ -258,6 +258,7 @@ void Board::doMove(const Move m) {
     Square to = getTo(m);
     movePiece(from, to);
   }
+  _resolveMove();
   _turn++;
   _player = ~_player;
 }
@@ -276,6 +277,7 @@ void Board::undoMove(const Move m) {
     Square to = getTo(m);
     movePiece(to, from);
   }
+  _undoCaptures();
   _turn--;
   _player = ~_player;
 }

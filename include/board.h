@@ -2,12 +2,13 @@
 #include <bitset>
 #include <vector>
 
-#include "move.h"
+#include "laser.h"
+//#include "move.h"
 
 #ifndef BOARD_H_
 #define BOARD_H_
 
-using Bitboard = std::bitset <NUM_SQUARES>;
+class Laser;
 
 const unsigned int NUM_FILES = 10;
 const unsigned int NUM_RANKS = 8;
@@ -62,13 +63,6 @@ Bitboard bbFromVec(const std::vector<Square>&);
 std::vector<Square> vecFromBB(const Bitboard&);
 void display(const Bitboard&);
 
-struct BoardState {
-  BoardState* prev;
-  Bitboard silver_path;
-  Bitboard red_path;
-  std::array<Capture, 3> captured; // 3 max for 2 beam splitters
-};
-
 class Board {
 public:
   Board() = default;
@@ -98,13 +92,37 @@ public:
   void display() const;
 
 private:
-  BoardState* _state;
   std::array<Piece, NUM_SQUARES> _pieces = {};
   std::array<Bitboard, NUM_COLORS> _color_bb = {};
   std::array<Bitboard, NUM_DIRECTIONS> _direction_bb = {};
   std::array<Bitboard, NUM_PIECE_TYPES> _type_bb = {};
   Color _player = SILVER;
   unsigned int _turn = 0;
+  Laser _laser;
+  std::vector<Capture> _captures = {};
+
+  void _resolveMove() {
+    std::cout << "_resolveMove" << std::endl;
+    // TODO pkn determines sphinx? maybe it should be hard coded and not a piece
+    // pkn could have extra field for sphinx directions, placement being implicit
+    Square s = (_player == SILVER) ? SQ_J1 : SQ_A8;
+    Piece p = pieceOn(s);
+    Direction d = directionOf(p);
+    Capture cap = _laser.fire(*this, s, d);
+    if (cap != NO_CAPTURE) {
+      // TODO why does this require the piece argument? square is all that is needed
+      removePiece(getCapPiece(cap), getCapSquare(cap));
+    }
+  }
+
+  void _undoCaptures() {
+    std::cout << "_undoCaptures" << std::endl;
+    while (!_captures.empty()) {
+      Capture cap = _captures.back();
+      _captures.pop_back();
+      addPiece(getCapPiece(cap), getCapSquare(cap));
+    }
+  }
 };
 
 inline Bitboard Board::pieces() const {
@@ -140,6 +158,7 @@ inline Bitboard Board::blocked() const {
 }
 
 inline void Board::addPiece(Piece p, Square s) {
+  std::cout << "addPiece " << SquareStr[s] << std::endl;
   _pieces[s] = p;
   _color_bb[colorOf(p)].set(s);
   _direction_bb[directionOf(p)].set(s);
@@ -148,6 +167,7 @@ inline void Board::addPiece(Piece p, Square s) {
 }
 
 inline void Board::removePiece(Piece p, Square s) {
+  std::cout << "removePiece " << SquareStr[s] << std::endl;
   _pieces[s] = NO_PIECE;
   _color_bb[colorOf(p)].reset(s);
   _direction_bb[directionOf(p)].reset(s);
@@ -156,6 +176,7 @@ inline void Board::removePiece(Piece p, Square s) {
 }
 
 inline void Board::movePiece(Square from, Square to) {
+  std::cout << "movePiece " << SquareStr[from] << " -> " << SquareStr[to] << std::endl;
   Bitboard both = SQ_BB[from] | SQ_BB[to];
   Piece p = _pieces[from];
   _pieces[to] = p;
@@ -167,6 +188,7 @@ inline void Board::movePiece(Square from, Square to) {
 }
 
 inline void Board::swapPiece(Square from, Square to) {
+  std::cout << "swapPiece " << SquareStr[from] << " <-> " << SquareStr[to] << std::endl;
   Piece a = _pieces[from];
   Piece b = _pieces[to];
   Piece tmp = a;
@@ -193,6 +215,7 @@ inline void Board::swapPiece(Square from, Square to) {
 }
 
 inline void Board::rotatePiece(Square s, Rotation r) {
+  std::cout << "rotatePiece " << SquareStr[s] << ((r == POSITIVE) ? "+" : "-") << std::endl;
   Piece p = _pieces[s];
   _direction_bb[directionOf(p)].reset(s);
   p = (r == POSITIVE) ? rotatePos(p) : rotateNeg(p);

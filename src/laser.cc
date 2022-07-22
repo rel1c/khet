@@ -1,4 +1,4 @@
-#include "laser.h"
+#include "board.h"
 
 /**
  * @brief Fires the laser!
@@ -10,7 +10,7 @@
  *      There exist a myriad of optimizations, but I need a model to test.
  */
 const Capture Laser::fire(const Board& b, Square s, Direction ld) {
-  Color player = b.player();
+  s = _advance(s, ld);
   while(s != SQ_NONE) {
     Piece p = b.pieceOn(s);
     if (p) {
@@ -29,7 +29,6 @@ const Capture Laser::fire(const Board& b, Square s, Direction ld) {
       // must be reflecting
       // TODO nevermind beam splitting for now...
       else {
-        std::cout << std::bitset<8>(p & REFLECTOR_MASK) << std::endl;
         assert(p & REFLECTOR_MASK);
         assert(pt == PYRAMID || pt == SCARAB || pt == EYE_OF_HORUS);
         ld = _reflect(ld, p);

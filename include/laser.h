@@ -1,8 +1,13 @@
 #include <array>
-#include "board.h"
+
+#include "move.h"
 
 #ifndef LASER_H_
 #define LASER_H_
+
+class Board;
+
+using Bitboard = std::bitset <NUM_SQUARES>;
 
 class Laser {
 public:

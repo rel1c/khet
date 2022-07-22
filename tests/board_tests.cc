@@ -3,7 +3,16 @@
 #include "test_util.h"
 #include "board.h"
 
-class BoardTest : public::testing::Test {};
+class BoardTest : public::testing::Test {
+public:
+  void SetUp() {
+  b.addPiece(SILVER_SPHINX_NORTH, SQ_J1);
+  b.addPiece(RED_SPHINX_SOUTH, SQ_A8);
+}
+protected:
+  Board b;
+};
+
 class BoardTestParam : public ::testing::TestWithParam<std::tuple<std::string, std::array<Piece, NUM_SQUARES>>> {};
 
 TEST_F(BoardTest, FileOfTest) {
@@ -100,7 +109,6 @@ TEST_P(BoardTestParam, RemovePieceTest) {
 }
 
 TEST_F(BoardTest, MovePieceTest) {
-  Board b;
   Piece p = make(SILVER, ANUBIS, NORTH);
   b.addPiece(p, SQ_A1);
   for (int i = 0; i < NUM_SQUARES - 1; i++) {
@@ -122,7 +130,6 @@ TEST_F(BoardTest, MovePieceTest) {
 }
 
 TEST_F(BoardTest, SwapPieceTest) {
-  Board b;
   Piece p = make(SILVER, PYRAMID, NORTH);
   Piece q = make(RED, SCARAB, SOUTH);
   Square from = SQ_A1;
@@ -180,7 +187,6 @@ TEST_F(BoardTest, SwapPieceTest) {
 }
 
 TEST_F(BoardTest, RotatePieceTest) {
-  Board b;
   Piece p = make(SILVER, ANUBIS, NORTH);
   Square s = SQ_A1;
   b.addPiece(p, s);
@@ -203,7 +209,6 @@ TEST_F(BoardTest, RotatePieceTest) {
 }
 
 TEST_F(BoardTest, DoMoveRotationTest) {
-  Board b;
   Move m;
   Piece scarab = SILVER_SCARAB_NORTH;
   Piece anubis = RED_ANUBIS_SOUTH;
@@ -229,7 +234,6 @@ TEST_F(BoardTest, DoMoveRotationTest) {
 }
 
 TEST_F(BoardTest, DoMoveSwapTest) {
-  Board b;
   Move m;
   Piece scarab = SILVER_SCARAB_NORTH;
   Piece anubis = RED_ANUBIS_SOUTH;
@@ -257,7 +261,6 @@ TEST_F(BoardTest, DoMoveSwapTest) {
 }
 
 TEST_F(BoardTest, DoMoveNoSwapTest) {
-  Board b;
   Move m;
   Square from = SQ_H5;
   Square to = SQ_G5;
@@ -282,7 +285,6 @@ TEST_F(BoardTest, DoMoveNoSwapTest) {
 }
 
 TEST_F(BoardTest, UndoMoveRotationTest) {
-  Board b;
   b.setPkn("S9/1a8/0/0/0/0/0/0 ns s 3");
   Move m;
   Piece scarab = SILVER_SCARAB_NORTH;
@@ -307,7 +309,6 @@ TEST_F(BoardTest, UndoMoveRotationTest) {
 }
 
 TEST_F(BoardTest, UndoMoveSwapTest) {
-  Board b;
   b.setPkn("S9/1a8/0/0/0/0/0/0 ns s 3");
   Move m;
   Piece scarab = SILVER_SCARAB_NORTH;
@@ -334,7 +335,6 @@ TEST_F(BoardTest, UndoMoveSwapTest) {
 }
 
 TEST_F(BoardTest, UndoMoveNoSwapTest) {
-  Board b;
   b.setPkn("P9/0/0/0/0/0/0/0 w s 3");
   Move m;
   Square from = SQ_A1;
